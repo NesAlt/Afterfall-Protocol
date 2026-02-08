@@ -99,4 +99,9 @@ public class PlayerAnimator : MonoBehaviour
             animator.SetBool("isDead", false);
         }
     }
+    public void PlayAttack()
+    {
+        if (animator == null) return;
+        animator.SetTrigger("attack");
+    }
 }

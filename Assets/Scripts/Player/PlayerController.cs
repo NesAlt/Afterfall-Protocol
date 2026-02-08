@@ -85,6 +85,8 @@ public class PlayerController : MonoBehaviour
     public float jumpDuration = 0.1f;
     [Tooltip("The effect to spawn when the player jumps")]
     public GameObject jumpEffect = null;
+    [Header("Combat")]
+    public bool isAttacking = false;
     [Tooltip("Layers to pass through when moving upwards")]
     public List<string> passThroughLayers = new List<string>();
 
@@ -93,6 +95,10 @@ public class PlayerController : MonoBehaviour
     public InputAction moveAction;
     [Tooltip("The input action(s) that map to jumping")]
     public InputAction jumpAction;
+
+    [Tooltip("The input action(s) that map to attacking")]
+    public InputAction attackAction;
+
 
     // The number of times this player has jumped since being grounded
     private int timesJumped = 0;
@@ -112,6 +118,25 @@ public class PlayerController : MonoBehaviour
         Dead
     }
 
+    private IEnumerator AttackRoutine()
+    {
+        isAttacking = true;
+
+        // Stop horizontal movement immediately
+        playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
+
+        // Trigger animation
+        PlayerAnimator animator = GetComponent<PlayerAnimator>();
+        if (animator != null)
+        {
+            animator.PlayAttack();
+        }
+
+        yield return new WaitForSeconds(0.4f);
+
+        isAttacking = false;
+    }
+
     // The player's current state (walking, idle, jumping, or falling)
     public PlayerState state = PlayerState.Idle;
     #endregion
@@ -126,6 +151,7 @@ public class PlayerController : MonoBehaviour
     {
         moveAction.Enable();
         jumpAction.Enable();
+        attackAction.Enable();
     }
 
     /// <summary>
@@ -135,6 +161,7 @@ public class PlayerController : MonoBehaviour
     {
         moveAction.Disable();
         jumpAction.Disable();
+        attackAction.Disable();
     }
 
     /// <summary>
@@ -178,6 +205,7 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovementInput();
         HandleJumpInput();
+        HandleAttackInput();
     }
 
     /// <summary>
@@ -188,6 +216,13 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void HandleMovementInput()
     {
+
+        if (isAttacking || state == PlayerState.Dead)
+        {
+            MovePlayer(Vector2.zero);
+            return;
+        }
+
         Vector2 movementForce = Vector2.zero;
         if (Mathf.Abs(moveAction.ReadValue<Vector2>().x) > 0 && state != PlayerState.Dead)
         {
@@ -195,6 +230,15 @@ public class PlayerController : MonoBehaviour
         }
         MovePlayer(movementForce);
     }
+
+    private void HandleAttackInput()
+    {
+        if (attackAction.triggered && !isAttacking && grounded && state != PlayerState.Dead)
+        {
+            StartCoroutine(AttackRoutine());
+        }
+    }
+
 
     /// <summary>
     /// Description:
@@ -245,6 +289,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void HandleJumpInput()
     {
+        if (isAttacking || state == PlayerState.Dead)
+            return;
+
         if (jumpAction.triggered)
         {
             StartCoroutine("Jump", 1.0f);
@@ -379,6 +426,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void DetermineState()
     {
+        if (isAttacking)
+            return;
+
         if (playerHealth.currentHealth <= 0)
         {
             SetState(PlayerState.Dead);
