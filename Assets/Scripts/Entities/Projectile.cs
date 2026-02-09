@@ -22,16 +22,16 @@ public class Projectile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D col)
     {
         // Ignore player
-        if (col.CompareTag("Player"))
-            return;
+        // if (col.CompareTag("Player"))
+        //     return;
 
-        // Enemy hit
-        if (col.CompareTag("Enemy"))
-        {
-            col.GetComponent<Health>()?.TakeDamage(1);
-            Destroy(gameObject);
-            return;
-        }
+        // // Enemy hit
+        // if (col.CompareTag("Enemy"))
+        // {
+        //     col.GetComponent<Health>()?.TakeDamage(1);
+        //     Destroy(gameObject);
+        //     return;
+        // }
 
         // World / buildings
         if (col.gameObject.layer == LayerMask.NameToLayer("Ground") ||

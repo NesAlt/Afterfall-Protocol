@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7480662399923291232}
   - component: {fileID: 4805888233091057367}
   - component: {fileID: 4691513153238346140}
+  - component: {fileID: 6437913675732737545}
   m_Layer: 0
   m_Name: Projectile_Bullet
   m_TagString: Untagged
@@ -173,3 +174,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.16072594, y: 0.12902112}
   m_EdgeRadius: 0
+--- !u!114 &6437913675732737545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2307695141894675803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06f1b01476190414eb7d76e6956c6e4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamId: 0
+  damageAmount: 1
+  hitEffect: {fileID: 0}
+  destroyAfterDamage: 1
+  dealDamageOnTriggerEnter: 1
+  dealDamageOnTriggerStay: 0
+  dealDamageOnCollision: 0

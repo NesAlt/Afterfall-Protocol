@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
     public List<string> passThroughLayers = new List<string>();
     [Header("Projectile")]
     [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private float projectileSpeed = 12f;
+    // [SerializeField] private float projectileSpeed = 12f;
 
     [Header("Input Actions & Controls")]
     [Tooltip("The input action(s) that map to player movement")]
