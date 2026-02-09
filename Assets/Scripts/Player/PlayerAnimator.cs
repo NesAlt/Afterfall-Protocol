@@ -104,4 +104,11 @@ public class PlayerAnimator : MonoBehaviour
         if (animator == null) return;
         animator.SetTrigger("attack");
     }
+    public void FireProjectile()
+    {
+        if (playerController != null)
+        {
+            playerController.FireProjectile();
+        }
+    }
 }

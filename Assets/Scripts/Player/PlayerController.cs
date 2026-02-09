@@ -17,9 +17,12 @@ public class PlayerController : MonoBehaviour
     [Tooltip("The health component attached to the player.")]
     public Health playerHealth;
 
+    [Tooltip("Point from which projectiles are fired")]
+    [SerializeField] private Transform firePoint;
+    private Vector3 firePointRightLocalPos;
+    private Vector3 firePointLeftLocalPos;
     // The rigidbody used to move the player (necessary for this component, so not made public)
     private Rigidbody2D playerRigidbody = null;
-
     #region Getters (primarily from other components)
     #region Directional facing
     /// <summary>
@@ -89,6 +92,9 @@ public class PlayerController : MonoBehaviour
     public bool isAttacking = false;
     [Tooltip("Layers to pass through when moving upwards")]
     public List<string> passThroughLayers = new List<string>();
+    [Header("Projectile")]
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private float projectileSpeed = 12f;
 
     [Header("Input Actions & Controls")]
     [Tooltip("The input action(s) that map to player movement")]
@@ -175,6 +181,16 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         SetupRigidbody();
+
+         if (firePoint != null)
+        {
+            firePointRightLocalPos = firePoint.localPosition;
+            firePointLeftLocalPos = new Vector3(
+                -firePointRightLocalPos.x,
+                firePointRightLocalPos.y,
+                firePointRightLocalPos.z
+            );
+        }
     }
 
     /// <summary>
@@ -238,7 +254,26 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(AttackRoutine());
         }
     }
+    public void FireProjectile()
+    {
+        if (projectilePrefab == null || firePoint == null)
+            return;
 
+        GameObject proj = Instantiate(
+            projectilePrefab,
+            firePoint.position,
+            Quaternion.identity
+        );
+
+        float xDir = Mathf.Sign(firePoint.localPosition.x);
+        Vector2 dir = new Vector2(xDir, 0f);
+
+        Projectile projectile = proj.GetComponent<Projectile>();
+        if (projectile != null)
+        {
+            projectile.Init(dir);
+        }
+    }
 
     /// <summary>
     /// Description:
@@ -378,10 +413,14 @@ public class PlayerController : MonoBehaviour
             if (facing == PlayerDirection.Left)
             {
                 spriteRenderer.flipX = true;
+                if (firePoint != null)
+                    firePoint.localPosition = firePointLeftLocalPos;
             }
             else
             {
                 spriteRenderer.flipX = false;
+                if (firePoint != null)
+                    firePoint.localPosition = firePointRightLocalPos;
             }
         }
     }

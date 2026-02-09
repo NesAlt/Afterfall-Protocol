@@ -64,11 +64,14 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.62f3\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Player\PlayerSpriteEvents.cs" />
     <Compile Include="Assets\Scripts\Utility\TimedObjectDestroyer.cs" />
     <Compile Include="Assets\Scripts\Utility\ScreenshotUtility.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HighScoreDisplay.cs" />
+    <Compile Include="Assets\Scripts\Entities\ProjectileTest.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\Utility\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectile.cs" />
     <Compile Include="Assets\Scripts\Utility\LevelManager.cs" />
     <Compile Include="Assets\Scripts\UI\LevelLoadButton.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />

@@ -127,6 +127,37 @@ MonoBehaviour:
   groundCheckCollider: {fileID: 0}
   landingEffect: {fileID: 0}
   groundedLastCheck: 0
+--- !u!1 &7376246013448095236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5647714593090411844}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5647714593090411844
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7376246013448095236}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.286, y: 0.066, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6865385432463409113}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8169893660609212036
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,6 +301,7 @@ Transform:
   - {fileID: 5158079548482450568}
   - {fileID: 8304647346425003146}
   - {fileID: 7278167960881988320}
+  - {fileID: 5647714593090411844}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &1633587272771816570
@@ -301,7 +333,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -347,13 +379,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundCheck: {fileID: 8619997994594220499}
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 3588658159945815782}
   playerHealth: {fileID: 4072942725601109035}
+  firePoint: {fileID: 5647714593090411844}
   movementSpeed: 4
   jumpPower: 10
   allowedJumps: 1
   jumpDuration: 0.2
   jumpEffect: {fileID: 0}
+  isAttacking: 0
   passThroughLayers: []
   moveAction:
     m_Name: Move
@@ -419,6 +453,23 @@ MonoBehaviour:
       m_Processors: 
       m_Groups: 
       m_Action: Jump
+      m_Flags: 0
+    m_Flags: 0
+  attackAction:
+    m_Name: Attack
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 05392e68-461a-4485-a866-8c788c145cf6
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 08d41f4d-85c9-4dee-973c-e586c1e5f5f1
+      m_Path: <Keyboard>/f
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Attack
       m_Flags: 0
     m_Flags: 0
   state: 0
