@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4529833491914945521
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7278167960881988320}
-  m_Layer: 0
-  m_Name: Feet
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7278167960881988320
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4529833491914945521}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6865385432463409113}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4816946478309298775
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,7 +11,7 @@ GameObject:
   - component: {fileID: 8304647346425003146}
   - component: {fileID: 8612354787370167489}
   - component: {fileID: 8619997994594220499}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4816946478309298775}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.047, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -107,7 +76,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.4243412, y: 0.1917522}
+  m_Size: {x: 0.4243412, y: 0.12}
   m_EdgeRadius: 0
 --- !u!114 &8619997994594220499
 MonoBehaviour:
@@ -123,7 +92,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundLayers:
     serializedVersion: 2
-    m_Bits: 2112
+    m_Bits: 2240
   groundCheckCollider: {fileID: 0}
   landingEffect: {fileID: 0}
   groundedLastCheck: 0
@@ -136,7 +105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5647714593090411844}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,7 +121,7 @@ Transform:
   m_GameObject: {fileID: 7376246013448095236}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.286, y: 0.066, z: 0}
+  m_LocalPosition: {x: 0.345, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -169,7 +138,8 @@ GameObject:
   - component: {fileID: 5158079548482450568}
   - component: {fileID: 3588658159945815782}
   - component: {fileID: 6191168116765161496}
-  m_Layer: 0
+  - component: {fileID: 6371240482576261198}
+  m_Layer: 8
   m_Name: PlayerSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,6 +234,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6371240482576261198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8169893660609212036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 749a21e8230f10547b173af0a96f95ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 6483353872723223206}
 --- !u!1 &8609122152325029768
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,12 +256,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6865385432463409113}
-  - component: {fileID: 1633587272771816570}
+  - component: {fileID: 8662162811040846947}
   - component: {fileID: 5005933389095562020}
   - component: {fileID: 6483353872723223206}
   - component: {fileID: 4072942725601109035}
   - component: {fileID: 5720608286333297333}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -300,12 +283,11 @@ Transform:
   m_Children:
   - {fileID: 5158079548482450568}
   - {fileID: 8304647346425003146}
-  - {fileID: 7278167960881988320}
   - {fileID: 5647714593090411844}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!70 &1633587272771816570
-CapsuleCollider2D:
+--- !u!61 &8662162811040846947
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -333,12 +315,22 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.5, y: 1}
-  m_Direction: 0
+  m_Offset: {x: 0.005886078, y: -0.048273206}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.305336, y: 0.9034536}
+  m_EdgeRadius: 0
 --- !u!50 &5005933389095562020
 Rigidbody2D:
   serializedVersion: 4
@@ -383,12 +375,12 @@ MonoBehaviour:
   playerHealth: {fileID: 4072942725601109035}
   firePoint: {fileID: 5647714593090411844}
   movementSpeed: 4
-  jumpPower: 10
+  jumpPower: 15
   allowedJumps: 1
   jumpDuration: 0.2
   jumpEffect: {fileID: 0}
   isAttacking: 0
-  passThroughLayers: []
+  projectilePrefab: {fileID: 2307695141894675803, guid: d827d251e5012924f95540b3250b1788, type: 3}
   moveAction:
     m_Name: Move
     m_Type: 0

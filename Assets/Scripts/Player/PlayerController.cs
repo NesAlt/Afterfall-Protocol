@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
     [Header("Combat")]
     public bool isAttacking = false;
     [Tooltip("Layers to pass through when moving upwards")]
-    public List<string> passThroughLayers = new List<string>();
+    // public List<string> passThroughLayers = new List<string>();
     [Header("Projectile")]
     [SerializeField] private GameObject projectilePrefab;
     // [SerializeField] private float projectileSpeed = 12f;
@@ -298,20 +298,20 @@ public class PlayerController : MonoBehaviour
             float verticalVelocity = playerRigidbody.velocity.y;
             playerRigidbody.velocity = new Vector2(horizontalVelocity, verticalVelocity);
         }
-        if (playerRigidbody.velocity.y > 0)
-        {
-            foreach (string layerName in passThroughLayers)
-            {
-                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer(layerName), true);
-            } 
-        }
-        else
-        {
-            foreach (string layerName in passThroughLayers)
-            {
-                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer(layerName), false);
-            }
-        }
+        // if (playerRigidbody.velocity.y > 0)
+        // {
+        //     foreach (string layerName in passThroughLayers)
+        //     {
+        //         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer(layerName), true);
+        //     } 
+        // }
+        // else
+        // {
+        //     foreach (string layerName in passThroughLayers)
+        //     {
+        //         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer(layerName), false);
+        //     }
+        // }
     }
 
     /// <summary>

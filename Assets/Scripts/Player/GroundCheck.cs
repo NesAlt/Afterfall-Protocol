@@ -67,37 +67,36 @@ public class GroundCheck : MonoBehaviour
     /// <returns>bool: Whether or not this collider counts as grounded</returns>
     public bool CheckGrounded()
     {
-        // Ensure the collider is assigned
         if (groundCheckCollider == null)
-        {
             GetCollider();
-        }
 
-        // Find the colliders that overlap this one
-        Collider2D[] overlaps = new Collider2D[5];
-        ContactFilter2D contactFilter = new ContactFilter2D();
-        contactFilter.layerMask = groundLayers;
-        groundCheckCollider.OverlapCollider(contactFilter, overlaps);
+        Vector2 origin = new Vector2(
+            groundCheckCollider.bounds.center.x,
+            groundCheckCollider.bounds.min.y
+        );
 
-        // Check if one of the overlapping colliders is on the "ground" layer
-        foreach (Collider2D overlapCollider in overlaps)
+        float distance = 0.2f;
+
+        RaycastHit2D hit = Physics2D.Raycast(
+            origin,
+            Vector2.down,
+            distance,
+            groundLayers
+        );
+
+        Debug.DrawRay(origin, Vector2.down * distance, hit ? Color.green : Color.red);
+
+        if (hit.collider != null)
         {
-            if (overlapCollider != null)
+            if (!groundedLastCheck && landingEffect)
             {
-                // This line determines if the collider found is on a layer in the ground layer mask
-                // sorry it is so math-heavy
-                int match = contactFilter.layerMask.value & (int)Mathf.Pow(2, overlapCollider.gameObject.layer);
-                if (match > 0)
-                {
-                    if (landingEffect && !groundedLastCheck)
-                    {
-                        Instantiate(landingEffect, transform.position, Quaternion.identity, null);
-                    }
-                    groundedLastCheck = true;
-                    return true;
-                }
+                Instantiate(landingEffect, transform.position, Quaternion.identity);
             }
+
+            groundedLastCheck = true;
+            return true;
         }
+
         groundedLastCheck = false;
         return false;
     }
