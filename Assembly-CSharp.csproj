@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Utility\TimedObjectDestroyer.cs" />
     <Compile Include="Assets\Scripts\Utility\ScreenshotUtility.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HighScoreDisplay.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\Entities\ProjectileTest.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\Utility\GameManager.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HealthDisplay.cs" />
     <Compile Include="Assets\Scripts\Health\Damage.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyMotor.cs" />
     <Compile Include="Assets\Scripts\UI\CursorChanger.cs" />
     <Compile Include="Assets\Scripts\Player\GroundCheck.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\ScoreDisplay.cs" />
