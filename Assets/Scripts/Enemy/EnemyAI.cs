@@ -5,15 +5,14 @@ public class EnemyAI : MonoBehaviour
     public float chaseRange = 6f;
     public float attackRange = 1.2f;
     public float attackCooldown = 1.2f;
+    public Animator animator;
 
     private EnemyMotor motor;
-    private Animator animator;
     private float lastAttack;
 
     void Awake()
     {
         motor = GetComponent<EnemyMotor>();
-        animator = GetComponent<Animator>();
     }
 
     void Update()

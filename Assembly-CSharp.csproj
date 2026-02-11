@@ -82,6 +82,7 @@
     <Compile Include="Assets\Scripts\UI\UIelement\UIelement.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\LivesDisplay.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerAnimator.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemySpriteEvents.cs" />
     <Compile Include="Assets\Scripts\UI\UIPage.cs" />
     <Compile Include="Assets\Scripts\Utility\PlayerPrefsResetter.cs" />
     <Compile Include="Assets\Scripts\Utility\LevelSwitcher.cs" />
