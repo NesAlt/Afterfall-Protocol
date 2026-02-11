@@ -58,7 +58,10 @@ public class Health : MonoBehaviour
     void Update()
     {
         InvincibilityCheck();
-        RespawnCheck();
+        if (!CompareTag("Player"))
+        {
+            RespawnCheck();
+        }
     }
 
     // The time to respawn at
@@ -250,39 +253,21 @@ public class Health : MonoBehaviour
             Instantiate(deathEffect, transform.position, transform.rotation, null);
         }
 
-        if (useLives)
+        if (CompareTag("Player"))
         {
-            currentLives -= 1;
-            if (currentLives > 0)
+            PlayerDeathController deathController =
+                GetComponent<PlayerDeathController>();
+
+            if (deathController != null)
             {
-                if (respawnWaitTime == 0)
-                {
-                    Respawn();
-                }
-                else
-                {
-                    respawnTime = Time.time + respawnWaitTime;
-                } 
+                deathController.HandleDeath();
             }
-            else
-            {
-                if (respawnWaitTime != 0)
-                {
-                    respawnTime = Time.time + respawnWaitTime;
-                }
-                else
-                {
-                    Destroy(this.gameObject);
-                }
-                GameOver();
-            }
-            
         }
         else
         {
-            GameOver();
             Destroy(this.gameObject);
         }
+
         GameManager.UpdateUIElements();
     }
 

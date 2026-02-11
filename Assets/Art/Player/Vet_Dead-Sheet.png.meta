@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a9bee6dcb6958224bb3214a8d1953f66
+guid: c4b8af93ed04d2941aac72ffd3f23df5
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UIButton_0
+      name: Vet_Dead-Sheet_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 50
-        height: 12
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 532f50a331bee71409f58eb54320d374
-      internalID: -2079546602
+      spriteID: d2a46d2833f28984393878b983b7ccfb
+      internalID: -273686507
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UIButton_1
+      name: Vet_Dead-Sheet_1
       rect:
         serializedVersion: 2
-        x: 55
+        x: 64
         y: 0
-        width: 50
-        height: 12
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,8 +145,71 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e9988550c7606ce4c8443dbdcdfe9167
-      internalID: -1152446342
+      spriteID: 58eef4c921876094f907e7fd37abca4a
+      internalID: 1730744443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Vet_Dead-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8536a4425280bf498c25f747a168de3
+      internalID: 1081692119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Vet_Dead-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b00766eb5309fef428e8854e16f26330
+      internalID: 1936321233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Vet_Dead-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 927429913c5c29f46aba727641f30f25
+      internalID: -252893044
       vertices: []
       indices: 
       edges: []
@@ -162,8 +225,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      UIButton_0: -2079546602
-      UIButton_1: -1152446342
+      Vet_Dead-Sheet_0: -273686507
+      Vet_Dead-Sheet_1: 1730744443
+      Vet_Dead-Sheet_2: 1081692119
+      Vet_Dead-Sheet_3: 1936321233
+      Vet_Dead-Sheet_4: -252893044
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
