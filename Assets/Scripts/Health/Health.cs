@@ -33,6 +33,8 @@ public class Health : MonoBehaviour
     public int maximumLives = 5;
     [Tooltip("The amount of time to wait before respawning")]
     public float respawnWaitTime = 3f;
+    [Tooltip("Healthbar event")]
+    public System.Action OnHealthChanged;
 
     /// <summary>
     /// Description:
@@ -137,6 +139,9 @@ public class Health : MonoBehaviour
     {
         transform.position = respawnPosition;
         currentHealth = defaultHealth;
+
+        OnHealthChanged?.Invoke();
+
         GameManager.UpdateUIElements();
     }
 
@@ -164,6 +169,12 @@ public class Health : MonoBehaviour
             timeToBecomeDamagableAgain = Time.time + invincibilityTime;
             isInvincible = true;
             currentHealth -= damageAmount;
+            
+            Debug.Log("Damage on: " + gameObject.name);
+
+            Debug.Log("Health changed to: " + currentHealth);
+
+            OnHealthChanged?.Invoke();
             CheckDeath();
         }
         GameManager.UpdateUIElements();
@@ -185,6 +196,9 @@ public class Health : MonoBehaviour
         {
             currentHealth = maximumHealth;
         }
+
+        OnHealthChanged?.Invoke();
+
         CheckDeath();
         GameManager.UpdateUIElements();
     }
@@ -265,7 +279,15 @@ public class Health : MonoBehaviour
         }
         else
         {
-            Destroy(this.gameObject);
+        Enemy enemy = GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.Die();
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }       
         }
 
         GameManager.UpdateUIElements();

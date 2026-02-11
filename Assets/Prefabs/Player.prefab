@@ -225,7 +225,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: e88cbcfdfc4b4af4eb9dc51ef7825ec6, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -261,9 +261,10 @@ GameObject:
   - component: {fileID: 6483353872723223206}
   - component: {fileID: 4072942725601109035}
   - component: {fileID: 5720608286333297333}
+  - component: {fileID: 8914763840477063684}
   m_Layer: 8
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -375,7 +376,7 @@ MonoBehaviour:
   playerHealth: {fileID: 4072942725601109035}
   firePoint: {fileID: 5647714593090411844}
   movementSpeed: 4
-  jumpPower: 15
+  jumpPower: 10
   allowedJumps: 1
   jumpDuration: 0.2
   jumpEffect: {fileID: 0}
@@ -478,11 +479,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teamId: 0
-  defaultHealth: 2
+  defaultHealth: 5
   maximumHealth: 5
-  currentHealth: 2
-  invincibilityTime: 3
-  useLives: 1
+  currentHealth: 5
+  invincibilityTime: 0.3
+  useLives: 0
   currentLives: 3
   maximumLives: 5
   respawnWaitTime: 3
@@ -503,3 +504,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerController: {fileID: 6483353872723223206}
   animator: {fileID: 6191168116765161496}
+--- !u!114 &8914763840477063684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8609122152325029768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 203b3bea75c064e46bb4db1ef8fd45ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 6191168116765161496}
+  deathDelay: 2
+  gameOverPanel: {fileID: 0}
+  gameOverSceneName: GameOver
