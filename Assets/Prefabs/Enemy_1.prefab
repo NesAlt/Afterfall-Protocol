@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 6865385432463409113, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-  chaseRange: 6
+  chaseRange: 10
   attackRange: 1.2
   attackCooldown: 1.2
   animator: {fileID: 6429687355450108872}
