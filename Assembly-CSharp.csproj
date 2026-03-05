@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\UI\VictoryUIController.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelSelectManager.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSpriteEvents.cs" />
     <Compile Include="Assets\Scripts\UI\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\Utility\TimedObjectDestroyer.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Assets\Scripts\LevelDesign\DoorController.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\UI\BobbingEffect.cs" />
+    <Compile Include="Assets\Scripts\Utility\BackToMenu.cs" />
     <Compile Include="Assets\Scripts\Entities\ProjectileTest.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\Enemy.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Assets\Scripts\UI\UIelement\UIelement.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\LivesDisplay.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\EnemySpawner.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelNode.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerAnimator.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemySpriteEvents.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HealthBarUI.cs" />
