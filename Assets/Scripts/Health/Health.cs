@@ -22,7 +22,7 @@ public class Health : MonoBehaviour
     [Tooltip("The current in game health value")]
     public int currentHealth = 1;
     [Tooltip("Invulnerability duration, in seconds, after taking damage")]
-    public float invincibilityTime = 3f;
+    public float invincibilityTime = .3f;
 
     [Header("Lives settings")]
     [Tooltip("Whether or not to use lives")]

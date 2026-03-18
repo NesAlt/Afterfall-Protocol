@@ -53,6 +53,7 @@ public class Damage : MonoBehaviour
     /// <param name="collision">The Collider2D that set of the function call</param>
     private void OnTriggerStay2D(Collider2D collision)
     {
+        Debug.Log("Triggered with: " + collision.name);
         if (dealDamageOnTriggerStay)
         {
             DealDamage(collision.gameObject);

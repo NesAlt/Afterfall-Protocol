@@ -4,23 +4,71 @@ public class ParallaxEffect : MonoBehaviour
 {
     private float length, startPos;
     public GameObject cam;
-    public float parallaxEffect; // The multiplier (e.g., 0.5f)
+
+    [Range(0f, 1f)]
+    public float parallaxEffect;
+
+    [Header("Clamp Settings")]
+    public bool infiniteHorizontal = true;   // Turn OFF for sky/distant layers
+    public bool stretchToFillCamera = true;   // Auto-scales sprite to cover viewport
+
+    private Camera mainCam;
+    private SpriteRenderer sr;
 
     void Start()
     {
+        mainCam = cam.GetComponent<Camera>();
+        sr = GetComponent<SpriteRenderer>();
+
         startPos = transform.position.x;
-        // This calculates the width of your sprite so it can loop
-        length = GetComponent<SpriteRenderer>().bounds.size.x;
+        length = sr.bounds.size.x;
+
+        if (stretchToFillCamera)
+            AutoScaleToFillCamera();
     }
 
-    void FixedUpdate()
+    void AutoScaleToFillCamera()
     {
-        float dist = (cam.transform.position.x * parallaxEffect);
+        float camHeight = 2f * mainCam.orthographicSize;
+        float camWidth  = camHeight * mainCam.aspect;
+
+        float spriteHeight = sr.sprite.bounds.size.y * transform.localScale.y;
+        float spriteWidth  = sr.sprite.bounds.size.x * transform.localScale.x;
+
+        // Scale so it's always taller than the camera
+        if (spriteHeight < camHeight)
+        {
+            float scaleY = camHeight / sr.sprite.bounds.size.y;
+            transform.localScale = new Vector3(scaleY, scaleY, 1f); // uniform scale
+        }
+
+        // Ensure it's wide enough — at minimum 3x camera width to survive parallax shift
+        float requiredWidth = camWidth * 3f;
+        length = sr.bounds.size.x; // recalculate after scale
+        if (length < requiredWidth)
+        {
+            float scaleX = requiredWidth / sr.sprite.bounds.size.x;
+            transform.localScale = new Vector3(
+                Mathf.Max(transform.localScale.x, scaleX),
+                transform.localScale.y,
+                1f
+            );
+            length = sr.bounds.size.x;
+        }
+    }
+
+    void LateUpdate()   // LateUpdate avoids jitter vs FixedUpdate
+    {
+        float camX = cam.transform.position.x;
+
+        float dist = camX * parallaxEffect;
         transform.position = new Vector3(startPos + dist, transform.position.y, transform.position.z);
 
-        // Infinite Looping Logic (Optional but recommended)
-        float temp = (cam.transform.position.x * (1 - parallaxEffect));
-        if (temp > startPos + length) startPos += length;
-        else if (temp < startPos - length) startPos -= length;
+        if (infiniteHorizontal)
+        {
+            float temp = camX * (1f - parallaxEffect);
+            if      (temp > startPos + length) startPos += length;
+            else if (temp < startPos - length) startPos -= length;
+        }
     }
 }
