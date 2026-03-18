@@ -38,11 +38,17 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Backdrop
+  - name: Backdrop_Sky
     uniqueID: 3209589921
     locked: 0
-  - name: Background
+  - name: Background_Far
     uniqueID: 2400647177
+    locked: 0
+  - name: Background_Closer
+    uniqueID: 862508429
+    locked: 0
+  - name: Background_Main
+    uniqueID: 718611299
     locked: 0
   - name: Building
     uniqueID: 3958744819

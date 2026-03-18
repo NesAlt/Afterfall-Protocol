@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4816946478309298775}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.047, z: 0}
+  m_LocalPosition: {x: 0.116, y: -0.309, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -155,8 +155,8 @@ Transform:
   m_GameObject: {fileID: 8169893660609212036}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.1237, y: -0.1237, z: 0}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6865385432463409113}
@@ -319,7 +319,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.005886078, y: -0.048273206}
+  m_Offset: {x: 0.0835104, y: -0.11134291}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -330,7 +330,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.305336, y: 0.9034536}
+  m_Size: {x: 0.46058464, y: 1.029593}
   m_EdgeRadius: 0
 --- !u!50 &5005933389095562020
 Rigidbody2D:
@@ -479,9 +479,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teamId: 0
-  defaultHealth: 5
-  maximumHealth: 5
-  currentHealth: 5
+  defaultHealth: 100
+  maximumHealth: 100
+  currentHealth: 100
   invincibilityTime: 0.3
   useLives: 0
   currentLives: 3
