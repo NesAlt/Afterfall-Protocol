@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Utility\LevelSelectManager.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSpriteEvents.cs" />
     <Compile Include="Assets\Scripts\UI\MainMenuController.cs" />
+    <Compile Include="Assets\Scripts\Utility\SampleManager.cs" />
     <Compile Include="Assets\Scripts\Utility\TimedObjectDestroyer.cs" />
     <Compile Include="Assets\Scripts\Utility\ScreenshotUtility.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HighScoreDisplay.cs" />
@@ -94,11 +95,11 @@
     <Compile Include="Assets\Scripts\Utility\LevelNode.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerAnimator.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemySpriteEvents.cs" />
+    <Compile Include="Assets\Scripts\Utility\SamplePickup.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HealthBarUI.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\LevelEndPickup.cs" />
     <Compile Include="Assets\Scripts\UI\UIPage.cs" />
     <Compile Include="Assets\Scripts\Utility\PlayerPrefsResetter.cs" />
-    <Compile Include="Assets\Scripts\Utility\LevelSwitcher.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\ArenaController.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HealthDisplay.cs" />

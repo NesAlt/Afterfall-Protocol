@@ -10,6 +10,8 @@ public class LevelSelectManager : MonoBehaviour
     public TMP_Text levelNameText;
     public TMP_Text corruptionText;
 
+    public TMP_Text missionObjectiveText;
+
     private string selectedLevelScene;
 
     void Awake()
@@ -23,11 +25,12 @@ public class LevelSelectManager : MonoBehaviour
             ClosePanel();
         }
     }
-    public void SelectLevel(string levelName, string sceneName, int corruption)
+    public void SelectLevel(string levelName, string sceneName, string missionObjective, int corruption)
     {
         levelInfoPanel.SetActive(true);
 
         levelNameText.text = levelName;
+        missionObjectiveText.text = "Current Objective: "+ missionObjective;
         corruptionText.text = "Corruption: " + corruption;
 
         selectedLevelScene = sceneName;

@@ -1,25 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-/// <summary>
-/// Class to help with switching between scenes
-/// </summary>
-public static class LevelManager
+public enum LevelType
 {
-    /// <summary>
-    /// Description:
-    /// Loads a scene by name
-    /// Input:
-    /// string sceneName
-    /// Return:
-    /// void (no return)
-    /// </summary>
-    /// <param name="sceneName">The name of the scene to be loaded</param>
-    public static void LoadScene(string sceneName)
+    Normal,
+    KillAndCollect
+}
+
+public class LevelManager : MonoBehaviour
+{
+    public static LevelManager Instance;
+
+    public LevelType currentLevelType;
+
+    private void Awake()
     {
-        Time.timeScale = 1;
-        SceneManager.LoadScene(sceneName);
+        Instance = this;
+    }
+
+    public bool IsKillAndCollectLevel()
+    {
+        return currentLevelType == LevelType.KillAndCollect;
     }
 }
