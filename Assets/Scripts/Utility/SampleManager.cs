@@ -1,23 +1,32 @@
 using UnityEngine;
-
 public class SampleManager : MonoBehaviour
 {
     public static SampleManager Instance;
 
-    [Header("Objective")]
     public int currentSamples = 0;
     public int requiredSamples = 10;
+
+    [Header("UI")]
+    [SerializeField] private SampleUI sampleUI;
+
+    [Header("Victory")]
+    [SerializeField] private GameObject victoryPanel;
 
     private void Awake()
     {
         Instance = this;
     }
 
+    private void Start()
+    {
+        UpdateUI();
+    }
+
     public void AddSample(int amount)
     {
         currentSamples += amount;
 
-        Debug.Log($"Samples: {currentSamples}/{requiredSamples}");
+        UpdateUI();
 
         if (currentSamples >= requiredSamples)
         {
@@ -25,13 +34,23 @@ public class SampleManager : MonoBehaviour
         }
     }
 
+    void UpdateUI()
+    {
+        if (sampleUI != null)
+        {
+            sampleUI.UpdateUI(currentSamples, requiredSamples);
+        }
+    }
+
     void CompleteLevel()
     {
         Debug.Log("LEVEL COMPLETE");
 
-        // TODO:
-        // - Open exit door
-        // - Trigger UI
-        // - Notify game manager
+        if (victoryPanel != null)
+        {
+            victoryPanel.SetActive(true);
+        }
+
+        Time.timeScale = 0f; // pause game
     }
 }

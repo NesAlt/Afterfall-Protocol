@@ -95,6 +95,13 @@ public class PlayerController : MonoBehaviour
     [Header("Projectile")]
     [SerializeField] private GameObject projectilePrefab;
     // [SerializeField] private float projectileSpeed = 12f;
+    [Header("Wall Detection")]
+    [SerializeField] private Transform wallCheckLeft;
+    [SerializeField] private Transform wallCheckRight;
+    [SerializeField] private float wallCheckRadius = 0.2f;
+    [SerializeField] private LayerMask wallLayer;
+    private bool isTouchingWallLeft;
+    private bool isTouchingWallRight;
 
     [Header("Input Actions & Controls")]
     [Tooltip("The input action(s) that map to player movement")]
@@ -105,6 +112,11 @@ public class PlayerController : MonoBehaviour
     [Tooltip("The input action(s) that map to attacking")]
     public InputAction attackAction;
 
+    [Header("Wall Jump")]
+    public float wallJumpForce = 10f;
+    public Vector2 wallJumpDirection = new Vector2(1, 1);
+    private float wallJumpLockTime = 0.2f;
+    private float wallJumpLockCounter;
 
     // The number of times this player has jumped since being grounded
     private int timesJumped = 0;
@@ -204,6 +216,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void LateUpdate()
     {
+        if (wallJumpLockCounter > 0)
+            wallJumpLockCounter -= Time.deltaTime;
+
+        isTouchingWallLeft = Physics2D.OverlapCircle(wallCheckLeft.position, wallCheckRadius, wallLayer);
+        isTouchingWallRight = Physics2D.OverlapCircle(wallCheckRight.position, wallCheckRadius, wallLayer);
+        Debug.Log($"WallL: {isTouchingWallLeft}, WallR: {isTouchingWallRight}, Grounded: {grounded}");
         ProcessInput();
         HandleSpriteDirection();
         DetermineState();
@@ -286,17 +304,27 @@ public class PlayerController : MonoBehaviour
     /// <param name="movementForce">The force with which to move the player</param>
     private void MovePlayer(Vector2 movementForce)
     {
-        if (grounded && !jumping)
+        float inputX = moveAction.ReadValue<Vector2>().x;
+
+        bool pushingIntoWall =
+            (isTouchingWallLeft && inputX < 0) ||
+            (isTouchingWallRight && inputX > 0);
+
+        if ((isTouchingWallLeft || isTouchingWallRight) && !grounded && playerRigidbody.velocity.y <= 0 && wallJumpLockCounter <= 0)
         {
-            float horizontalVelocity = movementForce.x;
-            float verticalVelocity = 0;
-            playerRigidbody.velocity = new Vector2(horizontalVelocity, verticalVelocity);
+            float horizontal = inputX * movementSpeed;
+
+            if (isTouchingWallLeft && inputX < 0)
+                horizontal = 0;
+
+            if (isTouchingWallRight && inputX > 0)
+                horizontal = 0;
+
+            playerRigidbody.velocity = new Vector2(horizontal, -2f);
         }
         else
         {
-            float horizontalVelocity = movementForce.x;
-            float verticalVelocity = playerRigidbody.velocity.y;
-            playerRigidbody.velocity = new Vector2(horizontalVelocity, verticalVelocity);
+            playerRigidbody.velocity = new Vector2(inputX * movementSpeed, playerRigidbody.velocity.y);
         }
         // if (playerRigidbody.velocity.y > 0)
         // {
@@ -322,15 +350,36 @@ public class PlayerController : MonoBehaviour
     /// Return:
     /// void (no return)
     /// </summary>
-    private void HandleJumpInput()
+private void HandleJumpInput()
     {
         if (isAttacking || state == PlayerState.Dead)
             return;
 
         if (jumpAction.triggered)
         {
+            if (isTouchingWallLeft || isTouchingWallRight)
+            {
+                WallJump();
+                return;
+            }
+
             StartCoroutine("Jump", 1.0f);
         }
+    }
+    private void WallJump()
+    {
+        float direction = 0;
+        wallJumpLockCounter = wallJumpLockTime;
+
+        if (isTouchingWallLeft)
+            direction = 1;  
+        else if (isTouchingWallRight)
+            direction = -1; 
+
+        Vector2 force = new Vector2(direction * wallJumpDirection.x, wallJumpDirection.y);
+
+        playerRigidbody.velocity = Vector2.zero;
+        playerRigidbody.AddForce(force * wallJumpForce, ForceMode2D.Impulse);
     }
 
     /// <summary>

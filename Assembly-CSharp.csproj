@@ -67,8 +67,8 @@
     <Compile Include="Assets\Scripts\UI\VictoryUIController.cs" />
     <Compile Include="Assets\Scripts\Utility\LevelSelectManager.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSpriteEvents.cs" />
-    <Compile Include="Assets\Scripts\UI\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\Utility\SampleManager.cs" />
+    <Compile Include="Assets\Scripts\UI\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\Utility\TimedObjectDestroyer.cs" />
     <Compile Include="Assets\Scripts\Utility\ScreenshotUtility.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HighScoreDisplay.cs" />
@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\UI\QuitGameButton.cs" />
     <Compile Include="Assets\Scripts\Health\Health.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\UIelement.cs" />
+    <Compile Include="Assets\Scripts\UI\UIelement\SampleUI.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\LivesDisplay.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Utility\LevelNode.cs" />

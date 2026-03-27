@@ -40,7 +40,13 @@ public class Enemy : MonoBehaviour
 
         if (Random.value <= dropChance)
         {
-            Instantiate(samplePrefab, transform.position, Quaternion.identity);
+        Vector3 offset = new Vector3(
+            Random.Range(-0.3f, 0.3f),
+            Random.Range(0.8f, 1.2f),
+            0f
+        );
+
+        Instantiate(samplePrefab, transform.position + offset, Quaternion.identity);        
         }
     }
 }

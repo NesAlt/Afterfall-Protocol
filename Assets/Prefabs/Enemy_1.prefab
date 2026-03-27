@@ -184,6 +184,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ef35d69af504bc43841853b030f4234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  samplePrefab: {fileID: 8118786832316240106, guid: 416a4f08ee3432841adb82e2b0320328, type: 3}
+  dropChance: 0.5
 --- !u!1 &3177565929878482606
 GameObject:
   m_ObjectHideFlags: 0
