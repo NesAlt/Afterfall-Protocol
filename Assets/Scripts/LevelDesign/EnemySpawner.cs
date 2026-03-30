@@ -6,7 +6,8 @@ public class EnemySpawner : MonoBehaviour
     [Header("Spawn Settings")]
     public GameObject enemyPrefab;
     public GameObject finalEnemyPrefab;
-
+    [Header("Boss Settings")]
+    public GameObject bossPrefab;
     public Transform[] spawnPoints;
     public float spawnInterval = 2f;
     public int maxAliveEnemies = 3;
@@ -57,7 +58,14 @@ public class EnemySpawner : MonoBehaviour
         StopSpawning();
         SpawnEnemy(finalEnemyPrefab, true);
     }
+    public void SpawnBoss()
+    {
+        Transform point = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        GameObject bossObj = Instantiate(bossPrefab, point.position, Quaternion.identity);
 
+        Boss boss = bossObj.GetComponent<Boss>();
+        boss.Initialize(arena);
+    }
     public void NotifyEnemyDeath()
     {
         aliveEnemies--;

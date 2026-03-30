@@ -2,8 +2,9 @@ using UnityEngine;
 
 public enum LevelType
 {
-    Normal,
-    KillAndCollect
+    AreaClear,
+    KillAndCollect,
+    Boss
 }
 
 public class LevelManager : MonoBehaviour

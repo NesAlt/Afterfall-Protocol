@@ -31,12 +31,24 @@ public class ArenaController : MonoBehaviour
         foreach (DoorController door in doors)
             door.CloseDoor();
 
-        spawner.StartSpawning(this);
+        if (LevelManager.Instance.currentLevelType == LevelType.Boss)
+            {
+                spawner.SpawnBoss();
+            }
+            else
+            {
+                spawner.StartSpawning(this);
+            }
     }
 
     public void RegisterKill(bool isFinalEnemy)
     {
         if (arenaCleared) return;
+
+        if (LevelManager.Instance != null && LevelManager.Instance.IsKillAndCollectLevel())
+        {
+            return;
+        }
 
         if (isFinalEnemy)
         {
@@ -58,6 +70,17 @@ public class ArenaController : MonoBehaviour
     }
     void EndArena()
     {
+        foreach (DoorController door in doors)
+            door.OpenDoor();
+
+        spawner.StopSpawning();
+    }
+    public void ForceEndArena()
+    {
+        if (arenaCleared) return;
+
+        arenaCleared = true;
+
         foreach (DoorController door in doors)
             door.OpenDoor();
 

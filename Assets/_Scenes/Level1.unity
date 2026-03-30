@@ -122,6 +122,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &173880258
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 173880260}
+  - component: {fileID: 173880259}
+  m_Layer: 0
+  m_Name: LevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &173880259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173880258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb87695840d9c0f4fba19fda10e5947d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentLevelType: 0
+--- !u!4 &173880260
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173880258}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 17.281569, y: 7.6022387, z: 0.045517482}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &236420311
 GameObject:
   m_ObjectHideFlags: 0
@@ -744,6 +789,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 2863723192822286163, guid: ebcf433e09075ad4d9efb687c446f340, type: 3}
   finalEnemyPrefab: {fileID: 2302625449732007716, guid: a56e45a42f1b7c54c8873f714665de94, type: 3}
+  bossPrefab: {fileID: 0}
   spawnPoints:
   - {fileID: 236420312}
   spawnInterval: 4
@@ -1075,6 +1121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 2863723192822286163, guid: ebcf433e09075ad4d9efb687c446f340, type: 3}
   finalEnemyPrefab: {fileID: 2302625449732007716, guid: a56e45a42f1b7c54c8873f714665de94, type: 3}
+  bossPrefab: {fileID: 0}
   spawnPoints:
   - {fileID: 2031090823}
   spawnInterval: 4
@@ -1274,17 +1321,91 @@ Tilemap:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956759399}
   m_Enabled: 1
-  m_Tiles: {}
+  m_Tiles:
+  - first: {x: 23, y: -1, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 0
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 24, y: -1, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 0
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 23, y: 0, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 0
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 24, y: 0, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 0
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 23, y: 1, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 0
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
-  m_TileAssetArray: []
-  m_TileSpriteArray: []
-  m_TileMatrixArray: []
-  m_TileColorArray: []
+  m_TileAssetArray:
+  - m_RefCount: 5
+    m_Data: {fileID: 11400000, guid: 29d84364376c51d4b8a1ef6e40aa8a45, type: 2}
+  m_TileSpriteArray:
+  - m_RefCount: 5
+    m_Data: {fileID: -51497583, guid: 65721689125a42f448b5321116344391, type: 3}
+  m_TileMatrixArray:
+  - m_RefCount: 5
+    m_Data:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+  m_TileColorArray:
+  - m_RefCount: 5
+    m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: 0, y: 0, z: 0}
-  m_Size: {x: 0, y: 0, z: 1}
+  m_Origin: {x: 0, y: -1, z: 0}
+  m_Size: {x: 25, y: 3, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -13866,7 +13987,7 @@ PrefabInstance:
     - target: {fileID: 626074332911291271, guid: fc788ff7b23713c43a641f56e2892ace, type: 3}
       propertyPath: victoryUI
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1616052561}
     - target: {fileID: 5219789860631718699, guid: fc788ff7b23713c43a641f56e2892ace, type: 3}
       propertyPath: m_LocalPosition.x
       value: 82.53
@@ -13924,30 +14045,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5158079548482450568, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5158079548482450568, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5158079548482450568, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6865385432463409113, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 6865385432463409113, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 6865385432463409113, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.25
-      objectReference: {fileID: 0}
     - target: {fileID: 6865385432463409113, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.81
@@ -13988,45 +14085,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8304647346425003146, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.148
-      objectReference: {fileID: 0}
     - target: {fileID: 8609122152325029768, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 8612354787370167489, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_Size.x
-      value: 0.29741025
-      objectReference: {fileID: 0}
-    - target: {fileID: 8612354787370167489, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_Size.y
-      value: 0.120000005
-      objectReference: {fileID: 0}
-    - target: {fileID: 8612354787370167489, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_Offset.x
-      value: -0.021415584
-      objectReference: {fileID: 0}
-    - target: {fileID: 8662162811040846947, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_Size.x
-      value: 0.27441788
-      objectReference: {fileID: 0}
-    - target: {fileID: 8662162811040846947, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_Size.y
-      value: 0.7291886
-      objectReference: {fileID: 0}
-    - target: {fileID: 8662162811040846947, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_Offset.x
-      value: 0.10466587
-      objectReference: {fileID: 0}
-    - target: {fileID: 8662162811040846947, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: m_Offset.y
-      value: -0.08807221
-      objectReference: {fileID: 0}
-    - target: {fileID: 8914763840477063684, guid: db3002a1411d48340bb487df5661c1e0, type: 3}
-      propertyPath: gameOverPanel
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14047,3 +14108,4 @@ SceneRoots:
   - {fileID: 299588943}
   - {fileID: 6146432122608402226}
   - {fileID: 1616052565}
+  - {fileID: 173880260}

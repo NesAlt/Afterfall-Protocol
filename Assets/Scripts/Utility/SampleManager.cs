@@ -46,6 +46,12 @@ public class SampleManager : MonoBehaviour
     {
         Debug.Log("LEVEL COMPLETE");
 
+         ArenaController arena = FindObjectOfType<ArenaController>();
+        if (arena != null)
+        {
+            arena.ForceEndArena();
+        }
+
         if (victoryPanel != null)
         {
             victoryPanel.SetActive(true);

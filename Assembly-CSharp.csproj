@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\UI\VictoryUIController.cs" />
     <Compile Include="Assets\Scripts\Utility\LevelSelectManager.cs" />
+    <Compile Include="Assets\Scripts\Enemy\Boss.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSpriteEvents.cs" />
     <Compile Include="Assets\Scripts\Utility\SampleManager.cs" />
     <Compile Include="Assets\Scripts\UI\MainMenuController.cs" />
