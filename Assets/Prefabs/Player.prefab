@@ -440,7 +440,7 @@ MonoBehaviour:
   playerHealth: {fileID: 4072942725601109035}
   firePoint: {fileID: 5647714593090411844}
   movementSpeed: 4
-  jumpPower: 15
+  jumpPower: 10
   allowedJumps: 1
   jumpDuration: 0.2
   jumpEffect: {fileID: 0}
@@ -537,6 +537,7 @@ MonoBehaviour:
     m_Flags: 0
   wallJumpForce: 15
   wallJumpDirection: {x: 1, y: 1}
+  buildingJumpMultiplier: 1.5
   state: 0
 --- !u!114 &4072942725601109035
 MonoBehaviour:

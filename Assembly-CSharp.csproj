@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\Enemy\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\UI\BobbingEffect.cs" />
     <Compile Include="Assets\Scripts\Utility\BackToMenu.cs" />
+    <Compile Include="Assets\Scripts\LevelDesign\BuildingZone.cs" />
     <Compile Include="Assets\Scripts\Entities\ProjectileTest.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\Enemy.cs" />

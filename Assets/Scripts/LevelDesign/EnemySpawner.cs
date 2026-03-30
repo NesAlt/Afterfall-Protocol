@@ -11,6 +11,9 @@ public class EnemySpawner : MonoBehaviour
     public Transform[] spawnPoints;
     public float spawnInterval = 2f;
     public int maxAliveEnemies = 3;
+    [Header("Spawn Limit")]
+    public int maxTotalEnemies = 20;
+    private int totalSpawned = 0;
 
     private ArenaController arena;
     private bool spawningActive = false;
@@ -33,6 +36,14 @@ public class EnemySpawner : MonoBehaviour
     {
         while (spawningActive)
         {
+            if (LevelManager.Instance != null && 
+                LevelManager.Instance.IsKillAndCollectLevel() &&
+                totalSpawned >= maxTotalEnemies)
+            {
+                spawningActive = false;
+                yield break;
+            }
+
             if (aliveEnemies < maxAliveEnemies)
             {
                 SpawnEnemy(enemyPrefab, false);
@@ -51,6 +62,7 @@ public class EnemySpawner : MonoBehaviour
         enemyScript.Initialize(arena, this, isFinal,arena.player);
 
         aliveEnemies++;
+        totalSpawned++;
     }
 
     public void SpawnFinalEnemy()

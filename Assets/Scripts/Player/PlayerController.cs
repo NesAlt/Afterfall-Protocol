@@ -123,6 +123,9 @@ public class PlayerController : MonoBehaviour
     // Whether the player is in the middle of a jump right now
     private bool jumping = false;
 
+    private bool isInsideBuilding = false;
+    [SerializeField] private float buildingJumpMultiplier = 1.5f;
+
     #region Player State Variables
     /// <summary>
     /// Enum used for categorizing the player's state
@@ -293,6 +296,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void SetInsideBuilding(bool value)
+    {
+        if (!grounded) return;
+
+        isInsideBuilding = value;
+    }
+
     /// <summary>
     /// Description:
     /// Moves the player with a specified force
@@ -363,7 +373,8 @@ private void HandleJumpInput()
                 return;
             }
 
-            StartCoroutine("Jump", 1.0f);
+            float multiplier = isInsideBuilding ? buildingJumpMultiplier : 1.0f;
+            StartCoroutine("Jump", multiplier);        
         }
     }
     private void WallJump()
