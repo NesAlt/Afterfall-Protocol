@@ -280,14 +280,22 @@ public class Health : MonoBehaviour
         else
         {
         Enemy enemy = GetComponent<Enemy>();
-            if (enemy != null)
+        if (enemy != null)
+        {
+            enemy.Die();
+        }
+        else
+        {
+            Boss boss = GetComponent<Boss>();
+            if (boss != null)
             {
-                enemy.Die();
+                boss.OnBossDeath();
             }
             else
             {
                 Destroy(this.gameObject);
-            }       
+            }
+        }   
         }
 
         GameManager.UpdateUIElements();
