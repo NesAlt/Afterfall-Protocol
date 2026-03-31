@@ -98,6 +98,7 @@
     <Compile Include="Assets\Scripts\Utility\LevelNode.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerAnimator.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemySpriteEvents.cs" />
+    <Compile Include="Assets\Scripts\LevelDesign\SpawnPoint.cs" />
     <Compile Include="Assets\Scripts\Utility\SamplePickup.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HealthBarUI.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\LevelEndPickup.cs" />
@@ -108,9 +109,11 @@
     <Compile Include="Assets\Scripts\UI\UIelement\HealthDisplay.cs" />
     <Compile Include="Assets\Scripts\Health\Damage.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyMotor.cs" />
+    <Compile Include="Assets\Scripts\UI\RadarController.cs" />
     <Compile Include="Assets\Scripts\UI\CursorChanger.cs" />
     <Compile Include="Assets\Scripts\Player\GroundCheck.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\ScoreDisplay.cs" />
+    <Compile Include="Assets\Scripts\UI\RadarPing.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
