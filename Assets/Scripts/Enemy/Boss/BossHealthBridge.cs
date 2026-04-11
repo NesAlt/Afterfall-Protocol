@@ -3,55 +3,53 @@ using UnityEngine;
 /// <summary>
 /// BossHealthBridge
 ///
-/// Sits on the boss GameObject alongside Health.cs and a Boss subclass.
+/// Sits on the BossRoot alongside InfectionBlobBoss.
 ///
-/// Problem it solves:
-///   Health.cs calls Enemy.Die() or Destroy() on death. Bosses don't have
-///   an Enemy component, so without this bridge the boss would simply be
-///   destroyed without triggering OnBossDeath() — meaning the arena would
-///   never open its doors.
+/// Health lives on the BodyHitbox child, not on the root, so this bridge
+/// takes a direct serialized reference to that child's Health component
+/// rather than using GetComponent on itself.
 ///
-/// How it works:
-///   Hooks into Health.OnHealthChanged and calls the Boss's OnBossDeath()
-///   the first time currentHealth drops to 0.
+/// When Health reaches 0, it calls Die() which looks for an Enemy component —
+/// the boss has none, so it would just Destroy the BodyHitbox child.
+/// This bridge intercepts OnHealthChanged first and calls OnBossDeath()
+/// cleanly before that happens.
 /// </summary>
-[RequireComponent(typeof(Health))]
 public class BossHealthBridge : MonoBehaviour
 {
-    private Health health;
-    private Boss   boss;
-    private bool   deathTriggered = false;
+    [Tooltip("Drag the BodyHitbox child's Health component here.")]
+    [SerializeField] private Health bodyHitboxHealth;
+
+    private Boss boss;
+    private bool deathTriggered = false;
 
     private void Awake()
     {
-        health = GetComponent<Health>();
-        boss   = GetComponent<Boss>();
-
-        if (health == null)
-            Debug.LogError("BossHealthBridge: No Health component found on " + gameObject.name);
+        boss = GetComponent<Boss>();
 
         if (boss == null)
-            Debug.LogError("BossHealthBridge: No Boss component found on " + gameObject.name);
+            Debug.LogError("BossHealthBridge: No Boss component on " + gameObject.name, this);
+
+        if (bodyHitboxHealth == null)
+            Debug.LogError("BossHealthBridge: bodyHitboxHealth not assigned on " + gameObject.name, this);
     }
 
     private void OnEnable()
     {
-        if (health != null)
-            health.OnHealthChanged += OnHealthChanged;
+        if (bodyHitboxHealth != null)
+            bodyHitboxHealth.OnHealthChanged += OnHealthChanged;
     }
 
     private void OnDisable()
     {
-        if (health != null)
-            health.OnHealthChanged -= OnHealthChanged;
+        if (bodyHitboxHealth != null)
+            bodyHitboxHealth.OnHealthChanged -= OnHealthChanged;
     }
 
     private void OnHealthChanged()
     {
-        if (deathTriggered) return;
-        if (health == null || boss == null) return;
+        if (deathTriggered || bodyHitboxHealth == null || boss == null) return;
 
-        if (health.currentHealth <= 0)
+        if (bodyHitboxHealth.currentHealth <= 0)
         {
             deathTriggered = true;
             boss.OnBossDeath();

@@ -12,7 +12,6 @@ public class DoorController : MonoBehaviour
         doorCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // Ensure door starts OPEN (invisible + no collision)
         OpenDoor();
     }
 

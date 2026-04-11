@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BuildingZone : MonoBehaviour
@@ -9,6 +10,7 @@ public class BuildingZone : MonoBehaviour
             var player = other.GetComponent<PlayerController>();
             if (player != null)
                 player.SetInsideBuilding(true);
+                Debug.Log("Inside zone");
         }
     }
 
