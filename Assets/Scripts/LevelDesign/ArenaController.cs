@@ -31,7 +31,7 @@ public class ArenaController : MonoBehaviour
         foreach (DoorController door in doors)
             door.CloseDoor();
 
-        if (LevelManager.Instance.currentLevelType == LevelType.Boss)
+        if (LevelManager.Instance.CurrentLevelType == LevelType.Boss)
             {
                 spawner.SpawnBoss(this);
             }
@@ -87,7 +87,7 @@ public class ArenaController : MonoBehaviour
         spawner.StopSpawning();
 
         if (LevelManager.Instance != null &&
-            LevelManager.Instance.currentLevelType == LevelType.Boss)
+            LevelManager.Instance.CurrentLevelType == LevelType.Boss)
         {
             if (VictoryUIController.Instance != null)
                 VictoryUIController.Instance.ShowVictory();

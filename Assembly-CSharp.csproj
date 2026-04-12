@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Utility\ScreenshotUtility.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HighScoreDisplay.cs" />
     <Compile Include="Assets\Scripts\Player\FallDamage.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelSetup\RunLevelState.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\DoorController.cs" />
     <Compile Include="Assets\Scripts\Utility\ParallaxEffect.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyAI.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectile.cs" />
     <Compile Include="Assets\Scripts\Utility\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelSetup\WorldRegion.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerDeathController.cs" />
     <Compile Include="Assets\Scripts\UI\HighlightFix.cs" />
     <Compile Include="Assets\Scripts\UI\QuitGameButton.cs" />
@@ -101,17 +103,20 @@
     <Compile Include="Assets\Scripts\Player\PlayerAnimator.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemySpriteEvents.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\SpawnPoint.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelSetup\RunManager.cs" />
     <Compile Include="Assets\Scripts\Utility\SamplePickup.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HealthBarUI.cs" />
     <Compile Include="Assets\Scripts\Utility\PauseManager.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\LevelEndPickup.cs" />
     <Compile Include="Assets\Scripts\UI\UIPage.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelSetup\BuffSystem.cs" />
     <Compile Include="Assets\Scripts\Utility\PlayerPrefsResetter.cs" />
     <Compile Include="Assets\Scripts\Enemy\Boss\BlobBoss.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\ArenaController.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HealthDisplay.cs" />
     <Compile Include="Assets\Scripts\Health\Damage.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelSetup\LevelData.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyMotor.cs" />
     <Compile Include="Assets\Scripts\UI\RadarController.cs" />
     <Compile Include="Assets\Scripts\UI\CursorChanger.cs" />
