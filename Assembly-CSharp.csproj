@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\Utility\TimedObjectDestroyer.cs" />
     <Compile Include="Assets\Scripts\Utility\ScreenshotUtility.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HighScoreDisplay.cs" />
+    <Compile Include="Assets\Scripts\Player\FallDamage.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\DoorController.cs" />
     <Compile Include="Assets\Scripts\Utility\ParallaxEffect.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyAI.cs" />

@@ -2,12 +2,13 @@ using UnityEngine;
 
 public abstract class Boss : MonoBehaviour
 {
-    private float stateTimer;
     protected ArenaController arena;
+    protected Transform playerTransform;
 
-    public virtual void Initialize(ArenaController arenaController)
+    public virtual void Initialize(ArenaController arenaController, Transform player)
     {
-        arena = arenaController;
+        arena           = arenaController;
+        playerTransform = player;
     }
 
     public abstract void OnBossDeath();

@@ -279,7 +279,7 @@ MonoBehaviour:
   groundLayers:
     serializedVersion: 2
     m_Bits: 2240
-  groundCheckCollider: {fileID: 0}
+  groundCheckCollider: {fileID: 771977702800239943}
   landingEffect: {fileID: 0}
   groundedLastCheck: 0
 --- !u!1 &4322421460355746201
@@ -413,7 +413,7 @@ GameObject:
   - component: {fileID: 1131887914045832169}
   - component: {fileID: 8906389271819553182}
   - component: {fileID: 8036440350238939329}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: BodyHitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

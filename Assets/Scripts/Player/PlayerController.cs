@@ -113,6 +113,8 @@ public class PlayerController : MonoBehaviour
     public InputAction attackAction;
 
     [Header("Wall Jump")]
+
+    [SerializeField] private float maxFallSpeed = 20f;
     public float wallJumpForce = 10f;
     public Vector2 wallJumpDirection = new Vector2(1, 1);
     private float wallJumpLockTime = 0.2f;
@@ -217,6 +219,14 @@ public class PlayerController : MonoBehaviour
     /// Return: 
     /// void (no return)
     /// </summary>
+    private void FixedUpdate()
+    {
+        // Cap fall speed here, in the physics step, so the limit
+        // is enforced before the engine resolves collisions
+        if (playerRigidbody.velocity.y < -maxFallSpeed)
+            playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, -maxFallSpeed);
+    }
+
     private void LateUpdate()
     {
         if (wallJumpLockCounter > 0)
@@ -388,6 +398,7 @@ private void HandleJumpInput()
             direction = -1; 
 
         Vector2 force = new Vector2(direction * wallJumpDirection.x, wallJumpDirection.y);
+        GetComponent<FallDamage>().NotifyWallJump();
 
         playerRigidbody.velocity = Vector2.zero;
         playerRigidbody.AddForce(force * wallJumpForce, ForceMode2D.Impulse);

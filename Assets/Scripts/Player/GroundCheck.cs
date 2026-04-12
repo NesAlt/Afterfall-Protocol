@@ -70,12 +70,15 @@ public class GroundCheck : MonoBehaviour
         if (groundCheckCollider == null)
             GetCollider();
 
+        // Fire from slightly ABOVE the collider bottom so the ray isn't already
+        // inside the platform when the rigidbody sinks on a fast landing
+        const float skinWidth = 0.05f;
         Vector2 origin = new Vector2(
             groundCheckCollider.bounds.center.x,
-            groundCheckCollider.bounds.min.y
+            groundCheckCollider.bounds.min.y + skinWidth
         );
 
-        float distance = 0.2f;
+        float distance = 0.2f + skinWidth;
 
         RaycastHit2D hit = Physics2D.Raycast(
             origin,

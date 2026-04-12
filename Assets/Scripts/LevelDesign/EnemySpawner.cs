@@ -135,13 +135,15 @@ public class EnemySpawner : MonoBehaviour
         SpawnPoint point = spawnPoints[Random.Range(0, spawnPoints.Length)];
         SpawnEnemyAtPoint(finalEnemyPrefab, true, point);
     }
-    public void SpawnBoss()
+    public void SpawnBoss(ArenaController arenaController)
     {
+        arena = arenaController;
+
         SpawnPoint point = spawnPoints[Random.Range(0, spawnPoints.Length)];
         GameObject bossObj = Instantiate(bossPrefab, point.transform.position, Quaternion.identity);
 
         Boss boss = bossObj.GetComponent<Boss>();
-        boss.Initialize(arena);
+        boss.Initialize(arena, arena.player);
     }
     public void NotifyEnemyDeath(SpawnPoint point)
     {

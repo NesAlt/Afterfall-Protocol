@@ -7,8 +7,26 @@ using UnityEditor;
 
 public class VictoryUIController : MonoBehaviour
 {
+    public static VictoryUIController Instance;
+
+    [Header("Panel")]
     public GameObject victoryPanel;
-    public string menuSceneName = "MainMenu";
+
+    [Header("Buttons")]
+    [Tooltip("Shown on non-boss levels.")]
+    public GameObject mainMenuButton;
+
+    [Tooltip("Shown on the boss level — leads to credits.")]
+    public GameObject creditsButton;
+
+    [Header("Scene Names")]
+    public string menuSceneName   = "MainMenu";
+    public string creditsSceneName = "Credits";
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -17,15 +35,17 @@ public class VictoryUIController : MonoBehaviour
 
     public void ShowVictory()
     {
-        // Debug.Log("ShowVictory called");
-
         victoryPanel.SetActive(true);
 
-        // Debug.Log("ActiveSelf: " + victoryPanel.activeSelf);
-        // Debug.Log("ActiveInHierarchy: " + victoryPanel.activeInHierarchy);
+        bool isBossLevel = LevelManager.Instance != null &&
+                           LevelManager.Instance.currentLevelType == LevelType.Boss;
+
+        if (mainMenuButton != null) mainMenuButton.SetActive(!isBossLevel);
+        if (creditsButton  != null) creditsButton.SetActive(isBossLevel);
 
         Time.timeScale = 0f;
     }
+
     public void ReturnToMenu()
     {
         Time.timeScale = 1f;
@@ -35,5 +55,11 @@ public class VictoryUIController : MonoBehaviour
 #else
         SceneManager.LoadScene(menuSceneName);
 #endif
+    }
+
+    public void GoToCredits()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(creditsSceneName);
     }
 }

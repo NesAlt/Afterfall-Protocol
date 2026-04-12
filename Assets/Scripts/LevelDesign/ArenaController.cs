@@ -33,7 +33,7 @@ public class ArenaController : MonoBehaviour
 
         if (LevelManager.Instance.currentLevelType == LevelType.Boss)
             {
-                spawner.SpawnBoss();
+                spawner.SpawnBoss(this);
             }
             else
             {
@@ -85,5 +85,12 @@ public class ArenaController : MonoBehaviour
             door.OpenDoor();
 
         spawner.StopSpawning();
+
+        if (LevelManager.Instance != null &&
+            LevelManager.Instance.currentLevelType == LevelType.Boss)
+        {
+            if (VictoryUIController.Instance != null)
+                VictoryUIController.Instance.ShowVictory();
+        }
     }
 }
