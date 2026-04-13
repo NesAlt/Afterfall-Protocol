@@ -1,9 +1,11 @@
+// SampleManager.cs
 using UnityEngine;
+
 public class SampleManager : MonoBehaviour
 {
     public static SampleManager Instance;
 
-    public int currentSamples = 0;
+    public int currentSamples  = 0;
     public int requiredSamples = 10;
 
     [Header("UI")]
@@ -12,6 +14,7 @@ public class SampleManager : MonoBehaviour
     [Header("Victory")]
     [SerializeField] private GameObject victoryPanel;
 
+    // ─────────────────────────────────────────────────────────────────────────
     private void Awake()
     {
         Instance = this;
@@ -22,41 +25,39 @@ public class SampleManager : MonoBehaviour
         UpdateUI();
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
     public void AddSample(int amount)
     {
         currentSamples += amount;
-
         UpdateUI();
 
         if (currentSamples >= requiredSamples)
-        {
             CompleteLevel();
-        }
     }
 
     void UpdateUI()
     {
-        if (sampleUI != null)
-        {
-            sampleUI.UpdateUI(currentSamples, requiredSamples);
-        }
+        sampleUI?.UpdateUI(currentSamples, requiredSamples);
     }
 
     void CompleteLevel()
     {
-        Debug.Log("LEVEL COMPLETE");
+        Debug.Log("[SampleManager] Sample quota reached — level complete.");
 
-         ArenaController arena = FindObjectOfType<ArenaController>();
-        if (arena != null)
-        {
-            arena.ForceEndArena();
-        }
-
+        // 1. Show victory panel
         if (victoryPanel != null)
-        {
             victoryPanel.SetActive(true);
-        }
 
-        Time.timeScale = 0f; // pause game
+        if (VictoryUIController.Instance != null)
+            VictoryUIController.Instance.ShowVictory();
+
+        // 2. Tell the arena to open doors / stop spawning
+        //    ArenaController.ForceEndArena() will then call
+        //    LevelManager.NotifyLevelCleared() to update the run system
+        ArenaController arena = FindObjectOfType<ArenaController>();
+        if (arena != null)
+            arena.ForceEndArena();
+
+        Time.timeScale = 0f;
     }
 }

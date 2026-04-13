@@ -1,3 +1,5 @@
+// EnemySpawner.cs
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,34 +9,51 @@ public class EnemySpawner : MonoBehaviour
     [Header("Spawn Settings")]
     public GameObject enemyPrefab;
     public GameObject finalEnemyPrefab;
+
     [Header("Boss Settings")]
+    [Tooltip("Only used when LevelManager reports this is a Boss level.")]
     public GameObject bossPrefab;
+
     public SpawnPoint[] spawnPoints;
-    public float spawnInterval = 2f;
-    public int maxAliveEnemies = 3;
+    public float spawnInterval  = 2f;
+    public int maxAliveEnemies  = 3;
+
     [Header("Spawn Limit")]
-    public int maxTotalEnemies = 20;
-    private int totalSpawned = 0;
+    public int maxTotalEnemies  = 20;
+    private int totalSpawned    = 0;
+
     [Header("Per Point Control")]
     public int maxAlivePerPoint = 2;
+
     [Header("Anti-Camping")]
     public float minDistanceFromPlayer = 5f;
 
     private ArenaController arena;
     private bool spawningActive = false;
-    private int aliveEnemies = 0;
+    private int  aliveEnemies   = 0;
 
+    // ═════════════════════════════════════════════════════════════════════════
     public void StartSpawning(ArenaController arenaController)
     {
-        arena = arenaController;
-        spawningActive = true;
-        totalSpawned = 0;
-        aliveEnemies = 0;
+        // Safety: if enemyPrefab isn't assigned this spawner can't function.
+        // This usually means you're on a Boss scene — check your Inspector and
+        // make sure editorFallbackLevelType on LevelManager is set to Boss.
+        if (enemyPrefab == null)
+        {
+            Debug.LogError("[EnemySpawner] enemyPrefab is not assigned. " +
+                           "If this is a Boss scene, set LevelManager's Editor Fallback Level Type to 'Boss' " +
+                           "so ArenaController routes to SpawnBoss() instead.");
+            return;
+        }
+
+        arena           = arenaController;
+        spawningActive  = true;
+        totalSpawned    = 0;
+        aliveEnemies    = 0;
 
         foreach (SpawnPoint point in spawnPoints)
-        {
             point.aliveCount = 0;
-        }
+
         StartCoroutine(SpawnRoutine());
     }
 
@@ -44,11 +63,21 @@ public class EnemySpawner : MonoBehaviour
         StopAllCoroutines();
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
     IEnumerator SpawnRoutine()
     {
+        // Apply corruption-based spawn cap increase once at start
+        int scaledMax = maxAliveEnemies;
+        if (LevelManager.Instance != null)
+        {
+            float mult = LevelManager.Instance.GetEnemySpawnMultiplier();
+            scaledMax  = Mathf.RoundToInt(maxAliveEnemies * mult);
+        }
+
         while (spawningActive)
         {
-            if (LevelManager.Instance != null && 
+            // KillAndCollect: stop generating new enemies once the cap is hit
+            if (LevelManager.Instance != null &&
                 LevelManager.Instance.IsKillAndCollectLevel() &&
                 totalSpawned >= maxTotalEnemies)
             {
@@ -56,32 +85,36 @@ public class EnemySpawner : MonoBehaviour
                 yield break;
             }
 
-            if (aliveEnemies < maxAliveEnemies)
+            if (aliveEnemies < scaledMax)
             {
                 SpawnPoint point = GetNextSpawnPoint();
-
                 if (point != null)
-                {
                     SpawnEnemyAtPoint(enemyPrefab, false, point);
-                }            
             }
 
             yield return new WaitForSeconds(spawnInterval);
         }
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
     void SpawnEnemyAtPoint(GameObject prefab, bool isFinal, SpawnPoint point)
     {
-        GameObject enemy = Instantiate(prefab, point.transform.position, Quaternion.identity);
+        if (prefab == null)
+        {
+            Debug.LogError($"[EnemySpawner] Tried to spawn a null prefab at {point.name}. Skipping.");
+            return;
+        }
 
-        Enemy enemyScript = enemy.GetComponent<Enemy>();
-        // Pass the point's drop multiplier to the enemy
+        GameObject enemy       = Instantiate(prefab, point.transform.position, Quaternion.identity);
+        Enemy      enemyScript = enemy.GetComponent<Enemy>();
         enemyScript.Initialize(arena, this, isFinal, arena.player, point, point.dropChanceMultiplier);
 
         aliveEnemies++;
         point.aliveCount++;
         totalSpawned++;
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
     SpawnPoint GetNextSpawnPoint()
     {
         List<SpawnPoint> validPoints = new List<SpawnPoint>();
@@ -99,7 +132,6 @@ public class EnemySpawner : MonoBehaviour
         }
 
         if (validPoints.Count == 0) return null;
-
         return GetHeightWeightedPoint(validPoints);
     }
 
@@ -109,8 +141,8 @@ public class EnemySpawner : MonoBehaviour
         foreach (var p in points)
             if (p.transform.position.y < minY) minY = p.transform.position.y;
 
-        float totalWeight = 0f;
-        List<float> weights = new List<float>();
+        float       totalWeight = 0f;
+        List<float> weights     = new List<float>();
 
         foreach (var p in points)
         {
@@ -119,7 +151,7 @@ public class EnemySpawner : MonoBehaviour
             totalWeight += w;
         }
 
-        float roll = Random.Range(0f, totalWeight);
+        float roll       = Random.Range(0f, totalWeight);
         float cumulative = 0f;
         for (int i = 0; i < points.Count; i++)
         {
@@ -129,28 +161,36 @@ public class EnemySpawner : MonoBehaviour
 
         return points[points.Count - 1];
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
     public void SpawnFinalEnemy()
     {
         StopSpawning();
         SpawnPoint point = spawnPoints[Random.Range(0, spawnPoints.Length)];
         SpawnEnemyAtPoint(finalEnemyPrefab, true, point);
     }
+
     public void SpawnBoss(ArenaController arenaController)
     {
         arena = arenaController;
 
-        SpawnPoint point = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        GameObject bossObj = Instantiate(bossPrefab, point.transform.position, Quaternion.identity);
+        if (bossPrefab == null)
+        {
+            Debug.LogError("[EnemySpawner] bossPrefab is not assigned on this spawner.");
+            return;
+        }
 
-        Boss boss = bossObj.GetComponent<Boss>();
+        SpawnPoint  point   = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        GameObject  bossObj = Instantiate(bossPrefab, point.transform.position, Quaternion.identity);
+        Boss        boss    = bossObj.GetComponent<Boss>();
         boss.Initialize(arena, arena.player);
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
     public void NotifyEnemyDeath(SpawnPoint point)
     {
         aliveEnemies--;
         if (point != null)
-        {
             point.aliveCount = Mathf.Max(0, point.aliveCount - 1);
-        }
     }
 }

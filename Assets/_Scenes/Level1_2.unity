@@ -151,7 +151,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb87695840d9c0f4fba19fda10e5947d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLevelType: 1
+  editorFallbackLevelType: 1
+  editorFallbackCorruption: 10
+  healthScalePerPoint: 0.03
+  damageScalePerPoint: 0.02
+  spawnScalePerPoint: 0.01
 --- !u!4 &14445831
 Transform:
   m_ObjectHideFlags: 0
