@@ -1,3 +1,5 @@
+// MainMenuController.cs
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -8,16 +10,17 @@ public class MainMenuController : MonoBehaviour
     public string levelSelectScene = "LevelSelect";
 
     [Header("UI")]
-    public Button  newGameButton;
+    public Button   newGameButton;
     public TMP_Text newGameText;
 
     void Start()
     {
-        if (HasSave())
+        if (RunSaveSystem.HasSave())
         {
+            // A run is in progress — offer to continue it
             newGameText.text = "Continue";
             newGameButton.onClick.RemoveAllListeners();
-            newGameButton.onClick.AddListener(LoadGame);
+            newGameButton.onClick.AddListener(ContinueGame);
         }
         else
         {
@@ -27,29 +30,28 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
-    bool HasSave()
-    {
-        return PlayerPrefs.HasKey("HasSave");
-    }
-
     public void StartNewGame()
     {
-        PlayerPrefs.SetInt("HasSave", 1);
-
-        // Reset any leftover buffs from a previous run then generate a fresh one
+        // Wipe any leftover save, reset buffs, generate a fresh run
+        RunSaveSystem.DeleteSave();
         PlayerBuffManager.Instance?.ResetBuffs();
         RunManager.Instance?.GenerateRun();
 
         SceneManager.LoadScene(levelSelectScene);
     }
 
-    public void LoadGame()
+    public void ContinueGame()
     {
-        // Run data is in-memory only, so a Continue after closing
-        // the app always starts a fresh run. A full save system
-        // would serialise RunManager state here instead.
-        PlayerBuffManager.Instance?.ResetBuffs();
-        RunManager.Instance?.GenerateRun();
+        // Restore the saved run state into RunManager
+        bool loaded = RunSaveSystem.LoadRun(RunManager.Instance);
+
+        if (!loaded)
+        {
+            // Save was corrupt or missing — fall back to a new run
+            Debug.LogWarning("[MainMenu] Save load failed — starting a new run instead.");
+            StartNewGame();
+            return;
+        }
 
         SceneManager.LoadScene(levelSelectScene);
     }

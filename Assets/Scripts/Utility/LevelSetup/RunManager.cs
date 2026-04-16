@@ -5,26 +5,12 @@
 //  • Run Generation  — 3 AreaClear + 2 KillAndCollect from 5 random regions
 //  • Corruption      — base 10; furthest uncleared level +20, rest +10 after
 //                      each clear
-//  • Buff Assignment — 1 buff for close levels, 2 for medium, 3 for far;
-//                      reassigned at preview time so the panel is always accurate
+//  • Buff Assignment — 1 buff for close levels, 2 for medium, 3 for far
 //  • Turn Tracking   — distance-based; used to scale re-corruption risk
 //  • Re-Corruption   — cleared levels adjacent to uncleared ones have a
 //                      chance to reset based on turns taken
-//  • Boss            — unlocked when all 5 run levels are cleared;
-//                      drawn from one of the 5 selected regions
-//
-// Setup in Inspector
-// ──────────────────
-//  areaClearLevels[0..6]  → one LevelData asset per WorldRegion (indexed by enum)
-//  killCollectLevels[0..6]
-//  bossLevels[0..6]
-//
-// Calling convention
-// ──────────────────
-//  1. GenerateRun()          — at run start / main menu "Play"
-//  2. PreviewLevel(level)    — called by LevelSelectManager on node click
-//  3. LoadLevel(level)       — called by LevelSelectManager "Enter" button
-//  4. OnLevelCleared()       — called by in-level game logic on objective complete
+//  • Boss            — unlocked when all 5 run levels are cleared
+//  • Save / Load     — auto-saves after every level clear via RunSaveSystem
 // ─────────────────────────────────────────────────────────────────────────────
 
 using System;
@@ -39,13 +25,8 @@ public class RunManager : MonoBehaviour
 
     // ── Inspector: Level Data Banks ──────────────────────────────────────────
     [Header("Level Data Banks  (index = (int)WorldRegion)")]
-    [Tooltip("7 entries — one AreaClear LevelData per region.")]
     public LevelData[] areaClearLevels   = new LevelData[7];
-
-    [Tooltip("7 entries — one KillAndCollect LevelData per region.")]
     public LevelData[] killCollectLevels = new LevelData[7];
-
-    [Tooltip("7 entries — one Boss LevelData per region.")]
     public LevelData[] bossLevels        = new LevelData[7];
 
     // ── Inspector: Run Config ────────────────────────────────────────────────
@@ -54,44 +35,32 @@ public class RunManager : MonoBehaviour
     public int killCollectCount = 2;
 
     [Header("Corruption")]
-    public int baseCorruption              = 10;
-    public int defaultCorruptionIncrease   = 10;
-    public int furthestCorruptionIncrease  = 20;
+    public int baseCorruption             = 10;
+    public int defaultCorruptionIncrease  = 10;
+    public int furthestCorruptionIncrease = 20;
 
     [Header("Re-Corruption")]
     [Range(0f, 0.5f)]
-    [Tooltip("Base chance per adjacent uncleared neighbour per roll.")]
     public float baseReCorruptionChance = 0.12f;
-
     [Range(0f, 0.2f)]
-    [Tooltip("Added to the per-neighbour chance for every extra turn taken.")]
     public float turnsReCorruptionMultiplier = 0.06f;
-
-    [Tooltip("Flat corruption penalty added when a level is re-corrupted.")]
     public int reCorruptionCorruptionPenalty = 30;
 
-    // ── Run State (read-only from outside) ───────────────────────────────────
-    public IReadOnlyList<RunLevelState> RunLevels  => _runLevels;
-    public RunLevelState BossLevel                 { get; private set; }
-    public RunLevelState ActiveLevel               { get; private set; }
-    public RunLevelState LastClearedLevel          { get; private set; }
-    public int           TotalTurns                { get; private set; }
-    public bool          BossUnlocked              => _runLevels.Count > 0 && _runLevels.All(l => l.IsCleared);
+    // ── Run State ─────────────────────────────────────────────────────────────
+    public IReadOnlyList<RunLevelState> RunLevels => _runLevels;
+    public RunLevelState BossLevel        { get; private set; }
+    public RunLevelState ActiveLevel      { get; private set; }
+    public RunLevelState LastClearedLevel { get; private set; }
+    public int           TotalTurns       { get; private set; }
+    public bool BossUnlocked => _runLevels.Count > 0 && _runLevels.All(l => l.IsCleared);
 
     private readonly List<RunLevelState> _runLevels = new();
 
     // ── Events ────────────────────────────────────────────────────────────────
-    /// <summary>Fired whenever corruption, clear-states, or buff assignments change.</summary>
-    public event Action OnRunStateChanged;
-
-    /// <summary>Fired for each level that gets re-corrupted after a clear.</summary>
-    public event Action<RunLevelState> OnLevelReCorrupted;
-
-    /// <summary>Fired once when all 5 levels are cleared for the first time.</summary>
-    public event Action OnBossUnlocked;
-
-    /// <summary>Fired when the boss is cleared — run is complete.</summary>
-    public event Action OnRunComplete;
+    public event Action                  OnRunStateChanged;
+    public event Action<RunLevelState>   OnLevelReCorrupted;
+    public event Action                  OnBossUnlocked;
+    public event Action                  OnRunComplete;
 
     // ═════════════════════════════════════════════════════════════════════════
     // Lifecycle
@@ -105,13 +74,9 @@ public class RunManager : MonoBehaviour
     }
 
     // ═════════════════════════════════════════════════════════════════════════
-    // Public API — Run Generation
+    // Run Generation
     // ═════════════════════════════════════════════════════════════════════════
 
-    /// <summary>
-    /// Generates a fresh run: 5 levels (3 AreaClear + 2 KillAndCollect) from
-    /// 5 randomly chosen distinct regions, plus a boss level.
-    /// </summary>
     public void GenerateRun()
     {
         _runLevels.Clear();
@@ -119,127 +84,123 @@ public class RunManager : MonoBehaviour
         ActiveLevel      = null;
         TotalTurns       = 0;
 
-        // 1. Pick 5 distinct regions
         var regions = Enum.GetValues(typeof(WorldRegion))
-                          .Cast<WorldRegion>()
-                          .ToList();
+                          .Cast<WorldRegion>().ToList();
         Shuffle(regions);
         var selected = regions.Take(areaClearCount + killCollectCount).ToList();
 
-        // 2. Shuffle again to randomise which regions get which level type
         Shuffle(selected);
         for (int i = 0; i < selected.Count; i++)
         {
             var region = selected[i];
             var bank   = i < areaClearCount ? areaClearLevels : killCollectLevels;
             var data   = bank[(int)region];
-
-            if (data == null)
-            {
-                Debug.LogWarning($"[RunManager] Missing LevelData for {region} in bank index {i}. Skipping.");
-                continue;
-            }
-
+            if (data == null) { Debug.LogWarning($"[RunManager] Missing LevelData for {region}."); continue; }
             _runLevels.Add(new RunLevelState(data, baseCorruption));
         }
 
-        // 3. Initial buff assignment based on geographic isolation in the set
         InitialAssignAllBuffs();
 
-        // 4. Boss from one of the selected regions
-        int bossIdx = UnityEngine.Random.Range(0, selected.Count);
+        int bossIdx  = UnityEngine.Random.Range(0, selected.Count);
         var bossData = bossLevels[(int)selected[bossIdx]];
         BossLevel = new RunLevelState(bossData, baseCorruption);
-        AssignBuffsToLevel(BossLevel, 3); // Boss always rewards 3 buffs
+        AssignBuffsToLevel(BossLevel, 3);
 
         Debug.Log($"[RunManager] Run generated — {_runLevels.Count} levels + Boss: {BossLevel?.Data.levelName}");
         OnRunStateChanged?.Invoke();
     }
 
     // ═════════════════════════════════════════════════════════════════════════
-    // Public API — Level Select Interaction
+    // Save System Integration
     // ═════════════════════════════════════════════════════════════════════════
 
     /// <summary>
-    /// Called by LevelSelectManager when the player clicks a node.
-    /// Re-assigns buffs based on current distance, then returns a preview
-    /// struct with turn cost and buff count so the UI panel can display them.
+    /// Called by RunSaveSystem.LoadRun() to rebuild run state without
+    /// going through GenerateRun(). Do not call this directly.
     /// </summary>
+    public void LoadFromSave(
+        List<RunLevelState> levels,
+        RunLevelState       boss,
+        int                 totalTurns,
+        int                 lastClearedIndex)
+    {
+        _runLevels.Clear();
+        _runLevels.AddRange(levels);
+
+        BossLevel   = boss;
+        TotalTurns  = totalTurns;
+        ActiveLevel = null;
+
+        LastClearedLevel = (lastClearedIndex >= 0 && lastClearedIndex < _runLevels.Count)
+            ? _runLevels[lastClearedIndex]
+            : null;
+
+        Debug.Log($"[RunManager] State restored from save — {_runLevels.Count} levels, turn {totalTurns}.");
+        OnRunStateChanged?.Invoke();
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // Level Select Interaction
+    // ═════════════════════════════════════════════════════════════════════════
+
     public LevelPreview PreviewLevel(RunLevelState level)
     {
         int turns     = GetTurnDistance(LastClearedLevel, level);
         int buffCount = TurnsToBuffCount(turns);
-
-        // Assign now so the panel shows the actual buffs the player will receive
         AssignBuffsToLevel(level, buffCount);
 
         return new LevelPreview
         {
-            Turns     = turns,
-            BuffCount = buffCount,
-            // Re-corruption risk: does this move leave cleared levels with uncleared neighbours?
-            HasReCorruptionRisk = turns > 1 && AnyReCorruptionRiskExists()
+            Turns                = turns,
+            BuffCount            = buffCount,
+            HasReCorruptionRisk  = turns > 1 && AnyReCorruptionRiskExists()
         };
     }
 
-    /// <summary>Loads the selected level scene and records it as active.</summary>
     public void LoadLevel(RunLevelState level)
     {
-        ActiveLevel = level;
-        int turns   = GetTurnDistance(LastClearedLevel, level);
-        TotalTurns += turns;
+        ActiveLevel  = level;
+        int turns    = GetTurnDistance(LastClearedLevel, level);
+        TotalTurns  += turns;
         Debug.Log($"[RunManager] Loading '{level.Data.levelName}' | +{turns} turns | Total: {TotalTurns}");
         SceneManager.LoadScene(level.Data.sceneName);
     }
 
-    /// <summary>Loads the boss scene once all 5 levels are cleared.</summary>
     public void LoadBoss()
     {
-        if (!BossUnlocked)
-        {
-            Debug.LogWarning("[RunManager] Cannot load boss — not all levels cleared.");
-            return;
-        }
+        if (!BossUnlocked) { Debug.LogWarning("[RunManager] Boss not yet unlocked."); return; }
         ActiveLevel = BossLevel;
         TotalTurns++;
         SceneManager.LoadScene(BossLevel.Data.sceneName);
     }
 
     // ═════════════════════════════════════════════════════════════════════════
-    // Public API — In-Level Callbacks
+    // In-Level Callbacks
     // ═════════════════════════════════════════════════════════════════════════
 
-    /// <summary>
-    /// Call this from in-level objective logic when the player completes the level.
-    /// Handles buff rewards, corruption updates, re-corruption rolls, and boss unlock.
-    /// </summary>
     public void OnLevelCleared()
     {
-        if (ActiveLevel == null)
-        {
-            Debug.LogWarning("[RunManager] OnLevelCleared called with no ActiveLevel.");
-            return;
-        }
+        if (ActiveLevel == null) { Debug.LogWarning("[RunManager] OnLevelCleared called with no ActiveLevel."); return; }
 
         var cleared = ActiveLevel;
         cleared.ClearState = LevelClearState.Cleared;
 
-        // Give the player their buff rewards
         PlayerBuffManager.Instance?.AddBuffs(cleared.AssignedBuffs);
 
-        bool wasAlreadyComplete = BossUnlocked;
+        bool wasComplete = BossUnlocked;
 
-        // Update corruption on remaining levels
         UpdateCorruptions(cleared);
 
-        // Roll for re-corruption on previously cleared levels
         int turnsTaken = GetTurnDistance(LastClearedLevel, cleared);
         CheckReCorruption(cleared, turnsTaken);
 
         LastClearedLevel = cleared;
         ActiveLevel      = null;
 
-        if (!wasAlreadyComplete && BossUnlocked)
+        // ── Auto-save after every level clear ────────────────────────────────
+        RunSaveSystem.SaveRun(this);
+
+        if (!wasComplete && BossUnlocked)
         {
             Debug.Log("[RunManager] All levels cleared — Boss unlocked!");
             OnBossUnlocked?.Invoke();
@@ -248,10 +209,6 @@ public class RunManager : MonoBehaviour
         OnRunStateChanged?.Invoke();
     }
 
-    /// <summary>
-    /// Call this when the boss is defeated.
-    /// Awards boss buffs and fires OnRunComplete.
-    /// </summary>
     public void OnBossCleared()
     {
         if (BossLevel != null)
@@ -259,6 +216,9 @@ public class RunManager : MonoBehaviour
             BossLevel.ClearState = LevelClearState.Cleared;
             PlayerBuffManager.Instance?.AddBuffs(BossLevel.AssignedBuffs);
         }
+
+        // Run is fully complete — wipe the save so Continue isn't offered
+        RunSaveSystem.DeleteSave();
 
         Debug.Log("[RunManager] Boss cleared — run complete!");
         ActiveLevel = null;
@@ -269,16 +229,10 @@ public class RunManager : MonoBehaviour
     // Helpers — Distance & Turns
     // ═════════════════════════════════════════════════════════════════════════
 
-    /// <summary>
-    /// Returns how many turns it costs to travel from <paramref name="from"/> to
-    /// <paramref name="to"/>. If <paramref name="from"/> is null (first move),
-    /// returns 1.
-    /// </summary>
     public int GetTurnDistance(RunLevelState from, RunLevelState to)
     {
         if (from == null || to == null) return 1;
-        int dist = RegionDistanceHelper.GetDistance(from.Data.region, to.Data.region);
-        return Mathf.Max(1, dist);
+        return Mathf.Max(1, RegionDistanceHelper.GetDistance(from.Data.region, to.Data.region));
     }
 
     private int TurnsToBuffCount(int turns)
@@ -294,7 +248,6 @@ public class RunManager : MonoBehaviour
 
     private void UpdateCorruptions(RunLevelState clearedLevel)
     {
-        // Find the furthest uncleared level from the one just cleared
         RunLevelState furthest = null;
         int maxDist = -1;
 
@@ -310,7 +263,6 @@ public class RunManager : MonoBehaviour
             if (!lvl.NeedsClearing || lvl == clearedLevel) continue;
             int increase = (lvl == furthest) ? furthestCorruptionIncrease : defaultCorruptionIncrease;
             lvl.CurrentCorruption += increase;
-            Debug.Log($"[Corruption] {lvl.Data.levelName}: +{increase} → {lvl.CurrentCorruption}");
         }
     }
 
@@ -320,8 +272,6 @@ public class RunManager : MonoBehaviour
 
     private void CheckReCorruption(RunLevelState clearedLevel, int turnsTaken)
     {
-        // Chance per adjacent uncleared neighbour scales with turns taken
-        // (longer detours leave more "exposure time" for corruption to spread)
         float chancePerNeighbour = baseReCorruptionChance + turnsReCorruptionMultiplier * (turnsTaken - 1);
 
         foreach (var lvl in _runLevels)
@@ -331,7 +281,6 @@ public class RunManager : MonoBehaviour
             int unclearedNeighbours = CountUnclearedNeighbours(lvl, maxDistance: 1);
             if (unclearedNeighbours == 0) continue;
 
-            // Compound probability: 1 - (1 - p)^n
             float totalChance = 1f - Mathf.Pow(1f - chancePerNeighbour, unclearedNeighbours);
 
             if (UnityEngine.Random.value < totalChance)
@@ -341,15 +290,14 @@ public class RunManager : MonoBehaviour
 
     private void ApplyReCorruption(RunLevelState level)
     {
-        level.ClearState        = LevelClearState.ReCorrupted;
+        level.ClearState         = LevelClearState.ReCorrupted;
         level.CurrentCorruption += reCorruptionCorruptionPenalty;
         level.TimesReCorrupted++;
 
-        // Re-corrupted levels get escalating buff rewards as incentive to re-clear
         int bonusBuffs = Mathf.Clamp(level.TimesReCorrupted + 1, 2, 4);
         AssignBuffsToLevel(level, bonusBuffs);
 
-        Debug.Log($"[Re-Corruption] {level.Data.levelName} reset! Corruption: {level.CurrentCorruption} | Re-corrupted x{level.TimesReCorrupted}");
+        Debug.Log($"[Re-Corruption] {level.Data.levelName} reset! Corruption: {level.CurrentCorruption}");
         OnLevelReCorrupted?.Invoke(level);
     }
 
@@ -357,21 +305,16 @@ public class RunManager : MonoBehaviour
     {
         int count = 0;
         foreach (var other in _runLevels)
-        {
-            if (!other.NeedsClearing) continue;
-            if (RegionDistanceHelper.GetDistance(level.Data.region, other.Data.region) <= maxDistance)
+            if (other.NeedsClearing && RegionDistanceHelper.GetDistance(level.Data.region, other.Data.region) <= maxDistance)
                 count++;
-        }
         return count;
     }
 
     private bool AnyReCorruptionRiskExists()
     {
         foreach (var lvl in _runLevels)
-        {
-            if (!lvl.IsCleared) continue;
-            if (CountUnclearedNeighbours(lvl, maxDistance: 1) > 0) return true;
-        }
+            if (lvl.IsCleared && CountUnclearedNeighbours(lvl, maxDistance: 1) > 0)
+                return true;
         return false;
     }
 
@@ -379,10 +322,6 @@ public class RunManager : MonoBehaviour
     // Helpers — Buff Assignment
     // ═════════════════════════════════════════════════════════════════════════
 
-    /// <summary>
-    /// Called once at run generation. Scores each level by its average geographic
-    /// distance from the other 4 — more isolated = more buffs.
-    /// </summary>
     private void InitialAssignAllBuffs()
     {
         for (int i = 0; i < _runLevels.Count; i++)
@@ -391,8 +330,7 @@ public class RunManager : MonoBehaviour
             for (int j = 0; j < _runLevels.Count; j++)
             {
                 if (i == j) continue;
-                totalDist += RegionDistanceHelper.GetDistance(
-                    _runLevels[i].Data.region, _runLevels[j].Data.region);
+                totalDist += RegionDistanceHelper.GetDistance(_runLevels[i].Data.region, _runLevels[j].Data.region);
             }
             float avgDist  = _runLevels.Count > 1 ? totalDist / (_runLevels.Count - 1) : 1;
             int   buffCount = avgDist <= 1.5f ? 1 : avgDist <= 2.5f ? 2 : 3;
@@ -400,7 +338,7 @@ public class RunManager : MonoBehaviour
         }
     }
 
-    private void AssignBuffsToLevel(RunLevelState level, int count)
+    public void AssignBuffsToLevel(RunLevelState level, int count)
     {
         level.AssignedBuffs.Clear();
         if (level.Data?.buffPool == null || level.Data.buffPool.Count == 0) return;
@@ -427,7 +365,6 @@ public class RunManager : MonoBehaviour
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-/// <summary>Data returned by RunManager.PreviewLevel — used to populate the UI panel.</summary>
 public struct LevelPreview
 {
     public int  Turns;

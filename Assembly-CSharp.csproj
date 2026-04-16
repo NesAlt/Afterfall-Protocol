@@ -112,6 +112,7 @@
     <Compile Include="Assets\Scripts\UI\UIPage.cs" />
     <Compile Include="Assets\Scripts\Utility\PlayerPrefsResetter.cs" />
     <Compile Include="Assets\Scripts\Enemy\Boss\BlobBoss.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelSetup\RunSaveSystem.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\ArenaController.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />
     <Compile Include="Assets\Scripts\UI\UIelement\HealthDisplay.cs" />
