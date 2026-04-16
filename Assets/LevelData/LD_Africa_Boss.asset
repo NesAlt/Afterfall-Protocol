@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: The Orb
   sceneName: LevelBoss_6
-  region: 4
+  region: 5
   levelType: 2
   missionObjective: Defeat the Infection Node
   buffPool: []

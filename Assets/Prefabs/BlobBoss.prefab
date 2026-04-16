@@ -206,7 +206,7 @@ MonoBehaviour:
   burstWindupTime: 1.5
   directionalAttackRange: 4
   burstAttackRange: 2
-  tentacleSpawnRadius: 0.8
+  tentacleSpawnRadius: 0.5
   phase2Threshold: 0.5
   phase2SpeedMultiplier: 1.6
   phase2CooldownMultiplier: 0.65

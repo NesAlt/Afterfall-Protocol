@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LD_Russia_KillAndCollect
   m_EditorClassIdentifier: 
   levelName: Infected Bunker
-  sceneName: Level2_2
+  sceneName: Level4_2
   region: 3
   levelType: 1
   missionObjective: Collect Samples for Testing

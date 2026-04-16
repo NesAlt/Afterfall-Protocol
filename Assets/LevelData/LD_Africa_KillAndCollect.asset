@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Desert Fields
   sceneName: Level6_2
-  region: 4
+  region: 5
   levelType: 1
   missionObjective: Collect Samples for Testing
   buffPool: []

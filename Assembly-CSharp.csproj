@@ -91,6 +91,7 @@
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Utility\LevelSetup\WorldRegion.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerDeathController.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelSetup\PlayerBuffManager.cs" />
     <Compile Include="Assets\Scripts\UI\HighlightFix.cs" />
     <Compile Include="Assets\Scripts\UI\QuitGameButton.cs" />
     <Compile Include="Assets\Scripts\Health\Health.cs" />
@@ -109,7 +110,6 @@
     <Compile Include="Assets\Scripts\Utility\PauseManager.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\LevelEndPickup.cs" />
     <Compile Include="Assets\Scripts\UI\UIPage.cs" />
-    <Compile Include="Assets\Scripts\Utility\LevelSetup\BuffSystem.cs" />
     <Compile Include="Assets\Scripts\Utility\PlayerPrefsResetter.cs" />
     <Compile Include="Assets\Scripts\Enemy\Boss\BlobBoss.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\ArenaController.cs" />
