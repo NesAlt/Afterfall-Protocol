@@ -319,11 +319,17 @@ public class BlobBoss : Boss
     //  Helpers
     private void SpawnTentacle(Vector2 direction)
     {
-        // Offset spawn point to the boss edge so tentacles emerge from the body surface
         Vector3 spawnPos = transform.position + (Vector3)(direction.normalized * tentacleSpawnRadius);
         GameObject obj = Instantiate(tentaclePrefab, spawnPos, Quaternion.identity);
         BossTentacle t = obj.GetComponent<BossTentacle>();
-        if (t != null) t.Launch(direction);
+
+        if (t != null)
+        {
+            if (spriteRenderer != null)
+                t.SetColor(spriteRenderer.color);   // 👈 ADD THIS
+
+            t.Launch(direction);
+        }
     }
 
     /// <summary>

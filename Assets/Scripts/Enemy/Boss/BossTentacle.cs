@@ -16,6 +16,7 @@ public class BossTentacle : MonoBehaviour
 
     [Tooltip("Time in seconds to fully retract.")]
     [SerializeField] private float retractTime = 0.3f;
+    private SpriteRenderer spriteRenderer;
 
     // Retract trigger — fires just before scaling back down
     private static readonly int AnimRetract = Animator.StringToHash("Retract");
@@ -34,6 +35,9 @@ public class BossTentacle : MonoBehaviour
 
         hitCollider = visual.GetComponent<Collider2D>();
         animator    = visual.GetComponent<Animator>();
+
+        spriteRenderer = visual.GetComponent<SpriteRenderer>();
+
 
         // Collider off until fully extended
         if (hitCollider != null)
@@ -55,6 +59,12 @@ public class BossTentacle : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
         StartCoroutine(TentacleLifetime());
+    }
+
+    public void SetColor(Color color)
+    {
+        if (spriteRenderer != null)
+            spriteRenderer.color = color;
     }
 
     private IEnumerator TentacleLifetime()

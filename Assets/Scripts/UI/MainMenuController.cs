@@ -8,7 +8,7 @@ public class MainMenuController : MonoBehaviour
     public string levelSelectScene = "LevelSelect";
 
     [Header("UI")]
-    public Button newGameButton;
+    public Button  newGameButton;
     public TMP_Text newGameText;
 
     void Start()
@@ -34,12 +34,23 @@ public class MainMenuController : MonoBehaviour
 
     public void StartNewGame()
     {
-        PlayerPrefs.SetInt("HasSave", 1); // mark save exists
+        PlayerPrefs.SetInt("HasSave", 1);
+
+        // Reset any leftover buffs from a previous run then generate a fresh one
+        PlayerBuffManager.Instance?.ResetBuffs();
+        RunManager.Instance?.GenerateRun();
+
         SceneManager.LoadScene(levelSelectScene);
     }
 
     public void LoadGame()
     {
+        // Run data is in-memory only, so a Continue after closing
+        // the app always starts a fresh run. A full save system
+        // would serialise RunManager state here instead.
+        PlayerBuffManager.Instance?.ResetBuffs();
+        RunManager.Instance?.GenerateRun();
+
         SceneManager.LoadScene(levelSelectScene);
     }
 
