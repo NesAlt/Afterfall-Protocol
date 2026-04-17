@@ -29,6 +29,11 @@ public class Health : MonoBehaviour
 
     void Start()
     {
+        if (CompareTag("Player"))
+        {
+            currentHealth = defaultHealth;
+        }
+
         if (!CompareTag("Player") && LevelManager.Instance != null)
         {
             float mult = LevelManager.Instance.GetEnemyHealthMultiplier();
@@ -64,15 +69,13 @@ public class Health : MonoBehaviour
         isInIFrames = true;
         timeToBecomeDamagableAgain = Time.time + invincibilityTime;
 
-        currentHealth -= damageAmount;
-
-        Debug.Log("Damage on: " + gameObject.name);
-        Debug.Log("Health changed to: " + currentHealth);
+        currentHealth = Mathf.Max(currentHealth - damageAmount, 0);
+        
+        // Debug.Log("Damage on: " + gameObject.name);
+        // Debug.Log("Health changed to: " + currentHealth);
 
         OnHealthChanged?.Invoke();
         CheckDeath();
-
-        GameManager.UpdateUIElements();
     }
 
     public void ReceiveHealing(int healingAmount)
@@ -85,8 +88,6 @@ public class Health : MonoBehaviour
 
         OnHealthChanged?.Invoke();
         CheckDeath();
-
-        GameManager.UpdateUIElements();
     }
 
     [Header("Effects & Polish")]
@@ -141,15 +142,6 @@ public class Health : MonoBehaviour
                     Destroy(this.gameObject);
                 }
             }   
-        }
-
-        GameManager.UpdateUIElements();
-    }
-    public void GameOver()
-    {
-        if (GameManager.instance != null && gameObject.tag == "Player")
-        {
-            GameManager.instance.GameOver();
         }
     }
 }

@@ -35,7 +35,6 @@ public class VictoryUIController : MonoBehaviour
 
     public void ShowVictory()
     {
-        victoryPanel.SetActive(true);
 
         bool isBossLevel = LevelManager.Instance != null &&
                            LevelManager.Instance.CurrentLevelType == LevelType.Boss;
@@ -43,8 +42,10 @@ public class VictoryUIController : MonoBehaviour
         if (mainMenuButton != null) mainMenuButton.SetActive(!isBossLevel);
         if (creditsButton  != null) creditsButton.SetActive(isBossLevel);
 
-        Time.timeScale = 0f;
+        GameFlowManager.Instance.SetState(GameFlowState.Victory);
+
     }
+
 
     public void ReturnToMenu()
     {

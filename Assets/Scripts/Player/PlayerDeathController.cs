@@ -40,7 +40,7 @@ public class PlayerDeathController : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(deathDelay);
 
-        gameOverPanel.SetActive(true);
+        GameFlowManager.Instance.SetState(GameFlowState.GameOver);
 
         // SceneManager.LoadScene(gameOverSceneName);
     }
