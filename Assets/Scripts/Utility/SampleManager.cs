@@ -14,7 +14,8 @@ public class SampleManager : MonoBehaviour
     [Header("Victory")]
     [SerializeField] private GameObject victoryPanel;
 
-    // ─────────────────────────────────────────────────────────────────────────
+    private bool levelCompleted = false;
+
     private void Awake()
     {
         Instance = this;
@@ -25,7 +26,6 @@ public class SampleManager : MonoBehaviour
         UpdateUI();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     public void AddSample(int amount)
     {
         currentSamples += amount;
@@ -42,21 +42,21 @@ public class SampleManager : MonoBehaviour
 
     void CompleteLevel()
     {
+        if (levelCompleted) return;
+        levelCompleted = true;
+
         Debug.Log("[SampleManager] Sample quota reached — level complete.");
 
-        // 1. Show victory panel
-        if (victoryPanel != null)
-            victoryPanel.SetActive(true);
+        LevelManager.Instance?.NotifyLevelCleared();
 
-        if (VictoryUIController.Instance != null)
-            VictoryUIController.Instance.ShowVictory();
-
-        // 2. Tell the arena to open doors / stop spawning
-        //    ArenaController.ForceEndArena() will then call
-        //    LevelManager.NotifyLevelCleared() to update the run system
         ArenaController arena = FindObjectOfType<ArenaController>();
         if (arena != null)
             arena.ForceEndArena();
+
+        if (VictoryUIController.Instance != null)
+            VictoryUIController.Instance.ShowVictory();
+        else if (victoryPanel != null)
+            victoryPanel.SetActive(true);
 
         Time.timeScale = 0f;
     }
