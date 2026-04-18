@@ -381,7 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: c9e8de60493a6914ab831adb77482743, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -437,19 +437,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 87946119}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 87946117}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &87946119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -577,7 +565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: dc346ffc1498e214c91d32383c1856e4, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -633,19 +621,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 94066208}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 94066206}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &94066208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -876,7 +852,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 0658fcb68c9ece249ae7cdf1ce1b4847, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -932,19 +908,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 248038092}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 248038090}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &248038092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1072,7 +1036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 7edab901a960a9c4992afda591315c0c, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -1128,19 +1092,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 325910165}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 325910163}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &325910165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1268,7 +1220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: c14355e206fce3947bc4fcf57c33dedf, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -1324,19 +1276,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 447644088}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 447644086}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &447644088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1673,7 +1613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 90837791d198401458b1e4b88e5bc2f9, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -1729,19 +1669,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 656966624}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 656966622}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &656966624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1869,7 +1797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 663d9a6aa43516f4aaee0969ac572c98, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -1925,19 +1853,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 766607124}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 766607122}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &766607124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2208,7 +2124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 504c4e292cf139b408723183b78d9251, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -2264,19 +2180,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1002623365}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1002623363}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1002623365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2404,7 +2308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 9d0673cc311ad7f488a098753e7f6633, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -2460,19 +2364,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1052040167}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1052040165}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1052040167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2600,7 +2492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: a804e400dc3a5934a9fa1f1aff6eea4d, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -2656,19 +2548,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1099626654}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1099626652}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1099626654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3225,7 +3105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 73db1812d2bfd7b44a9a58ba9d089191, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -3281,19 +3161,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1265273200}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1265273198}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1265273200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3421,7 +3289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: e42a13d04a45a66428e7d2e0af1fa12b, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -3477,19 +3345,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1294718486}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1294718484}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1294718486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3617,7 +3473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 9face61a8896c9a49973c666f72d045f, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -3673,19 +3529,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1406092262}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1406092260}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1406092262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3845,19 +3689,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1589565987}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1589565989}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1589565987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3908,7 +3740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: d8c740a066247b741b885dcd8d64684a, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -4151,7 +3983,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 024097b7b0bf9a9488d2428636bc8bba, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -4207,19 +4039,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1635949157}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1635949155}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1635949157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4347,7 +4167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 81fa7ef61b8b65346afffe2f0634edfc, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -4403,19 +4223,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1681923266}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1681923264}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1681923266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4543,7 +4351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: b2a2b794607977a4b93e8a8114000b6f, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -4599,19 +4407,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1688134858}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1688134856}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1688134858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4739,7 +4535,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 0d27f6672bb3e864b8a4cd7d7093b464, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -4795,19 +4591,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1702357230}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1702357228}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1702357230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4935,7 +4719,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: ae36444a76c59984db0f8f48d005deec, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -4991,19 +4775,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1780875600}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1780875598}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1780875600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5381,7 +5153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: 8afd6a27f1a81d141beff9f1026a997f, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -5437,19 +5209,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2010116099}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2010116097}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2010116099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5711,7 +5471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859d75255c3b4ec40af73eca9ac61e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignedLevelData: {fileID: 0}
+  assignedLevelData: {fileID: 11400000, guid: cb48a4c26ecf6b141a9a4a71baab57e5, type: 2}
   levelNameText: {fileID: 0}
   regionText: {fileID: 0}
   corruptionText: {fileID: 0}
@@ -5767,19 +5527,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2120938426}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2120938424}
-        m_TargetAssemblyTypeName: LevelNode, Assembly-CSharp
-        m_MethodName: SelectLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2120938426
 MonoBehaviour:
   m_ObjectHideFlags: 0
