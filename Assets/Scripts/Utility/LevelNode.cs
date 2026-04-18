@@ -1,11 +1,12 @@
 // LevelNode.cs
 // ─────────────────────────────────────────────────────────────────────────────
-// UI component attached to each level button/icon on the world map.
-// Initialised by LevelSelectManager with a RunLevelState, then calls
-// RefreshDisplay() whenever run state changes.
+// Attach to every level icon on your world map (21 total).
+// Each node is pre-assigned a LevelData asset in the inspector at edit time.
 //
-// Wire the 7 regional map positions in the scene. LevelSelectManager will
-// activate/deactivate nodes and call Initialize() with the correct state.
+// At runtime LevelSelectManager calls one of three methods:
+//   ActivateNode(state)  — this level was chosen this run, make it playable
+//   LockNode()           — not chosen this run, show as greyed/locked
+//   SetBossVisible(state)— for boss nodes only, revealed after 5 clears
 // ─────────────────────────────────────────────────────────────────────────────
 
 using UnityEngine;
@@ -14,69 +15,117 @@ using TMPro;
 
 public class LevelNode : MonoBehaviour
 {
+    // ── Inspector — set at edit time ──────────────────────────────────────────
+    [Header("Pre-Assigned Level (set in Inspector)")]
+    public LevelData assignedLevelData;
+
     [Header("UI References")]
     public TMP_Text levelNameText;
     public TMP_Text regionText;
     public TMP_Text corruptionText;
     public TMP_Text statusText;
-    public Image    nodeIcon;         // Background/icon image that changes colour by status
+    public Image    nodeIcon;
     public Button   selectButton;
 
-    [Header("Status Colours")]
+    [Header("Active State Colours")]
     public Color unclearedColour   = Color.white;
-    public Color clearedColour     = new Color(0.4f, 1f, 0.4f);   // soft green
-    public Color reCorruptedColour = new Color(1f, 0.3f, 0.3f);   // red
-    public Color bossColour        = new Color(1f, 0.6f, 0f);     // orange
+    public Color clearedColour     = new Color(0.4f, 1f, 0.4f);
+    public Color reCorruptedColour = new Color(1f, 0.3f, 0.3f);
+    public Color bossColour        = new Color(1f, 0.6f, 0f);
 
-    // ── State ─────────────────────────────────────────────────────────────────
-    public RunLevelState LevelState { get; private set; }
+    [Header("Inactive State")]
+    public Color lockedColour      = new Color(0.3f, 0.3f, 0.3f, 0.5f);
+    [Tooltip("Optional separate object to show a lock icon over the node.")]
+    public GameObject lockOverlay;
+
+    // ── Runtime State ─────────────────────────────────────────────────────────
+    public RunLevelState LevelState  { get; private set; }
+    public bool          IsActive    { get; private set; }
 
     // ═════════════════════════════════════════════════════════════════════════
-    /// <summary>Call once to bind a RunLevelState to this node.</summary>
-    public void Initialize(RunLevelState state)
+    // Called by LevelSelectManager
+    // ═════════════════════════════════════════════════════════════════════════
+
+    /// <summary>This node's level was selected for the current run — make it interactive.</summary>
+    public void ActivateNode(RunLevelState state)
     {
         LevelState = state;
+        IsActive   = true;
+
+        if (lockOverlay) lockOverlay.SetActive(false);
+
         selectButton.onClick.RemoveAllListeners();
         selectButton.onClick.AddListener(OnNodeClicked);
+        selectButton.interactable = true;
+
         RefreshDisplay();
     }
 
+    /// <summary>This node's level was not selected this run — grey it out.</summary>
+    public void LockNode()
+    {
+        LevelState = null;
+        IsActive   = false;
+
+        if (lockOverlay) lockOverlay.SetActive(true);
+
+        selectButton.onClick.RemoveAllListeners();
+        selectButton.interactable = false;
+
+        // Show the node's static data in muted colours so the map still looks full
+        if (assignedLevelData != null)
+        {
+            if (levelNameText)  levelNameText.text  = assignedLevelData.levelName;
+            if (regionText)     regionText.text     = RegionDistanceHelper.GetDisplayName(assignedLevelData.region);
+            if (corruptionText) corruptionText.text = "";
+            if (statusText)     statusText.text     = "Not Active";
+        }
+
+        if (nodeIcon) nodeIcon.color = lockedColour;
+    }
+
+    /// <summary>
+    /// For boss nodes — hidden until the run's boss is revealed.
+    /// Pass the boss RunLevelState when showing, null when hiding.
+    /// </summary>
+    public void SetBossVisible(RunLevelState bossState)
+    {
+        if (bossState != null)
+            ActivateNode(bossState);
+        else
+            LockNode();
+    }
+
     // ═════════════════════════════════════════════════════════════════════════
-    /// <summary>Refreshes all visual elements to match the current LevelState.</summary>
+    // Display Refresh
+    // ═════════════════════════════════════════════════════════════════════════
+
+    /// <summary>Re-reads LevelState and updates all UI elements.</summary>
     public void RefreshDisplay()
     {
-        if (LevelState == null) return;
+        if (!IsActive || LevelState == null) return;
 
-        // ── Text ─────────────────────────────────────────────────────────────
-        if (levelNameText) levelNameText.text = LevelState.Data.levelName;
-        if (regionText)    regionText.text    = RegionDistanceHelper.GetDisplayName(LevelState.Data.region);
-
-        if (corruptionText)
-            corruptionText.text = $"Corruption: {LevelState.CurrentCorruption}";
+        if (levelNameText)  levelNameText.text  = LevelState.Data.levelName;
+        if (regionText)     regionText.text     = RegionDistanceHelper.GetDisplayName(LevelState.Data.region);
+        if (corruptionText) corruptionText.text = $"Corruption: {LevelState.CurrentCorruption}";
 
         if (statusText)
             statusText.text = LevelState.ClearState switch
             {
-                LevelClearState.Cleared      => "✓ Cleared",
-                LevelClearState.ReCorrupted  => "⚠ Re-Corrupted!",
-                _                            => LevelState.Data.levelType == LevelType.Boss
-                                                    ? "BOSS" : "Uncleared"
+                LevelClearState.Cleared     => "✓ Cleared",
+                LevelClearState.ReCorrupted => "⚠ Re-Corrupted!",
+                _ => LevelState.Data.levelType == LevelType.Boss ? "BOSS" : "Uncleared"
             };
 
-        // ── Colour ───────────────────────────────────────────────────────────
         if (nodeIcon)
-        {
             nodeIcon.color = LevelState.ClearState switch
             {
                 LevelClearState.Cleared     => clearedColour,
                 LevelClearState.ReCorrupted => reCorruptedColour,
-                _ => LevelState.Data.levelType == LevelType.Boss
-                         ? bossColour : unclearedColour
+                _ => LevelState.Data.levelType == LevelType.Boss ? bossColour : unclearedColour
             };
-        }
 
-        // ── Interactability ──────────────────────────────────────────────────
-        // Cleared (and not re-corrupted) nodes are not selectable
+        // Cleared nodes (that haven't been re-corrupted) are not clickable
         if (selectButton)
             selectButton.interactable = LevelState.NeedsClearing;
     }

@@ -1,21 +1,18 @@
 // LevelSelectManager.cs
 // ─────────────────────────────────────────────────────────────────────────────
-// Orchestrates the world-map level-select screen.
+// Manages the world map screen.
 //
-// Responsibilities
-// ────────────────
-//  • Binds 5 LevelNodes to the current run's RunLevelStates
-//  • Shows / hides the boss node when all levels are cleared
-//  • Populates the info panel (name, region, corruption, objective,
-//    turn cost, buff rewards, re-corruption warning)
-//  • Forwards Enter/Close button actions to RunManager
-//  • Refreshes all nodes whenever RunManager fires OnRunStateChanged
+// Setup
+// ─────
+// In the Inspector, assign ALL 21 level nodes to the allLevelNodes list,
+// and all 7 boss nodes to the bossNodes list.
+// Each node already has its LevelData pre-assigned on the node itself.
 //
-// Inspector Setup
-// ───────────────
-//  levelNodes        — 5 pre-placed LevelNode objects on your world map
-//  bossNode          — 1 LevelNode for the boss, hidden until boss is unlocked
-//  All TMP_Text and Button references in the info panel section
+// At runtime this manager:
+//   1. Loops all 21 nodes — activates the 5 chosen by RunManager, locks the rest
+//   2. Loops all 7 boss nodes — all locked until boss is unlocked, then reveals
+//      whichever region matches the run's boss
+//   3. Handles info panel population and level loading
 // ─────────────────────────────────────────────────────────────────────────────
 
 using System.Collections.Generic;
@@ -30,15 +27,15 @@ public class LevelSelectManager : MonoBehaviour
 
     // ── Node References ───────────────────────────────────────────────────────
     [Header("Map Nodes")]
-    [Tooltip("Assign 5 LevelNode GameObjects placed on your world map.")]
-    public List<LevelNode> levelNodes = new();
+    [Tooltip("Drag all 21 level nodes here (14 regular + 7 boss).")]
+    public List<LevelNode> allLevelNodes = new();
 
-    [Tooltip("The boss node — hidden until all 5 levels are cleared.")]
-    public LevelNode bossNode;
+    [Tooltip("Drag all 7 boss nodes here separately for easy boss reveal control.")]
+    public List<LevelNode> bossNodes = new();
 
     // ── Info Panel ────────────────────────────────────────────────────────────
     [Header("Info Panel")]
-    public GameObject infoPanel;
+    public GameObject panelRoot;
     public TMP_Text   panelLevelName;
     public TMP_Text   panelRegion;
     public TMP_Text   panelLevelType;
@@ -48,13 +45,17 @@ public class LevelSelectManager : MonoBehaviour
     public TMP_Text   panelBuffList;
     public TMP_Text   panelReCorruptWarning;
     public Button     btnEnterLevel;
-    public Button     btnEnterBoss;
     public Button     btnClose;
 
     // ── HUD ───────────────────────────────────────────────────────────────────
     [Header("HUD")]
     public TMP_Text hudTurnsText;
     public TMP_Text hudProgressText;
+
+    // ── Boss Unlock UI ────────────────────────────────────────────────────────
+    [Header("Boss Unlock")]
+    [Tooltip("Optional panel/popup shown when the boss is first revealed.")]
+    public GameObject bossUnlockBanner;
 
     // ─────────────────────────────────────────────────────────────────────────
     private RunLevelState _selectedLevel;
@@ -67,14 +68,15 @@ public class LevelSelectManager : MonoBehaviour
 
     void Start()
     {
-        // Hide panels
-        infoPanel.SetActive(false);
-        if (bossNode) bossNode.gameObject.SetActive(false);
-        if (btnEnterBoss) btnEnterBoss.gameObject.SetActive(false);
+        panelRoot.SetActive(false);
+        if (bossUnlockBanner) bossUnlockBanner.SetActive(false);
+
+        // Hide all boss nodes until unlock
+        foreach (var node in bossNodes)
+            node.LockNode();
 
         // Wire buttons
         btnEnterLevel?.onClick.AddListener(EnterSelectedLevel);
-        btnEnterBoss?.onClick.AddListener(EnterBossLevel);
         btnClose?.onClick.AddListener(ClosePanel);
 
         // Subscribe to run events
@@ -85,7 +87,7 @@ public class LevelSelectManager : MonoBehaviour
             RunManager.Instance.OnBossUnlocked     += HandleBossUnlocked;
         }
 
-        InitialiseNodes();
+        BindNodesToRun();
         RefreshAllNodes();
     }
 
@@ -99,34 +101,46 @@ public class LevelSelectManager : MonoBehaviour
 
     void Update()
     {
-        if (infoPanel.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+        if (panelRoot.activeSelf && Input.GetKeyDown(KeyCode.Escape))
             ClosePanel();
     }
 
     // ═════════════════════════════════════════════════════════════════════════
-    // Initialisation
+    // Node Binding
     // ═════════════════════════════════════════════════════════════════════════
 
-    private void InitialiseNodes()
+    /// <summary>
+    /// Matches each of the 21 nodes against the current run's selected levels.
+    /// Nodes whose LevelData is in the run get Activated; the rest get Locked.
+    /// </summary>
+    private void BindNodesToRun()
     {
         if (RunManager.Instance == null) return;
 
-        var runLevels = RunManager.Instance.RunLevels;
-        for (int i = 0; i < levelNodes.Count; i++)
+        // Build a quick lookup: LevelData → RunLevelState
+        var runLookup = new Dictionary<LevelData, RunLevelState>();
+        foreach (var state in RunManager.Instance.RunLevels)
+            runLookup[state.Data] = state;
+
+        // Regular level nodes (non-boss)
+        foreach (var node in allLevelNodes)
         {
-            if (i < runLevels.Count)
+            if (node.assignedLevelData == null)
             {
-                levelNodes[i].gameObject.SetActive(true);
-                levelNodes[i].Initialize(runLevels[i]);
+                Debug.LogWarning($"[LevelSelectManager] Node '{node.name}' has no assignedLevelData.");
+                node.LockNode();
+                continue;
             }
+
+            if (runLookup.TryGetValue(node.assignedLevelData, out RunLevelState state))
+                node.ActivateNode(state);
             else
-            {
-                levelNodes[i].gameObject.SetActive(false);
-            }
+                node.LockNode();
         }
 
-        if (bossNode != null && RunManager.Instance.BossLevel != null)
-            bossNode.Initialize(RunManager.Instance.BossLevel);
+        // Boss nodes — all locked at start, revealed by HandleBossUnlocked
+        foreach (var node in bossNodes)
+            node.LockNode();
     }
 
     // ═════════════════════════════════════════════════════════════════════════
@@ -135,14 +149,15 @@ public class LevelSelectManager : MonoBehaviour
 
     private void RefreshAllNodes()
     {
-        foreach (var node in levelNodes)
-            if (node.gameObject.activeSelf) node.RefreshDisplay();
+        foreach (var node in allLevelNodes)
+            if (node.IsActive) node.RefreshDisplay();
 
-        bossNode?.RefreshDisplay();
+        foreach (var node in bossNodes)
+            if (node.IsActive) node.RefreshDisplay();
+
         RefreshHUD();
 
-        // If the info panel is open, refresh it too in case state changed
-        if (infoPanel.activeSelf && _selectedLevel != null)
+        if (panelRoot.activeSelf && _selectedLevel != null)
             PopulatePanel(_selectedLevel);
     }
 
@@ -158,13 +173,12 @@ public class LevelSelectManager : MonoBehaviour
             int cleared = 0;
             foreach (var lvl in RunManager.Instance.RunLevels)
                 if (lvl.IsCleared) cleared++;
-
             hudProgressText.text = $"Cleared: {cleared} / {RunManager.Instance.RunLevels.Count}";
         }
     }
 
     // ═════════════════════════════════════════════════════════════════════════
-    // Panel Population
+    // Info Panel
     // ═════════════════════════════════════════════════════════════════════════
 
     /// <summary>Called by a LevelNode when the player clicks it.</summary>
@@ -172,34 +186,32 @@ public class LevelSelectManager : MonoBehaviour
     {
         _selectedLevel = level;
 
-        // Ask RunManager to re-assign buffs based on current distance, get preview data
         LevelPreview preview = RunManager.Instance != null
             ? RunManager.Instance.PreviewLevel(level)
             : new LevelPreview { Turns = 1, BuffCount = 1 };
 
         PopulatePanel(level, preview);
-        infoPanel.SetActive(true);
+        panelRoot.SetActive(true);
     }
 
     private void PopulatePanel(RunLevelState level, LevelPreview? preview = null)
     {
-        // ── Identity ─────────────────────────────────────────────────────────
         if (panelLevelName)  panelLevelName.text  = level.Data.levelName;
-        if (panelRegion)     panelRegion.text      = RegionDistanceHelper.GetDisplayName(level.Data.region);
-        if (panelLevelType)  panelLevelType.text   = level.Data.levelType.ToString();
-        if (panelCorruption) panelCorruption.text  = $"Corruption: {level.CurrentCorruption}";
-        if (panelObjective)  panelObjective.text   = $"Objective: {level.Data.missionObjective}";
+        if (panelRegion)     panelRegion.text     = RegionDistanceHelper.GetDisplayName(level.Data.region);
+        if (panelLevelType)  panelLevelType.text  = level.Data.levelType.ToString();
+        if (panelCorruption) panelCorruption.text = $"Corruption: {level.CurrentCorruption}";
+        if (panelObjective)  panelObjective.text  = $"Objective: {level.Data.missionObjective}";
 
-        // ── Turns & Distance ─────────────────────────────────────────────────
+        // Turns
         if (panelTurns && preview.HasValue)
         {
-            int turns = preview.Value.Turns;
-            panelTurns.text = turns == 1
+            int t = preview.Value.Turns;
+            panelTurns.text = t == 1
                 ? "1 Turn  (Close)"
-                : $"{turns} Turns  (Further — better rewards)";
+                : $"{t} Turns  (Further — better rewards)";
         }
 
-        // ── Buff Rewards ─────────────────────────────────────────────────────
+        // Buff list
         if (panelBuffList)
         {
             if (level.AssignedBuffs.Count > 0)
@@ -212,11 +224,11 @@ public class LevelSelectManager : MonoBehaviour
             }
             else
             {
-                panelBuffList.text = "No reward data yet.";
+                panelBuffList.text = "No rewards assigned.";
             }
         }
 
-        // ── Re-Corruption Warning ─────────────────────────────────────────────
+        // Re-corruption warning
         bool showWarning = preview.HasValue && preview.Value.HasReCorruptionRisk;
         if (panelReCorruptWarning)
         {
@@ -225,13 +237,8 @@ public class LevelSelectManager : MonoBehaviour
                 panelReCorruptWarning.text = "⚠  Taking this route may re-corrupt nearby cleared levels!";
         }
 
-        // ── Buttons ───────────────────────────────────────────────────────────
         if (btnEnterLevel)
             btnEnterLevel.interactable = level.NeedsClearing;
-
-        bool bossReady = RunManager.Instance?.BossUnlocked ?? false;
-        if (btnEnterBoss)
-            btnEnterBoss.gameObject.SetActive(bossReady);
     }
 
     // ═════════════════════════════════════════════════════════════════════════
@@ -245,15 +252,9 @@ public class LevelSelectManager : MonoBehaviour
         RunManager.Instance?.LoadLevel(_selectedLevel);
     }
 
-    public void EnterBossLevel()
-    {
-        ClosePanel();
-        RunManager.Instance?.LoadBoss();
-    }
-
     public void ClosePanel()
     {
-        infoPanel.SetActive(false);
+        panelRoot.SetActive(false);
         _selectedLevel = null;
     }
 
@@ -263,21 +264,39 @@ public class LevelSelectManager : MonoBehaviour
 
     private void HandleReCorruption(RunLevelState level)
     {
-        Debug.Log($"[LevelSelectManager] '{level.Data.levelName}' has been re-corrupted.");
-        // TODO: Play a VFX / flash the node, show a popup, etc.
+        Debug.Log($"[LevelSelectManager] '{level.Data.levelName}' re-corrupted — refreshing map.");
         RefreshAllNodes();
     }
 
     private void HandleBossUnlocked()
     {
-        if (bossNode != null)
-        {
-            bossNode.gameObject.SetActive(true);
-            bossNode.RefreshDisplay();
-        }
-        if (btnEnterBoss) btnEnterBoss.gameObject.SetActive(true);
+        if (RunManager.Instance?.BossLevel == null) return;
 
-        Debug.Log("[LevelSelectManager] Boss node revealed!");
-        // TODO: Play boss-unlock fanfare
+        LevelData bossData = RunManager.Instance.BossLevel.Data;
+
+        // Find the boss node whose pre-assigned LevelData matches the run's boss
+        foreach (var node in bossNodes)
+        {
+            if (node.assignedLevelData == bossData)
+            {
+                node.SetBossVisible(RunManager.Instance.BossLevel);
+                Debug.Log($"[LevelSelectManager] Boss node revealed: {bossData.levelName}");
+                break;
+            }
+        }
+
+        // Show the optional banner
+        if (bossUnlockBanner)
+        {
+            bossUnlockBanner.SetActive(true);
+            Invoke(nameof(HideBossBanner), 3f);
+        }
+
+        RefreshHUD();
+    }
+
+    private void HideBossBanner() 
+    { 
+        if (bossUnlockBanner) bossUnlockBanner.SetActive(false); 
     }
 }
