@@ -15,11 +15,65 @@ EditorBuildSettings:
     path: Assets/_Scenes/Credits.unity
     guid: 400c22adefba46848b55bba9a3cb27c4
   - enabled: 1
-    path: Assets/_Scenes/Level5_1.unity
-    guid: 8a003dc74a4ef154cad4330961059227
+    path: Assets/_Scenes/Level1_1.unity
+    guid: 6023d8964e983ca4d983ddcd9e81892a
   - enabled: 1
     path: Assets/_Scenes/Level1_2.unity
     guid: 08ab1975ba284ad41a88e4b8002544a9
+  - enabled: 1
+    path: Assets/_Scenes/Level2_1.unity
+    guid: c4b2fbf6c84970c4896ca3c16026fb6c
+  - enabled: 1
+    path: Assets/_Scenes/Level2_2.unity
+    guid: bd715194d6a59c546bcb1d49d4df4e13
+  - enabled: 1
+    path: Assets/_Scenes/Level3_1.unity
+    guid: 09c5517d98908f94491cfe5e0d72f18c
+  - enabled: 1
+    path: Assets/_Scenes/Level3_2.unity
+    guid: cec93de5adc47804ab62d746ed424ad7
+  - enabled: 1
+    path: Assets/_Scenes/Level4_1.unity
+    guid: 745d1d89860b92b4d8b10123ad01033a
+  - enabled: 1
+    path: Assets/_Scenes/Level4_2.unity
+    guid: 9ceba9fd3e01554458544f6b0e167bce
+  - enabled: 1
+    path: Assets/_Scenes/Level5_1.unity
+    guid: 8a003dc74a4ef154cad4330961059227
+  - enabled: 1
+    path: Assets/_Scenes/Level5_2.unity
+    guid: 94b746d0f6fb19242ae2993bbe42fb26
+  - enabled: 1
+    path: Assets/_Scenes/Level6_1.unity
+    guid: a44ec8a1b5dc1b140886293e4676a0d3
+  - enabled: 1
+    path: Assets/_Scenes/Level6_2.unity
+    guid: a7613c37fa8d45242b22dd6b00cbdd47
+  - enabled: 1
+    path: Assets/_Scenes/Level7_1.unity
+    guid: d619f896b046ed34f9b9c8236394f0b6
+  - enabled: 1
+    path: Assets/_Scenes/Level7_2.unity
+    guid: 328bbe043bc7ba74496903a2f9d5d72e
+  - enabled: 1
+    path: Assets/_Scenes/LevelBoss_1.unity
+    guid: 27ae6e1a38c8f714e8958f420b3a4f29
+  - enabled: 1
+    path: Assets/_Scenes/LevelBoss_2.unity
+    guid: e71efd3edbf4ff042a6326dad6b8f39d
+  - enabled: 1
+    path: Assets/_Scenes/LevelBoss_3.unity
+    guid: 2f3eacd638325124187dc05c561fb794
+  - enabled: 1
+    path: Assets/_Scenes/LevelBoss_4.unity
+    guid: c7939fe56f2a6004a94f17105c0003da
+  - enabled: 1
+    path: Assets/_Scenes/LevelBoss_5.unity
+    guid: 648afac08647f33419bc9f7b914aaaf0
+  - enabled: 1
+    path: Assets/_Scenes/LevelBoss_6.unity
+    guid: 4aa4e55c8b884274db42b781bd9bee48
   - enabled: 1
     path: Assets/_Scenes/LevelBoss_7.unity
     guid: 6849d782b69f3424fb578f6cf78a6747

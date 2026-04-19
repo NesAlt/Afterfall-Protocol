@@ -67,7 +67,7 @@ public class LevelSelectManager : MonoBehaviour
         if (reCorruptOverlay)  reCorruptOverlay.SetActive(false);
         if (bossUnlockBanner)  bossUnlockBanner.SetActive(false);
 
-        foreach (var node in bossNodes) node.gameObject.SetActive(false);
+        foreach (var node in bossNodes) node.LockNode();
 
         btnEnterLevel?.onClick.AddListener(EnterSelectedLevel);
         btnClose?.onClick.AddListener(ClosePanel);
@@ -136,7 +136,7 @@ public class LevelSelectManager : MonoBehaviour
                 node.LockNode();
         }
 
-        foreach (var node in bossNodes) node.gameObject.SetActive(false);
+        foreach (var node in bossNodes) node.LockNode();
     }
 
     // ═════════════════════════════════════════════════════════════════════════
@@ -232,9 +232,16 @@ public class LevelSelectManager : MonoBehaviour
 
     public void EnterSelectedLevel()
     {
-        if (_selectedLevel == null) return;
+        if (_selectedLevel == null)
+        {
+            Debug.LogWarning("[LevelSelectManager] EnterSelectedLevel called with no level selected.");
+            return;
+        }
+
+        // Capture before ClosePanel() nulls _selectedLevel
+        RunLevelState levelToLoad = _selectedLevel;
         ClosePanel();
-        RunManager.Instance?.LoadLevel(_selectedLevel);
+        RunManager.Instance?.LoadLevel(levelToLoad);
     }
 
     public void ClosePanel()

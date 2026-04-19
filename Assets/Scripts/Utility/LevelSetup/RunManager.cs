@@ -164,6 +164,19 @@ public class RunManager : MonoBehaviour
 
     public void LoadLevel(RunLevelState level)
     {
+        if (level?.Data == null)
+        {
+            Debug.LogError("[RunManager] LoadLevel called with null level or LevelData.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(level.Data.sceneName))
+        {
+            Debug.LogError($"[RunManager] LevelData '{level.Data.levelName}' has no sceneName assigned. " +
+                           "Fill in the Scene Name field on the LevelData asset and make sure it's added to Build Settings.");
+            return;
+        }
+
         ActiveLevel  = level;
         int turns    = GetTurnDistance(LastClearedLevel, level);
         TotalTurns  += turns;
