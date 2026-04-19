@@ -54,40 +54,23 @@ public class LevelNode : MonoBehaviour
 
         if (lockOverlay) lockOverlay.SetActive(false);
 
-        selectButton.onClick.RemoveAllListeners();
-        selectButton.onClick.AddListener(OnNodeClicked);
-        selectButton.interactable = true;
+        if (selectButton != null)
+        {
+            selectButton.onClick.RemoveAllListeners();
+            selectButton.onClick.AddListener(OnNodeClicked);
+            selectButton.interactable = true;
+        }
 
         RefreshDisplay();
     }
 
-    /// <summary>This node's level was not selected this run — grey it out.</summary>
     public void LockNode()
     {
         LevelState = null;
         IsActive   = false;
-
-        if (lockOverlay) lockOverlay.SetActive(true);
-
-        selectButton.onClick.RemoveAllListeners();
-        selectButton.interactable = false;
-
-        // Show the node's static data in muted colours so the map still looks full
-        if (assignedLevelData != null)
-        {
-            if (levelNameText)  levelNameText.text  = assignedLevelData.levelName;
-            if (regionText)     regionText.text     = RegionDistanceHelper.GetDisplayName(assignedLevelData.region);
-            if (corruptionText) corruptionText.text = "";
-            if (statusText)     statusText.text     = "Not Active";
-        }
-
-        if (nodeIcon) nodeIcon.color = lockedColour;
+        gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// For boss nodes — hidden until the run's boss is revealed.
-    /// Pass the boss RunLevelState when showing, null when hiding.
-    /// </summary>
     public void SetBossVisible(RunLevelState bossState)
     {
         if (bossState != null)

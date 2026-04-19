@@ -81,6 +81,7 @@
     <Compile Include="Assets\Scripts\Utility\BackToMenu.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\BuildingZone.cs" />
     <Compile Include="Assets\Scripts\Entities\ProjectileTest.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelSetup\BuffCard.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\LevelDesign\Enemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\Boss\Boss.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Assets\Scripts\LevelDesign\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Utility\CreditsManager.cs" />
     <Compile Include="Assets\Scripts\Utility\LevelNode.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelSetup\BuffSelectionPanel.cs" />
     <Compile Include="Assets\Scripts\UI\GameFlowManager.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerAnimator.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemySpriteEvents.cs" />

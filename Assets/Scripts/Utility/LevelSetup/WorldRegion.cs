@@ -1,8 +1,4 @@
-// WorldRegion.cs
-// Defines all 7 world regions and provides a geographic distance matrix
-// used by the corruption, buff, turn, and re-corruption systems.
-
-public enum WorldRegion
+    public enum WorldRegion
 {
     NorthAmerica,
     SouthAmerica,
@@ -15,10 +11,6 @@ public enum WorldRegion
 
 public static class RegionDistanceHelper
 {
-    // Geographic distance between regions on a 0-4 scale.
-    // 0 = same, 1 = adjacent/nearby, 4 = opposite side of the world.
-    //
-    //               NA  SA  EU  RU  AS  AF  AU
     private static readonly int[,] DistanceMatrix =
     {
         { 0, 1, 2, 3, 3, 2, 4 }, // NorthAmerica
