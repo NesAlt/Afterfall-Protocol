@@ -7,14 +7,15 @@ public class ArenaController : MonoBehaviour
 
     [Header("References")]
     public EnemySpawner spawner;
-    public Transform player;
+    public Transform    player;
     public DoorController[] doors;
 
-    private int  currentKills       = 0;
-    private bool arenaActive        = false;
-    private bool finalEnemySpawned  = false;
-    private bool arenaCleared       = false;
+    private int  currentKills      = 0;
+    private bool arenaActive       = false;
+    private bool finalEnemySpawned = false;
+    private bool arenaCleared      = false;
 
+    // ─────────────────────────────────────────────────────────────────────────
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!arenaActive && other.CompareTag("Player"))
@@ -28,8 +29,6 @@ public class ArenaController : MonoBehaviour
         foreach (DoorController door in doors)
             door.CloseDoor();
 
-        // Guard: LevelManager may be null when testing a scene that has no
-        // LevelManager in it; default to normal spawning in that case.
         bool isBoss = LevelManager.Instance != null && LevelManager.Instance.IsBossLevel();
 
         if (isBoss)
@@ -38,14 +37,27 @@ public class ArenaController : MonoBehaviour
             spawner.StartSpawning(this);
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
     public void RegisterKill(bool isFinalEnemy)
     {
         if (arenaCleared) return;
 
-        // KillAndCollect levels track kills via SampleManager, not here
+        // KillAndCollect levels track completion via SampleManager
         if (LevelManager.Instance != null && LevelManager.Instance.IsKillAndCollectLevel())
             return;
 
+        // Boss level — boss death comes through here as a final enemy
+        if (LevelManager.Instance != null && LevelManager.Instance.IsBossLevel())
+        {
+            arenaCleared = true;
+            OpenDoors();
+            spawner.StopSpawning();
+            LevelManager.Instance.NotifyLevelCleared(); // → RunManager.OnBossCleared()
+            VictoryUIController.Instance?.ShowVictory();
+            return;
+        }
+
+        // AreaClear level
         if (isFinalEnemy)
         {
             arenaCleared = true;
@@ -63,33 +75,30 @@ public class ArenaController : MonoBehaviour
         }
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // Called when the final enemy in an AreaClear level dies
     void EndArena()
     {
-        foreach (DoorController door in doors)
-            door.OpenDoor();
-
+        OpenDoors();
         spawner.StopSpawning();
+        // LevelEndPickup handles NotifyLevelCleared + ShowVictory for AreaClear
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // Called by SampleManager when sample quota is reached (KillAndCollect)
     public void ForceEndArena()
     {
         if (arenaCleared) return;
         arenaCleared = true;
+        OpenDoors();
+        spawner.StopSpawning();
+        // SampleManager already called NotifyLevelCleared + ShowVictory before this
+    }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    void OpenDoors()
+    {
         foreach (DoorController door in doors)
             door.OpenDoor();
-
-        spawner.StopSpawning();
-
-        bool isBoss = LevelManager.Instance != null && LevelManager.Instance.IsBossLevel();
-
-        if (isBoss)
-        {
-            if (VictoryUIController.Instance != null)
-                VictoryUIController.Instance.ShowVictory();
-
-            // Notify RunManager that the boss is done
-            LevelManager.Instance?.NotifyLevelCleared();
-        }
     }
 }

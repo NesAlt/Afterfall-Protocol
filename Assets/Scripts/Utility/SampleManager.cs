@@ -11,34 +11,21 @@ public class SampleManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private SampleUI sampleUI;
 
-    [Header("Victory")]
-    [SerializeField] private GameObject victoryPanel;
-
     private bool levelCompleted = false;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    private void Awake() => Instance = this;
 
-    private void Start()
-    {
-        UpdateUI();
-    }
+    private void Start() => UpdateUI();
 
     public void AddSample(int amount)
     {
         currentSamples += amount;
         UpdateUI();
-
         if (currentSamples >= requiredSamples)
             CompleteLevel();
     }
 
-    void UpdateUI()
-    {
-        sampleUI?.UpdateUI(currentSamples, requiredSamples);
-    }
+    void UpdateUI() => sampleUI?.UpdateUI(currentSamples, requiredSamples);
 
     void CompleteLevel()
     {
@@ -47,17 +34,15 @@ public class SampleManager : MonoBehaviour
 
         Debug.Log("[SampleManager] Sample quota reached — level complete.");
 
+        // 1. Notify run system — saves state, updates corruption, re-corruption rolls
         LevelManager.Instance?.NotifyLevelCleared();
 
+        // 2. Stop spawning / open doors
         ArenaController arena = FindObjectOfType<ArenaController>();
-        if (arena != null)
-            arena.ForceEndArena();
+        if (arena != null) arena.ForceEndArena();
 
+        // 3. Show victory panel — VictoryUIController handles timeScale and navigation
         if (VictoryUIController.Instance != null)
             VictoryUIController.Instance.ShowVictory();
-        else if (victoryPanel != null)
-            victoryPanel.SetActive(true);
-
-        Time.timeScale = 0f;
     }
 }

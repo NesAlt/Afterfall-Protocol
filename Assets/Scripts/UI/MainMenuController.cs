@@ -58,6 +58,10 @@ public class MainMenuController : MonoBehaviour
     {
         Debug.Log("Settings menu not implemented yet.");
     }
+    public void OpenCredits()
+    {
+        SceneManager.LoadScene("Credits");
+    }
 
     public void QuitGame()
     {
