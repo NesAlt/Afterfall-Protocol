@@ -748,7 +748,7 @@ Transform:
   m_GameObject: {fileID: 265833854}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 36.55, y: -2.711, z: 0}
+  m_LocalPosition: {x: 27.47, y: -2.711, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1844,7 +1844,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Return to Menu
+  m_text: Next
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: df067dac1b99344489701d871c07226a, type: 2}
   m_sharedMaterial: {fileID: -3119302795185838449, guid: df067dac1b99344489701d871c07226a, type: 2}
@@ -2680,7 +2680,7 @@ Transform:
   m_GameObject: {fileID: 980053377}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.08, y: 14.39, z: 0}
+  m_LocalPosition: {x: -15.08, y: 13.27, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2887,7 +2887,7 @@ Transform:
   m_GameObject: {fileID: 1076848262}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 44.88, y: -2.1401072, z: -0.09716608}
+  m_LocalPosition: {x: 35.38, y: -2.1401072, z: -0.09716608}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7940,7 +7940,7 @@ Transform:
   m_GameObject: {fileID: 1369732643}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 42.39, y: 4.5211344, z: 0.005932264}
+  m_LocalPosition: {x: 33.38, y: 4.5211344, z: 0.005932264}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15872,7 +15872,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1377507158}
         m_TargetAssemblyTypeName: VictoryUIController, Assembly-CSharp
-        m_MethodName: ReturnToMenu
+        m_MethodName: ReturnToLevelSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15966,7 +15966,7 @@ Transform:
   m_GameObject: {fileID: 2031090822}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.38, y: 9.32, z: 0}
+  m_LocalPosition: {x: 2.76, y: 8.94, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18014,7 +18014,7 @@ PrefabInstance:
     - target: {fileID: 626074332911291271, guid: fc788ff7b23713c43a641f56e2892ace, type: 3}
       propertyPath: victoryUI
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1377507158}
     - target: {fileID: 5219789860631718699, guid: fc788ff7b23713c43a641f56e2892ace, type: 3}
       propertyPath: m_LocalPosition.x
       value: 50.63
