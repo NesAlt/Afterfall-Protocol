@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// A class which destroys it's gameobject after a certain amount of time
-/// </summary>
 public class TimedObjectDestroyer : MonoBehaviour
 {
     [Header("Settings:")]
@@ -17,14 +14,6 @@ public class TimedObjectDestroyer : MonoBehaviour
     [Tooltip("Whether or not to destroy child gameobjects when this gameobject is destroyed")]
     public bool destroyChildrenOnDeath = true;
 
-    /// <summary>
-    /// Description:
-    /// Standard Unity function called once every frame
-    /// Input: 
-    /// none
-    /// Returns: 
-    /// void (no return)
-    /// </summary>
     void Update()
     {
         // Every frame, increment the amount of time that this gameobject has been alive,
@@ -42,28 +31,12 @@ public class TimedObjectDestroyer : MonoBehaviour
     // Flag which tells whether the application is shutting down (helps avoid errors)
     public static bool quitting = false;
 
-    /// <summary>
-    /// Description:
-    /// Ensures that the quitting flag gets set correctly to avoid work as the application quits
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
     private void OnApplicationQuit()
     {
         quitting = true;
         DestroyImmediate(this.gameObject);
     }
 
-    /// <summary>
-    /// Description:
-    /// Behavior which triggers when this component is destroyed
-    /// Input: 
-    /// none
-    /// Returns:
-    /// void (no return)
-    /// </summary>
     private void OnDestroy()
     {
         if (destroyChildrenOnDeath && !quitting && Application.isPlaying)

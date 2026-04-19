@@ -51,69 +51,31 @@ public class CameraController : MonoBehaviour
     [Tooltip("The input action(s) that map to where the camera looks")]
     public InputAction lookAction;
 
-    /// <summary>
-    /// Standard Unity function called whenever the attached gameobject is enabled
-    /// </summary>
     void OnEnable()
     {
         lookAction.Enable();
     }
 
-    /// <summary>
-    /// Standard Unity function called whenever the attached gameobject is disabled
-    /// </summary>
     void OnDisable()
     {
         lookAction.Disable();
     }
 
-    /// <summary>
-    /// Description:
-    /// Standard Unity function called once before the first update
-    /// Input: 
-    /// none
-    /// Returns: 
-    /// void (no return)
-    /// </summary>
     void Start()
     {
         InitilalSetup();
     }
 
-    /// <summary>
-    /// Description:
-    /// Handles the initial setup of this script and its required components
-    /// Input:
-    /// none
-    /// Returns:
-    /// void
-    /// </summary>
     void InitilalSetup()
     {
         playerCamera = GetComponent<Camera>();
     }
 
-    /// <summary>
-    /// Description:
-    /// Standard Unity function that is called every frame
-    /// Input: 
-    /// none
-    /// Returns: 
-    /// void (no return)
-    /// </summary>
     void Update()
     {
         SetCameraPosition();
     }
 
-    /// <summary>
-    /// Description:
-    /// Sets the camera's position according to the settings
-    /// Input:
-    /// none
-    /// Return:
-    /// void (no return)
-    /// </summary>
     private void SetCameraPosition()
     {
         if (target != null)
@@ -126,15 +88,6 @@ public class CameraController : MonoBehaviour
         }      
     }
 
-    /// <summary>
-    /// Description:
-    /// Gets the follow target's position
-    /// Input: 
-    /// none
-    /// Returns: 
-    /// Vector3
-    /// </summary>
-    /// <returns>Vector3: The position of the target assigned to this camera controller.</returns>
     public Vector3 GetTargetPosition()
     {
         if (target != null)
@@ -144,31 +97,11 @@ public class CameraController : MonoBehaviour
         return transform.position;
     }
 
-    /// <summary>
-    /// Description:
-    /// Finds and returns the mouse position
-    /// Input: 
-    /// none
-    /// Returns: 
-    /// Vector3
-    /// </summary>
-    /// <returns>Vector3: The position of the player's mouse in world coordinates</returns>
     public Vector3 GetPlayerMousePosition()
     {
         return playerCamera.ScreenToWorldPoint(lookAction.ReadValue<Vector2>());
     }
 
-    /// <summary>
-    /// Description:
-    /// Takes the target's position and mouse position, and returns the desired position of the camera
-    /// Input: 
-    /// Vector3 targetPosition, Vector3 offsetPosition
-    /// Returns:
-    /// Vector3
-    /// </summary>
-    /// <param name="targetPosition"> The position of the target the camera is following. </param>
-    /// <param name="mousePosition"> The position of the mouse in world space used to determine distance from the target. </param>
-    /// <returns>Vector3: The position the camera should be at</returns>
     public Vector3 ComputeCameraPosition(Vector3 targetPosition, Vector3 mousePosition)
     {
         Vector3 result = Vector3.zero;

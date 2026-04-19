@@ -1,5 +1,3 @@
-// LevelSelectManager.cs
-
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -10,12 +8,10 @@ public class LevelSelectManager : MonoBehaviour
 {
     public static LevelSelectManager instance;
 
-    // ── Node References ───────────────────────────────────────────────────────
     [Header("Map Nodes")]
     public List<LevelNode> allLevelNodes = new();
     public List<LevelNode> bossNodes     = new();
 
-    // ── Info Panel ────────────────────────────────────────────────────────────
     [Header("Info Panel")]
     public GameObject panelRoot;
     public TMP_Text   panelLevelName;
@@ -29,17 +25,14 @@ public class LevelSelectManager : MonoBehaviour
     public Button     btnEnterLevel;
     public Button     btnClose;
 
-    // ── HUD ───────────────────────────────────────────────────────────────────
     [Header("HUD")]
     public TMP_Text hudTurnsText;
     public TMP_Text hudProgressText;
 
-    // ── Buff Selection ────────────────────────────────────────────────────────
     [Header("Buff Selection")]
     [Tooltip("The BuffSelectionPanel GameObject — hidden by default.")]
     public BuffSelectionPanel buffSelectionPanel;
 
-    // ── Re-Corruption Overlay ─────────────────────────────────────────────────
     [Header("Re-Corruption Overlay")]
     [Tooltip("Full-width panel anchored to top-center. Hidden by default.")]
     public GameObject reCorruptOverlay;
@@ -48,16 +41,9 @@ public class LevelSelectManager : MonoBehaviour
     [Tooltip("How long the overlay stays visible before auto-hiding.")]
     public float      reCorruptOverlayDuration = 4f;
 
-    // ── Boss Unlock ───────────────────────────────────────────────────────────
     [Header("Boss Unlock")]
     public GameObject bossUnlockBanner;
-
-    // ─────────────────────────────────────────────────────────────────────────
     private RunLevelState _selectedLevel;
-
-    // ═════════════════════════════════════════════════════════════════════════
-    // Lifecycle
-    // ═════════════════════════════════════════════════════════════════════════
 
     void Awake() => instance = this;
 
@@ -109,10 +95,6 @@ public class LevelSelectManager : MonoBehaviour
             ClosePanel();
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Node Binding
-    // ═════════════════════════════════════════════════════════════════════════
-
     private void BindNodesToRun()
     {
         if (RunManager.Instance == null) return;
@@ -139,9 +121,6 @@ public class LevelSelectManager : MonoBehaviour
         foreach (var node in bossNodes) node.LockNode();
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Node Refresh
-    // ═════════════════════════════════════════════════════════════════════════
 
     private void RefreshAllNodes()
     {
@@ -166,10 +145,6 @@ public class LevelSelectManager : MonoBehaviour
             hudProgressText.text = $"Cleared: {cleared} / {RunManager.Instance.RunLevels.Count}";
         }
     }
-
-    // ═════════════════════════════════════════════════════════════════════════
-    // Info Panel
-    // ═════════════════════════════════════════════════════════════════════════
 
     public void SelectLevel(RunLevelState level)
     {
@@ -226,10 +201,6 @@ public class LevelSelectManager : MonoBehaviour
             btnEnterLevel.interactable = level.NeedsClearing;
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Button Handlers
-    // ═════════════════════════════════════════════════════════════════════════
-
     public void EnterSelectedLevel()
     {
         if (_selectedLevel == null)
@@ -250,11 +221,6 @@ public class LevelSelectManager : MonoBehaviour
         _selectedLevel = null;
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Buff Selection
-    // ═════════════════════════════════════════════════════════════════════════
-
-    /// <summary>Called by BuffSelectionPanel.OnBuffChosen once the player picks.</summary>
     private void OnBuffChosen()
     {
         RunManager.Instance?.ClearPendingBuffs();
@@ -270,9 +236,6 @@ public class LevelSelectManager : MonoBehaviour
         RefreshAllNodes();
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Re-Corruption Overlay
-    // ═════════════════════════════════════════════════════════════════════════
 
     private void HandleReCorruption(RunLevelState level)
     {
@@ -293,9 +256,6 @@ public class LevelSelectManager : MonoBehaviour
         if (reCorruptOverlay) reCorruptOverlay.SetActive(false);
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Boss Unlock
-    // ═════════════════════════════════════════════════════════════════════════
 
     private void HandleBossUnlocked()
     {

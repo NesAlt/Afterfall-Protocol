@@ -1,19 +1,3 @@
-// BuffCard.cs
-// ─────────────────────────────────────────────────────────────────────────────
-// The entire card is interactive — no child button needed.
-// Hovering scales the card up slightly; clicking selects the buff.
-//
-// Requirements on the card GameObject:
-//   • This script
-//   • A Graphic component (Image) so the EventSystem can raycast it
-//   • No Button component needed
-//
-// Hierarchy:
-//   BuffCard              ← this script + Image (can be transparent if needed)
-//     BuffNameText        (TMP_Text)
-//     BuffDescriptionText (TMP_Text)
-// ─────────────────────────────────────────────────────────────────────────────
-
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -35,14 +19,12 @@ public class BuffCard : MonoBehaviour,
     [Tooltip("How fast the card scales up/down.")]
     public float scaleSpeed = 10f;
 
-    // ─────────────────────────────────────────────────────────────────────────
     private BuffReward         _buff;
     private Action<BuffReward> _onSelected;
     private bool               _interactable = false;
     private bool               _hovering     = false;
     private Vector3            _baseScale;
 
-    // ─────────────────────────────────────────────────────────────────────────
     void Awake()
     {
         _baseScale = transform.localScale;
@@ -56,10 +38,6 @@ public class BuffCard : MonoBehaviour,
         Vector3 targetScale = _hovering ? _baseScale * hoverScale : _baseScale;
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.unscaledDeltaTime * scaleSpeed);
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // Setup / Reset
-    // ─────────────────────────────────────────────────────────────────────────
 
     public void Setup(BuffReward buff, Action<BuffReward> onSelected)
     {
@@ -83,10 +61,6 @@ public class BuffCard : MonoBehaviour,
         if (buffDescriptionText) buffDescriptionText.text = "";
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Pointer Events
-    // ─────────────────────────────────────────────────────────────────────────
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (_interactable) _hovering = true;
@@ -104,10 +78,6 @@ public class BuffCard : MonoBehaviour,
         transform.localScale = _baseScale;
         _onSelected?.Invoke(_buff);
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // Display strings
-    // ─────────────────────────────────────────────────────────────────────────
 
     private string GetBuffName(BuffType type) => type switch
     {

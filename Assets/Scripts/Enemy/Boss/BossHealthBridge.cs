@@ -1,18 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// BossHealthBridge
-///
-/// Place on BlobBoss root alongside InfectionBlobBoss.
-///
-/// Health.cs lives on the BodyHitbox child. When the boss's HP hits 0,
-/// Health calls Die() which looks for an Enemy component — the boss has
-/// none, so without this bridge the BodyHitbox child gets Destroyed and
-/// the arena doors never open.
-///
-/// This bridge subscribes to Health.OnHealthChanged and intercepts the
-/// death, calling OnBossDeath() on the Boss component instead.
-/// </summary>
 public class BossHealthBridge : MonoBehaviour
 {
     [Tooltip("Drag the BodyHitbox child's Health component here.")]

@@ -1,5 +1,3 @@
-// EnemySpawner.cs
-
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,7 +30,6 @@ public class EnemySpawner : MonoBehaviour
     private bool spawningActive = false;
     private int  aliveEnemies   = 0;
 
-    // ═════════════════════════════════════════════════════════════════════════
     public void StartSpawning(ArenaController arenaController)
     {
         // Safety: if enemyPrefab isn't assigned this spawner can't function.
@@ -63,7 +60,6 @@ public class EnemySpawner : MonoBehaviour
         StopAllCoroutines();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     IEnumerator SpawnRoutine()
     {
         // Apply corruption-based spawn cap increase once at start
@@ -96,7 +92,6 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     void SpawnEnemyAtPoint(GameObject prefab, bool isFinal, SpawnPoint point)
     {
         if (prefab == null)
@@ -114,7 +109,6 @@ public class EnemySpawner : MonoBehaviour
         totalSpawned++;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     SpawnPoint GetNextSpawnPoint()
     {
         List<SpawnPoint> validPoints = new List<SpawnPoint>();
@@ -162,7 +156,6 @@ public class EnemySpawner : MonoBehaviour
         return points[points.Count - 1];
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     public void SpawnFinalEnemy()
     {
         StopSpawning();
@@ -186,7 +179,6 @@ public class EnemySpawner : MonoBehaviour
         boss.Initialize(arena, arena.player);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     public void NotifyEnemyDeath(SpawnPoint point)
     {
         aliveEnemies--;

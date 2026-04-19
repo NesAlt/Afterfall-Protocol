@@ -1,21 +1,10 @@
-// LevelNode.cs
-// ─────────────────────────────────────────────────────────────────────────────
-// Attach to every level icon on your world map (21 total).
-// Each node is pre-assigned a LevelData asset in the inspector at edit time.
-//
-// At runtime LevelSelectManager calls one of three methods:
-//   ActivateNode(state)  — this level was chosen this run, make it playable
-//   LockNode()           — not chosen this run, show as greyed/locked
-//   SetBossVisible(state)— for boss nodes only, revealed after 5 clears
-// ─────────────────────────────────────────────────────────────────────────────
-
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class LevelNode : MonoBehaviour
 {
-    // ── Inspector — set at edit time ──────────────────────────────────────────
+
     [Header("Pre-Assigned Level (set in Inspector)")]
     public LevelData assignedLevelData;
 
@@ -38,15 +27,9 @@ public class LevelNode : MonoBehaviour
     [Tooltip("Optional separate object to show a lock icon over the node.")]
     public GameObject lockOverlay;
 
-    // ── Runtime State ─────────────────────────────────────────────────────────
     public RunLevelState LevelState  { get; private set; }
     public bool          IsActive    { get; private set; }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Called by LevelSelectManager
-    // ═════════════════════════════════════════════════════════════════════════
-
-    /// <summary>This node's level was selected for the current run — make it interactive.</summary>
     public void ActivateNode(RunLevelState state)
     {
         LevelState = state;
@@ -79,11 +62,6 @@ public class LevelNode : MonoBehaviour
             LockNode();
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Display Refresh
-    // ═════════════════════════════════════════════════════════════════════════
-
-    /// <summary>Re-reads LevelState and updates all UI elements.</summary>
     public void RefreshDisplay()
     {
         if (!IsActive || LevelState == null) return;
@@ -113,7 +91,6 @@ public class LevelNode : MonoBehaviour
             selectButton.interactable = LevelState.NeedsClearing;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     private void OnNodeClicked()
     {
         LevelSelectManager.instance?.SelectLevel(LevelState);

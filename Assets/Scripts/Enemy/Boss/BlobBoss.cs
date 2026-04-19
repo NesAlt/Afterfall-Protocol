@@ -332,13 +332,6 @@ public class BlobBoss : Boss
         }
     }
 
-    /// <summary>
-    /// Toggles the attack hitbox collider and Damage component on/off.
-    /// The Damage component on AttackHitbox should have:
-    ///   - teamId = 1  (boss team)
-    ///   - dealDamageOnTriggerEnter = true
-    ///   - destroyAfterDamage = false
-    /// </summary>
     private void SetAttackHitbox(bool active)
     {
         if (attackHitboxCollider != null) attackHitboxCollider.enabled = active;

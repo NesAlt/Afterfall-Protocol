@@ -17,4 +17,12 @@ MonoBehaviour:
   region: 6
   levelType: 1
   missionObjective: Collect Samples for Testing
-  buffPool: []
+  buffPool:
+  - buffType: 0
+    value: 35
+  - buffType: 1
+    value: 0.25
+  - buffType: 2
+    value: 0.15
+  - buffType: 3
+    value: 0.1

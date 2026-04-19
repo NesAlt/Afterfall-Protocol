@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0df99be5e8783784e9faddd76bae4a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
+  cam: {fileID: 292561389}
   parallaxEffect: 0.4
   infiniteHorizontal: 1
   stretchToFillCamera: 1
@@ -15270,7 +15270,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.72156864, g: 0.9137255, b: 0.8352941, a: 1}
   m_Origin: {x: -11, y: -4, z: 0}
   m_Size: {x: 50, y: 31, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -15996,7 +15996,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0df99be5e8783784e9faddd76bae4a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
+  cam: {fileID: 292561389}
   parallaxEffect: 0.05
   infiniteHorizontal: 1
   stretchToFillCamera: 1
@@ -17383,7 +17383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0df99be5e8783784e9faddd76bae4a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
+  cam: {fileID: 292561389}
   parallaxEffect: 0.6
   infiniteHorizontal: 1
   stretchToFillCamera: 1
@@ -17729,7 +17729,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0df99be5e8783784e9faddd76bae4a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
+  cam: {fileID: 292561389}
   parallaxEffect: 0.8
   infiniteHorizontal: 1
   stretchToFillCamera: 1

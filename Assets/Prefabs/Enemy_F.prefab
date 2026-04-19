@@ -323,11 +323,7 @@ MonoBehaviour:
   defaultHealth: 10
   maximumHealth: 10
   currentHealth: 10
-  invincibilityTime: 0.3
-  useLives: 0
-  currentLives: 3
-  maximumLives: 5
-  respawnWaitTime: 3
+  invincibilityTime: 0.2
   isInvincible: 0
   deathEffect: {fileID: 0}
   hitEffect: {fileID: 0}

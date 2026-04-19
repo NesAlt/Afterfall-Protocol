@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// This class handles interactions with the animator component of the player
-/// It reads the player's state from the controller and animates accordingly
-/// </summary>
 public class PlayerAnimator : MonoBehaviour
 {
     [Header("Settings")]
@@ -14,40 +10,16 @@ public class PlayerAnimator : MonoBehaviour
     [Tooltip("The animator component that controls the player's animations")]
     public Animator animator;
 
-    /// <summary>
-    /// Description:
-    /// Standard Unity function called once before the first update
-    /// Input:
-    /// none
-    /// Return:
-    /// void (no return)
-    /// </summary>
     void Start()
     {
         ReadPlayerStateAndAnimate();
     }
 
-    /// <summary>
-    /// Description:
-    /// Standard Unity function called every frame
-    /// Input:
-    /// none
-    /// Return:
-    /// void (no return)
-    /// </summary>
     void Update()
     {
         ReadPlayerStateAndAnimate();
     }
 
-    /// <summary>
-    /// Description:
-    /// Reads the player's state and then sets and unsets booleans in the animator accordingly
-    /// Input:
-    /// none
-    /// Returns:
-    /// void (no return)
-    /// </summary>
     void ReadPlayerStateAndAnimate()
     {
         if (animator == null)
@@ -99,6 +71,18 @@ public class PlayerAnimator : MonoBehaviour
             animator.SetBool("isDead", false);
         }
     }
+    public void OnAttackStart()
+    {
+        if (playerController != null)
+            playerController.isAttacking = true;
+    }
+
+    public void OnAttackEnd()
+    {
+        if (playerController != null)
+            playerController.isAttacking = false;
+    }
+    
     public void PlayAttack()
     {
         if (animator == null) return;

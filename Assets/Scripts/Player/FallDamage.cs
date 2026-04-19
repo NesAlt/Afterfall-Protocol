@@ -98,11 +98,6 @@ public class FallDamage : MonoBehaviour
             Instantiate(hardLandingEffect, transform.position, Quaternion.identity);
     }
 
-    /// <summary>
-    /// Call this from PlayerController whenever a wall jump is performed.
-    /// Grants a short immunity window so the upward arc and any brief
-    /// downward dip between wall jumps never count as a fall.
-    /// </summary>
     public void NotifyWallJump()
     {
         wallJumpImmunityTimer = wallJumpImmunityDuration;

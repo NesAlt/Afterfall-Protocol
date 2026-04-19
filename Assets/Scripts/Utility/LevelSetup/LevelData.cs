@@ -1,9 +1,3 @@
-// LevelData.cs
-// ScriptableObject asset that holds the static design data for one level.
-// Create 7 AreaClear + 7 KillAndCollect + 7 Boss assets (one per region each).
-//
-// Menu: Assets > Create > Game > Level Data
-
 using System.Collections.Generic;
 using UnityEngine;
 

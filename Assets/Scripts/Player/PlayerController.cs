@@ -3,98 +3,67 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/// <summary>
-/// Class which handles player movement
-/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Game Object and Component References")]
-    [Tooltip("The Ground Check component used to check whether this player is grounded currently.")]
     public GroundCheck groundCheck = null;
-    [Tooltip("The sprite renderer that represents the player.")]
     public SpriteRenderer spriteRenderer = null;
-    [Tooltip("The health component attached to the player.")]
     public Health playerHealth;
 
-    [Tooltip("Point from which projectiles are fired")]
     [SerializeField] private Transform firePoint;
     private Vector3 firePointRightLocalPos;
     private Vector3 firePointLeftLocalPos;
-    // The rigidbody used to move the player (necessary for this component, so not made public)
     private Rigidbody2D playerRigidbody = null;
-    #region Getters (primarily from other components)
-    #region Directional facing
-    /// <summary>
-    /// Enum to help determine which direction the player is facing.
-    /// </summary>
-    public enum PlayerDirection
-    {
-        Right,
-        Left
-    }
 
-    // Which way the player is facing right now
+    #region Directional Facing
+    public enum PlayerDirection { Right, Left }
+
     public PlayerDirection facing
     {
         get
         {
-            if (moveAction.ReadValue<Vector2>().x > 0)
-            {
-                return PlayerDirection.Right;
-            }
-            else if (moveAction.ReadValue<Vector2>().x < 0)
-            {
-                return PlayerDirection.Left;
-            }
+            if (moveAction.ReadValue<Vector2>().x > 0)       return PlayerDirection.Right;
+            else if (moveAction.ReadValue<Vector2>().x < 0)  return PlayerDirection.Left;
             else
             {
-                if (spriteRenderer != null && spriteRenderer.flipX == true)
-                    return PlayerDirection.Left;
+                if (spriteRenderer != null && spriteRenderer.flipX) return PlayerDirection.Left;
                 return PlayerDirection.Right;
             }
         }
     }
     #endregion
 
-    // Whether this player is grounded false if no ground check component assigned
-    public bool grounded
-    {
-        get
-        {
-            if (groundCheck != null)
-            {
-                return groundCheck.CheckGrounded();
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
-
-    #endregion
+    public bool grounded => groundCheck != null && groundCheck.CheckGrounded();
 
     [Header("Movement Settings")]
-    [Tooltip("The speed at which to move the player horizontally")]
+    [Tooltip("Base movement speed — buff multiplier is applied on top at runtime.")]
     public float movementSpeed = 4.0f;
+    private float _effectiveSpeed;   // movementSpeed × (1 + MoveSpeedBonus)
 
     [Header("Jump Settings")]
-    [Tooltip("The force with which the player jumps.")]
-    public float jumpPower = 10.0f;
-    [Tooltip("The number of jumps that the player is alowed to make.")]
-    public int allowedJumps = 1;
-    [Tooltip("The duration that the player spends in the \"jump\" state")]
+    public float jumpPower    = 10.0f;
+    public int   allowedJumps = 1;
     public float jumpDuration = 0.1f;
-    [Tooltip("The effect to spawn when the player jumps")]
     public GameObject jumpEffect = null;
+
     [Header("Combat")]
     public bool isAttacking = false;
-    [Tooltip("Layers to pass through when moving upwards")]
-    // public List<string> passThroughLayers = new List<string>();
+
     [Header("Projectile")]
     [SerializeField] private GameObject projectilePrefab;
-    // [SerializeField] private float projectileSpeed = 12f;
+
+    [Tooltip("Base seconds between shots — reduced by FireRate buff.")]
+    [SerializeField] private float baseFireCooldown = 0.5f;
+    private float _fireCooldown;        // baseFireCooldown / (1 + FireRateBonus)
+    private float _lastFireTime = -999f;
+
+    [Tooltip("Base bullets fired per shot — increased by BulletCount buff.")]
+    [SerializeField] private int baseBulletCount = 1;
+
+
+    private int _effectiveBulletCount;  // baseBulletCount + BulletCountBonus
+
     [Header("Wall Detection")]
     [SerializeField] private Transform wallCheckLeft;
     [SerializeField] private Transform wallCheckRight;
@@ -104,150 +73,90 @@ public class PlayerController : MonoBehaviour
     private bool isTouchingWallRight;
 
     [Header("Input Actions & Controls")]
-    [Tooltip("The input action(s) that map to player movement")]
     public InputAction moveAction;
-    [Tooltip("The input action(s) that map to jumping")]
     public InputAction jumpAction;
-
-    [Tooltip("The input action(s) that map to attacking")]
     public InputAction attackAction;
 
     [Header("Wall Jump")]
-
     [SerializeField] private float maxFallSpeed = 20f;
     public float wallJumpForce = 10f;
     public Vector2 wallJumpDirection = new Vector2(1, 1);
-    private float wallJumpLockTime = 0.2f;
+    private float wallJumpLockTime    = 0.2f;
     private float wallJumpLockCounter;
 
-    // The number of times this player has jumped since being grounded
-    private int timesJumped = 0;
-    // Whether the player is in the middle of a jump right now
-    private bool jumping = false;
-
-    private bool isInsideBuilding = false;
     [SerializeField] private float buildingJumpMultiplier = 1.5f;
+    private bool isInsideBuilding = false;
 
-    #region Player State Variables
-    /// <summary>
-    /// Enum used for categorizing the player's state
-    /// </summary>
-    public enum PlayerState
-    {
-        Idle,
-        Walk,
-        Jump,
-        Fall,
-        Dead
-    }
+    private int  timesJumped = 0;
+    private bool jumping     = false;
 
-    private IEnumerator AttackRoutine()
-    {
-        isAttacking = true;
-
-        // Stop horizontal movement immediately
-        playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
-
-        // Trigger animation
-        PlayerAnimator animator = GetComponent<PlayerAnimator>();
-        if (animator != null)
-        {
-            animator.PlayAttack();
-        }
-
-        yield return new WaitForSeconds(0.4f);
-
-        isAttacking = false;
-    }
-
-    // The player's current state (walking, idle, jumping, or falling)
+    public enum PlayerState { Idle, Walk, Jump, Fall, Dead }
     public PlayerState state = PlayerState.Idle;
-    #endregion
 
-    #region Functions
-    #region GameObject Functions
 
-    /// <summary>
-    /// Standard Unity function called whenever the attached gameobject is enabled
-    /// </summary>
-    void OnEnable()
-    {
-        moveAction.Enable();
-        jumpAction.Enable();
-        attackAction.Enable();
-    }
+    void OnEnable()  { moveAction.Enable();  jumpAction.Enable();  attackAction.Enable(); }
+    void OnDisable() { moveAction.Disable(); jumpAction.Disable(); attackAction.Disable(); }
 
-    /// <summary>
-    /// Standard Unity function called whenever the attached gameobject is disabled
-    /// </summary>
-    void OnDisable()
-    {
-        moveAction.Disable();
-        jumpAction.Disable();
-        attackAction.Disable();
-    }
-
-    /// <summary>
-    /// Description:
-    /// Standard Unity function called once before the first update
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
     private void Start()
     {
         SetupRigidbody();
 
-         if (firePoint != null)
+        if (firePoint != null)
         {
             firePointRightLocalPos = firePoint.localPosition;
-            firePointLeftLocalPos = new Vector3(
+            firePointLeftLocalPos  = new Vector3(
                 -firePointRightLocalPos.x,
-                firePointRightLocalPos.y,
-                firePointRightLocalPos.z
-            );
+                 firePointRightLocalPos.y,
+                 firePointRightLocalPos.z);
         }
+
+        ApplyBuffs();
     }
 
-    /// <summary>
-    /// Description:
-    /// Standard Unity function called once every frame after update
-    /// Every frame, process input, move the player, determine which way they should face, and choose which state they are in
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
+    private void ApplyBuffs()
+    {
+        if (PlayerBuffManager.Instance != null)
+        {
+            // Movement speed
+            _effectiveSpeed = movementSpeed * (1f + PlayerBuffManager.Instance.MoveSpeedBonus);
+
+            // Fire rate — higher bonus = shorter cooldown
+            _fireCooldown = baseFireCooldown / (1f + PlayerBuffManager.Instance.FireRateBonus);
+
+            // Bullet count
+            _effectiveBulletCount = baseBulletCount + PlayerBuffManager.Instance.BulletCountBonus;
+        }
+        else
+        {
+            // No buff manager (editor testing) — use base values
+            _effectiveSpeed       = movementSpeed;
+            _fireCooldown         = baseFireCooldown;
+            _effectiveBulletCount = baseBulletCount;
+        }
+
+        Debug.Log($"[Player] Speed: {_effectiveSpeed:F2} | FireCooldown: {_fireCooldown:F2}s | Bullets: {_effectiveBulletCount}");
+    }
+
+
     private void FixedUpdate()
     {
-        // Cap fall speed here, in the physics step, so the limit
-        // is enforced before the engine resolves collisions
         if (playerRigidbody.velocity.y < -maxFallSpeed)
             playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, -maxFallSpeed);
     }
 
     private void LateUpdate()
     {
-        if (wallJumpLockCounter > 0)
-            wallJumpLockCounter -= Time.deltaTime;
+        if (wallJumpLockCounter > 0) wallJumpLockCounter -= Time.deltaTime;
 
-        isTouchingWallLeft = Physics2D.OverlapCircle(wallCheckLeft.position, wallCheckRadius, wallLayer);
+        isTouchingWallLeft  = Physics2D.OverlapCircle(wallCheckLeft.position,  wallCheckRadius, wallLayer);
         isTouchingWallRight = Physics2D.OverlapCircle(wallCheckRight.position, wallCheckRadius, wallLayer);
-        Debug.Log($"WallL: {isTouchingWallLeft}, WallR: {isTouchingWallRight}, Grounded: {grounded}");
+
         ProcessInput();
         HandleSpriteDirection();
         DetermineState();
     }
-    #endregion
 
-    #region Input Handling and Movement Functions
-    /// <summary>
-    /// Description:
-    /// Processes input
-    /// Input: none
-    /// Return: void (no return)
-    /// </summary>
+
     private void ProcessInput()
     {
         HandleMovementInput();
@@ -255,164 +164,114 @@ public class PlayerController : MonoBehaviour
         HandleAttackInput();
     }
 
-    /// <summary>
-    /// Description:
-    /// Handles movement input
-    /// Input: none
-    /// Return: void (no return)
-    /// </summary>
     private void HandleMovementInput()
     {
-
-        if (isAttacking || state == PlayerState.Dead)
-        {
-            MovePlayer(Vector2.zero);
-            return;
-        }
+        if (isAttacking || state == PlayerState.Dead) { MovePlayer(Vector2.zero); return; }
 
         Vector2 movementForce = Vector2.zero;
-        if (Mathf.Abs(moveAction.ReadValue<Vector2>().x) > 0 && state != PlayerState.Dead)
-        {
-            movementForce = transform.right * movementSpeed * moveAction.ReadValue<Vector2>().x;
-        }
+        if (Mathf.Abs(moveAction.ReadValue<Vector2>().x) > 0)
+            movementForce = transform.right * _effectiveSpeed * moveAction.ReadValue<Vector2>().x;
+
         MovePlayer(movementForce);
     }
 
     private void HandleAttackInput()
     {
-        if (attackAction.triggered && !isAttacking && grounded && state != PlayerState.Dead)
-        {
-            StartCoroutine(AttackRoutine());
-        }
+        if (!attackAction.triggered || isAttacking || !grounded || state == PlayerState.Dead)
+            return;
+        if (Time.time < _lastFireTime + _fireCooldown)
+            return;
+        StartCoroutine(AttackRoutine());
     }
+
+
+    [Tooltip("Delay in seconds between each bullet in a burst.")]
+    [SerializeField] private float burstDelay = 0.08f;
+
     public void FireProjectile()
     {
-        if (projectilePrefab == null || firePoint == null)
-            return;
+        if (projectilePrefab == null || firePoint == null) return;
+        _lastFireTime = Time.time;
+        StartCoroutine(BurstFireRoutine());
+    }
 
-        GameObject proj = Instantiate(
-            projectilePrefab,
-            firePoint.position,
-            Quaternion.identity
-        );
-
-        float xDir = Mathf.Sign(firePoint.localPosition.x);
+    private IEnumerator BurstFireRoutine()
+    {
+        float xDir  = Mathf.Sign(firePoint.localPosition.x);
         Vector2 dir = new Vector2(xDir, 0f);
+        int count   = Mathf.Max(1, _effectiveBulletCount);
 
-        Projectile projectile = proj.GetComponent<Projectile>();
-        if (projectile != null)
+        for (int i = 0; i < count; i++)
         {
-            projectile.Init(dir);
+            GameObject proj   = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+            Projectile bullet = proj.GetComponent<Projectile>();
+            if (bullet != null) bullet.Init(dir);
+
+            if (i < count - 1)
+                yield return new WaitForSeconds(burstDelay);
         }
     }
 
-    public void SetInsideBuilding(bool value)
+    private IEnumerator AttackRoutine()
     {
-        if (!grounded) return;
+        isAttacking = true;
+        playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
 
-        isInsideBuilding = value;
+        PlayerAnimator animator = GetComponent<PlayerAnimator>();
+        if (animator != null) animator.PlayAttack();
+
+        yield return new WaitForSeconds(0.4f);
+        isAttacking = false;
     }
 
-    /// <summary>
-    /// Description:
-    /// Moves the player with a specified force
-    /// Input: 
-    /// Vector2 movementForce
-    /// Return: 
-    /// void (no return)
-    /// </summary>
-    /// <param name="movementForce">The force with which to move the player</param>
     private void MovePlayer(Vector2 movementForce)
     {
+        // If attacking, kill horizontal velocity and do nothing else
+        if (isAttacking)
+        {
+            playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
+            return;
+        }
+
         float inputX = moveAction.ReadValue<Vector2>().x;
 
-        bool pushingIntoWall =
-            (isTouchingWallLeft && inputX < 0) ||
-            (isTouchingWallRight && inputX > 0);
-
-        if ((isTouchingWallLeft || isTouchingWallRight) && !grounded && playerRigidbody.velocity.y <= 0 && wallJumpLockCounter <= 0)
+        if ((isTouchingWallLeft || isTouchingWallRight) &&
+            !grounded &&
+            playerRigidbody.velocity.y <= 0 &&
+            wallJumpLockCounter <= 0)
         {
-            float horizontal = inputX * movementSpeed;
-
-            if (isTouchingWallLeft && inputX < 0)
-                horizontal = 0;
-
-            if (isTouchingWallRight && inputX > 0)
-                horizontal = 0;
-
+            float horizontal = inputX * _effectiveSpeed;
+            if (isTouchingWallLeft  && inputX < 0) horizontal = 0;  
+            if (isTouchingWallRight && inputX > 0) horizontal = 0;
             playerRigidbody.velocity = new Vector2(horizontal, -2f);
         }
         else
         {
-            playerRigidbody.velocity = new Vector2(inputX * movementSpeed, playerRigidbody.velocity.y);
+            playerRigidbody.velocity = new Vector2(inputX * _effectiveSpeed, playerRigidbody.velocity.y);
         }
-        // if (playerRigidbody.velocity.y > 0)
-        // {
-        //     foreach (string layerName in passThroughLayers)
-        //     {
-        //         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer(layerName), true);
-        //     } 
-        // }
-        // else
-        // {
-        //     foreach (string layerName in passThroughLayers)
-        //     {
-        //         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer(layerName), false);
-        //     }
-        // }
     }
 
-    /// <summary>
-    /// Description:
-    /// Handles jump input
-    /// Input:
-    /// none
-    /// Return:
-    /// void (no return)
-    /// </summary>
-private void HandleJumpInput()
+    private void HandleJumpInput()
     {
-        if (isAttacking || state == PlayerState.Dead)
-            return;
+        if (isAttacking || state == PlayerState.Dead) return;
 
         if (jumpAction.triggered)
         {
-            if (isTouchingWallLeft || isTouchingWallRight)
-            {
-                WallJump();
-                return;
-            }
-
+            if (isTouchingWallLeft || isTouchingWallRight) { WallJump(); return; }
             float multiplier = isInsideBuilding ? buildingJumpMultiplier : 1.0f;
-            StartCoroutine("Jump", multiplier);        
+            StartCoroutine("Jump", multiplier);
         }
     }
+
     private void WallJump()
     {
-        float direction = 0;
+        float direction = isTouchingWallLeft ? 1f : -1f;
         wallJumpLockCounter = wallJumpLockTime;
-
-        if (isTouchingWallLeft)
-            direction = 1;  
-        else if (isTouchingWallRight)
-            direction = -1; 
-
-        Vector2 force = new Vector2(direction * wallJumpDirection.x, wallJumpDirection.y);
         GetComponent<FallDamage>().NotifyWallJump();
-
         playerRigidbody.velocity = Vector2.zero;
-        playerRigidbody.AddForce(force * wallJumpForce, ForceMode2D.Impulse);
+        playerRigidbody.AddForce(new Vector2(direction * wallJumpDirection.x, wallJumpDirection.y) * wallJumpForce, ForceMode2D.Impulse);
     }
 
-    /// <summary>
-    /// Description:
-    /// Coroutine which causes the player to jump.
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
-    /// <returns>IEnumerator: makes coroutine possible</returns>
     private IEnumerator Jump(float powerMultiplier = 1.0f)
     {
         if (timesJumped < allowedJumps && state != PlayerState.Dead)
@@ -423,169 +282,55 @@ private void HandleJumpInput()
             playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, 0);
             playerRigidbody.AddForce(transform.up * jumpPower * powerMultiplier, ForceMode2D.Impulse);
             timesJumped++;
-            while (time < jumpDuration)
-            {
-                yield return null;
-                time += Time.deltaTime;
-            }
+            while (time < jumpDuration) { yield return null; time += Time.deltaTime; }
             jumping = false;
         }
     }
 
-    /// <summary>
-    /// Description:
-    /// Spawns the effect that occurs when the player jumps
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
     private void SpawnJumpEffect()
     {
-        if (jumpEffect != null)
-        {
-            Instantiate(jumpEffect, transform.position, transform.rotation, null);
-        }
+        if (jumpEffect != null) Instantiate(jumpEffect, transform.position, transform.rotation, null);
     }
 
-    /// <summary>
-    /// Description:
-    /// Bounces the player upwards, refunding jumps.
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
     public void Bounce()
     {
         timesJumped = 0;
-        if (jumpAction.ReadValue<float>() >= 1)
-        {
-            StartCoroutine("Jump", 1.5f);
-        }
-        else
-        {
-            StartCoroutine("Jump", 1.0f);
-        }
+        StartCoroutine("Jump", jumpAction.ReadValue<float>() >= 1 ? 1.5f : 1.0f);
     }
 
-    /// <summary>
-    /// Description:
-    /// Determines which way the player should be facing, then makes them face in that direction
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
+    public void SetInsideBuilding(bool value) { if (!grounded) return; isInsideBuilding = value; }
+
     private void HandleSpriteDirection()
     {
-        if (spriteRenderer != null)
-        {
-            if (facing == PlayerDirection.Left)
-            {
-                spriteRenderer.flipX = true;
-                if (firePoint != null)
-                    firePoint.localPosition = firePointLeftLocalPos;
-            }
-            else
-            {
-                spriteRenderer.flipX = false;
-                if (firePoint != null)
-                    firePoint.localPosition = firePointRightLocalPos;
-            }
-        }
-    }
-    #endregion
-
-    #region State Functions
-    /// <summary>
-    /// Description:
-    /// Gets and returns the player's current state
-    /// Input: 
-    /// none
-    /// Return: 
-    /// PlayerState
-    /// </summary>
-    /// <returns>PlayerState: The player's current state (idle, walking, jumping, falling</returns>
-    private PlayerState GetState()
-    {
-        return state;
+        if (spriteRenderer == null) return;
+        bool left = facing == PlayerDirection.Left;
+        spriteRenderer.flipX = left;
+        if (firePoint != null)
+            firePoint.localPosition = left ? firePointLeftLocalPos : firePointRightLocalPos;
     }
 
-    /// <summary>
-    /// Description:
-    /// Sets the player's current state
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
-    /// <param name="newState">The PlayerState to set the current state to</param>
-    private void SetState(PlayerState newState)
-    {
-        state = newState;
-    }
-
-    /// <summary>
-    /// Description:
-    /// Determines which state is appropriate for the player currently
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
     private void DetermineState()
     {
-        if (isAttacking)
-            return;
+        if (isAttacking) return;
 
         if (playerHealth.currentHealth <= 0)
         {
-            SetState(PlayerState.Dead);
+            state = PlayerState.Dead;
         }
         else if (grounded)
         {
-            if (playerRigidbody.velocity.magnitude > 0)
-            {
-                SetState(PlayerState.Walk);
-            }
-            else
-            {
-                SetState(PlayerState.Idle);
-            }
-            if (!jumping)
-            {
-                timesJumped = 0;
-            }
+            state = playerRigidbody.velocity.magnitude > 0 ? PlayerState.Walk : PlayerState.Idle;
+            if (!jumping) timesJumped = 0;
         }
         else
         {
-            if (jumping)
-            {
-                SetState(PlayerState.Jump);
-            }
-            else
-            {
-                SetState(PlayerState.Fall);
-            }
+            state = jumping ? PlayerState.Jump : PlayerState.Fall;
         }
     }
-    #endregion
 
-    /// <summary>
-    /// Description:
-    /// Sets up the player's rigidbody
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
     private void SetupRigidbody()
     {
         if (playerRigidbody == null)
-        {
             playerRigidbody = GetComponent<Rigidbody2D>();
-        }
     }
-    #endregion
 }

@@ -47,10 +47,6 @@ public class BossTentacle : MonoBehaviour
         visual.localScale = new Vector3(1f, 0f, 1f);
     }
 
-    /// <summary>
-    /// Called by InfectionBlobBoss immediately after Instantiate.
-    /// Rotates the tentacle to face the given direction and starts the lifetime.
-    /// </summary>
     public void Launch(Vector2 direction)
     {
         // Rotate root so the Visual child's local Up points in the launch direction
@@ -69,12 +65,8 @@ public class BossTentacle : MonoBehaviour
 
     private IEnumerator TentacleLifetime()
     {
-        // --- Extend ---
-        // Scale Y from 0 to 1 over extendTime.
-        // The Animator's Extend state plays the 4-frame animation in parallel.
-        yield return StartCoroutine(ScaleY(0f, 1f, extendTime));
 
-        // Animator auto-transitions to Linger via Has Exit Time when Extend finishes
+        yield return StartCoroutine(ScaleY(0f, 1f, extendTime));
 
         // Enable hitbox now that the tentacle is fully out
         if (hitCollider != null)
@@ -96,11 +88,6 @@ public class BossTentacle : MonoBehaviour
         Destroy(gameObject);
     }
 
-    /// <summary>
-    /// Smoothly scales the Visual child's local Y between two values.
-    /// X and Z are left at 1 so the sprite width is unchanged.
-    /// Because the CapsuleCollider2D is on Visual, it resizes automatically.
-    /// </summary>
     private IEnumerator ScaleY(float from, float to, float duration)
     {
         if (visual == null) yield break;

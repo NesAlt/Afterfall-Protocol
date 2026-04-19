@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+
 public class Health : MonoBehaviour
 {
     [Header("Team Settings")]
@@ -20,7 +21,7 @@ public class Health : MonoBehaviour
 
     [Header("Invincibility - Testing")]
     [Tooltip("If true, this object will not take any damage")]
-     public bool isInvincible = false;
+    public bool isInvincible = false;
     private float timeToBecomeDamagableAgain = 0;
     private bool isInIFrames = false;
 
@@ -31,15 +32,21 @@ public class Health : MonoBehaviour
     {
         if (CompareTag("Player"))
         {
-            currentHealth = defaultHealth;
+            // Apply flat health bonus from buffs earned this run
+            int bonus = PlayerBuffManager.Instance != null
+                ? (int)PlayerBuffManager.Instance.HealthBonus : 0;
+
+            defaultHealth  += bonus;
+            maximumHealth  += bonus;
+            currentHealth   = defaultHealth;
         }
 
         if (!CompareTag("Player") && LevelManager.Instance != null)
         {
-            float mult = LevelManager.Instance.GetEnemyHealthMultiplier();
+            float mult    = LevelManager.Instance.GetEnemyHealthMultiplier();
             maximumHealth = Mathf.RoundToInt(maximumHealth * mult);
             currentHealth = Mathf.RoundToInt(defaultHealth * mult);
-            defaultHealth = currentHealth; 
+            defaultHealth = currentHealth;
         }
     }
 
@@ -47,32 +54,25 @@ public class Health : MonoBehaviour
     {
         InvincibilityCheck();
     }
+
     private void InvincibilityCheck()
     {
         if (isInIFrames && timeToBecomeDamagableAgain <= Time.time)
-        {
             isInIFrames = false;
-        }
     }
 
     public void TakeDamage(int damageAmount)
     {
         if (isInvincible) return;
-
         if (isInIFrames || currentHealth <= 0) return;
 
         if (hitEffect != null)
-        {
             Instantiate(hitEffect, transform.position, transform.rotation, null);
-        }
 
         isInIFrames = true;
         timeToBecomeDamagableAgain = Time.time + invincibilityTime;
 
         currentHealth = Mathf.Max(currentHealth - damageAmount, 0);
-        
-        // Debug.Log("Damage on: " + gameObject.name);
-        // Debug.Log("Health changed to: " + currentHealth);
 
         OnHealthChanged?.Invoke();
         CheckDeath();
@@ -82,9 +82,7 @@ public class Health : MonoBehaviour
     {
         currentHealth += healingAmount;
         if (currentHealth > maximumHealth)
-        {
             currentHealth = maximumHealth;
-        }
 
         OnHealthChanged?.Invoke();
         CheckDeath();
@@ -109,19 +107,13 @@ public class Health : MonoBehaviour
     void Die()
     {
         if (deathEffect != null)
-        {
             Instantiate(deathEffect, transform.position, transform.rotation, null);
-        }
 
         if (CompareTag("Player"))
         {
-            PlayerDeathController deathController =
-                GetComponent<PlayerDeathController>();
-
+            PlayerDeathController deathController = GetComponent<PlayerDeathController>();
             if (deathController != null)
-            {
                 deathController.HandleDeath();
-            }
         }
         else
         {
@@ -134,14 +126,10 @@ public class Health : MonoBehaviour
             {
                 Boss boss = GetComponent<Boss>();
                 if (boss != null)
-                {
                     boss.OnBossDeath();
-                }
                 else
-                {
                     Destroy(this.gameObject);
-                }
-            }   
+            }
         }
     }
 }

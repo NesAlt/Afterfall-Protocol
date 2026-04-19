@@ -121,7 +121,7 @@ Transform:
   m_GameObject: {fileID: 7376246013448095236}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.345, y: 0.25, z: 0}
+  m_LocalPosition: {x: 0.44, y: 0.14, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -447,6 +447,8 @@ MonoBehaviour:
   jumpEffect: {fileID: 0}
   isAttacking: 0
   projectilePrefab: {fileID: 2307695141894675803, guid: d827d251e5012924f95540b3250b1788, type: 3}
+  baseFireCooldown: 0.5
+  baseBulletCount: 2
   wallCheckLeft: {fileID: 5433058212606175097}
   wallCheckRight: {fileID: 582478701189864478}
   wallCheckRadius: 0.2
@@ -536,10 +538,12 @@ MonoBehaviour:
       m_Action: Attack
       m_Flags: 0
     m_Flags: 0
+  maxFallSpeed: 20
   wallJumpForce: 15
   wallJumpDirection: {x: 1, y: 1}
   buildingJumpMultiplier: 1.5
   state: 0
+  burstDelay: 0.08
 --- !u!114 &4072942725601109035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -557,10 +561,6 @@ MonoBehaviour:
   maximumHealth: 100
   currentHealth: 100
   invincibilityTime: 0.3
-  useLives: 0
-  currentLives: 3
-  maximumLives: 5
-  respawnWaitTime: 3
   isInvincible: 0
   deathEffect: {fileID: 0}
   hitEffect: {fileID: 0}

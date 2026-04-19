@@ -1,4 +1,3 @@
-// LevelEndPickup.cs
 using UnityEngine;
 
 public class LevelEndItem : MonoBehaviour
@@ -11,7 +10,6 @@ public class LevelEndItem : MonoBehaviour
 
         LevelManager.Instance?.NotifyLevelCleared();
 
-        // 2. Show victory UI
         victoryUI?.ShowVictory();
 
         Destroy(gameObject);

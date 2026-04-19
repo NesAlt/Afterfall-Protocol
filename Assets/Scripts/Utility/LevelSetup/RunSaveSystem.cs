@@ -1,15 +1,3 @@
-// RunSaveSystem.cs
-// ─────────────────────────────────────────────────────────────────────────────
-// Handles all run persistence using PlayerPrefs + JSON.
-// No external packages required — works on all Unity 2022.3 platforms.
-//
-// Usage (all called internally by RunManager — you don't call these directly):
-//   RunSaveSystem.SaveRun(runManager)     — after every level clear
-//   RunSaveSystem.LoadRun(runManager)     — on Continue from main menu
-//   RunSaveSystem.DeleteSave()            — on run complete or new game
-//   RunSaveSystem.HasSave()               — checked by MainMenuController
-// ─────────────────────────────────────────────────────────────────────────────
-
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,10 +5,6 @@ using UnityEngine;
 public static class RunSaveSystem
 {
     private const string SaveKey = "RunSaveData";
-
-    // ═════════════════════════════════════════════════════════════════════════
-    // Public API
-    // ═════════════════════════════════════════════════════════════════════════
 
     public static bool HasSave() => PlayerPrefs.HasKey(SaveKey);
 
@@ -31,7 +15,6 @@ public static class RunSaveSystem
         Debug.Log("[RunSaveSystem] Save deleted.");
     }
 
-    // ── Save ─────────────────────────────────────────────────────────────────
 
     public static void SaveRun(RunManager runManager)
     {
@@ -68,12 +51,6 @@ public static class RunSaveSystem
         Debug.Log("[RunSaveSystem] Run saved.");
     }
 
-    // ── Load ─────────────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Rebuilds RunManager's run state from saved data.
-    /// Returns true on success, false if the save is missing or corrupt.
-    /// </summary>
     public static bool LoadRun(RunManager runManager)
     {
         if (!HasSave())
@@ -96,7 +73,6 @@ public static class RunSaveSystem
             return false;
         }
 
-        // ── Rebuild run levels ────────────────────────────────────────────────
         var rebuiltLevels = new List<RunLevelState>();
         foreach (var saved in data.levels)
         {
@@ -110,7 +86,6 @@ public static class RunSaveSystem
             rebuiltLevels.Add(state);
         }
 
-        // ── Rebuild boss ──────────────────────────────────────────────────────
         RunLevelState bossState = null;
         if (data.boss != null)
         {
@@ -123,7 +98,6 @@ public static class RunSaveSystem
             }
         }
 
-        // ── Push into RunManager ──────────────────────────────────────────────
         runManager.LoadFromSave(
             rebuiltLevels,
             bossState,
@@ -131,7 +105,6 @@ public static class RunSaveSystem
             data.lastClearedIndex
         );
 
-        // ── Restore player buffs ──────────────────────────────────────────────
         PlayerBuffManager.Instance?.ResetBuffs();
         if (PlayerBuffManager.Instance != null)
         {
@@ -148,10 +121,6 @@ public static class RunSaveSystem
         Debug.Log($"[RunSaveSystem] Run loaded — {rebuiltLevels.Count} levels, turn {data.totalTurns}.");
         return true;
     }
-
-    // ═════════════════════════════════════════════════════════════════════════
-    // Internal Helpers
-    // ═════════════════════════════════════════════════════════════════════════
 
     private static SerialisedLevel SerialiseLevel(RunLevelState lvl)
     {
@@ -214,11 +183,6 @@ public static class RunSaveSystem
         return array[index];
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Serialisable Data Classes
-    // (must be plain classes/structs with no Unity Object references
-    //  so JsonUtility can handle them)
-    // ═════════════════════════════════════════════════════════════════════════
 
     [Serializable]
     private class SaveData

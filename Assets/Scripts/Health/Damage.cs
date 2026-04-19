@@ -25,9 +25,17 @@ public class Damage : MonoBehaviour
 
     void Start()
     {
-        if (LevelManager.Instance != null && teamId == 1)
+        // Enemy bullets/attacks scale up with corruption
+        if (teamId == 1 && LevelManager.Instance != null)
         {
-            float mult = LevelManager.Instance.GetEnemyDamageMultiplier();
+            float mult  = LevelManager.Instance.GetEnemyDamageMultiplier();
+            damageAmount = Mathf.RoundToInt(damageAmount * mult);
+        }
+
+        // Player bullets scale up with damage buffs earned this run
+        if (teamId == 0 && PlayerBuffManager.Instance != null)
+        {
+            float mult   = 1f + PlayerBuffManager.Instance.DamageBonus;
             damageAmount = Mathf.RoundToInt(damageAmount * mult);
         }
     }
@@ -35,45 +43,31 @@ public class Damage : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (dealDamageOnTriggerEnter)
-        {
             DealDamage(collision.gameObject);
-        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        Debug.Log("Triggered with: " + collision.name);
         if (dealDamageOnTriggerStay)
-        {
             DealDamage(collision.gameObject);
-        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (dealDamageOnCollision)
-        {
             DealDamage(collision.gameObject);
-        }
     }
 
     private void DealDamage(GameObject collisionGameObject)
     {
         Health collidedHealth = collisionGameObject.GetComponent<Health>();
-        if (collidedHealth != null)
+        if (collidedHealth != null && collidedHealth.teamId != this.teamId)
         {
-            if (collidedHealth.teamId != this.teamId)
-            {
-                collidedHealth.TakeDamage(damageAmount);
-                if (hitEffect != null)
-                {
-                    Instantiate(hitEffect, transform.position, transform.rotation, null);
-                }
-                if (destroyAfterDamage)
-                {
-                    Destroy(this.gameObject);
-                }
-            }
+            collidedHealth.TakeDamage(damageAmount);
+            if (hitEffect != null)
+                Instantiate(hitEffect, transform.position, transform.rotation, null);
+            if (destroyAfterDamage)
+                Destroy(this.gameObject);
         }
     }
 }

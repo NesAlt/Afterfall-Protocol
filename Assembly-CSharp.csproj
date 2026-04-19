@@ -113,7 +113,6 @@
     <Compile Include="Assets\Scripts\Utility\LevelSetup\LevelData.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyMotor.cs" />
     <Compile Include="Assets\Scripts\UI\RadarController.cs" />
-    <Compile Include="Assets\Scripts\UI\CursorChanger.cs" />
     <Compile Include="Assets\Scripts\Player\GroundCheck.cs" />
     <Compile Include="Assets\Scripts\UI\SceneNavigation.cs" />
     <Compile Include="Assets\Scripts\Enemy\Boss\BossHealthBridge.cs" />

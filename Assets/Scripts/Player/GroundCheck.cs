@@ -3,11 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Component on gameobjects with colliders which determines if there is
-/// a collider overlapping them which is on a specific layer.
-/// Used to check for ground.
-/// </summary>
 [RequireComponent(typeof(Collider2D))]
 public class GroundCheck : MonoBehaviour
 {
@@ -25,29 +20,12 @@ public class GroundCheck : MonoBehaviour
     [HideInInspector]
     public bool groundedLastCheck = false;
 
-    /// <summary>
-    /// Description:
-    /// Standard Unity function called once before the first update
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
     private void Start()
     {
         // When this component starts up, ensure that the collider is not null, if possible
         GetCollider();
     }
 
-    /// <summary>
-    /// Description:
-    /// Attempts to setup the collider to be used with ground checking,
-    /// if one is not already set up.
-    /// Input: 
-    /// none
-    /// Return: 
-    /// void (no return)
-    /// </summary>
     public void GetCollider()
     {
         if (groundCheckCollider == null)
@@ -56,15 +34,6 @@ public class GroundCheck : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Description:
-    /// Checks whether there is a collider overlapping the checking collider which is on a "ground" layer.
-    /// Input: 
-    /// none
-    /// Return: 
-    /// bool
-    /// </summary>
-    /// <returns>bool: Whether or not this collider counts as grounded</returns>
     public bool CheckGrounded()
     {
         if (groundCheckCollider == null)

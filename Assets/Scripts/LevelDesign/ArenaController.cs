@@ -1,5 +1,3 @@
-// ArenaController.cs
-
 using UnityEngine;
 
 public class ArenaController : MonoBehaviour
@@ -17,7 +15,6 @@ public class ArenaController : MonoBehaviour
     private bool finalEnemySpawned  = false;
     private bool arenaCleared       = false;
 
-    // ─────────────────────────────────────────────────────────────────────────
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!arenaActive && other.CompareTag("Player"))
@@ -41,7 +38,6 @@ public class ArenaController : MonoBehaviour
             spawner.StartSpawning(this);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     public void RegisterKill(bool isFinalEnemy)
     {
         if (arenaCleared) return;
@@ -67,7 +63,6 @@ public class ArenaController : MonoBehaviour
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     void EndArena()
     {
         foreach (DoorController door in doors)
@@ -76,7 +71,6 @@ public class ArenaController : MonoBehaviour
         spawner.StopSpawning();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     public void ForceEndArena()
     {
         if (arenaCleared) return;

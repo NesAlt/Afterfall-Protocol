@@ -1,19 +1,3 @@
-// RunManager.cs
-// ─────────────────────────────────────────────────────────────────────────────
-// Central singleton (DontDestroyOnLoad) that owns every run-level mechanic:
-//
-//  • Run Generation  — 3 AreaClear + 2 KillAndCollect from 5 random regions
-//  • Corruption      — base 10; furthest uncleared level +20, rest +10
-//  • Buff Assignment — 1 buff for close levels, 2 for medium, 3 for far
-//  • Turn Tracking   — distance-based; scales re-corruption risk
-//  • Re-Corruption   — cleared levels near uncleared ones can reset
-//  • Boss            — unlocked when all 5 run levels are cleared
-//  • Pending Buffs   — buffs are held here after a clear; LevelSelectManager
-//                      shows BuffSelectionPanel, player picks one, then it
-//                      gets applied via PlayerBuffManager
-//  • Save / Load     — auto-saves after every level clear via RunSaveSystem
-// ─────────────────────────────────────────────────────────────────────────────
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +8,11 @@ public class RunManager : MonoBehaviour
 {
     public static RunManager Instance { get; private set; }
 
-    // ── Inspector: Level Data Banks ──────────────────────────────────────────
     [Header("Level Data Banks  (index = (int)WorldRegion)")]
     public LevelData[] areaClearLevels   = new LevelData[7];
     public LevelData[] killCollectLevels = new LevelData[7];
     public LevelData[] bossLevels        = new LevelData[7];
 
-    // ── Inspector: Run Config ────────────────────────────────────────────────
     [Header("Run Configuration")]
     public int areaClearCount   = 3;
     public int killCollectCount = 2;
@@ -47,7 +29,6 @@ public class RunManager : MonoBehaviour
     public float turnsReCorruptionMultiplier = 0.06f;
     public int   reCorruptionCorruptionPenalty = 30;
 
-    // ── Run State ─────────────────────────────────────────────────────────────
     public IReadOnlyList<RunLevelState> RunLevels => _runLevels;
     public RunLevelState BossLevel        { get; private set; }
     public RunLevelState ActiveLevel      { get; private set; }
@@ -55,24 +36,15 @@ public class RunManager : MonoBehaviour
     public int           TotalTurns       { get; private set; }
     public bool BossUnlocked => _runLevels.Count > 0 && _runLevels.All(l => l.IsCleared);
 
-    /// <summary>
-    /// Buffs from the last cleared level waiting for the player to choose from.
-    /// Populated in OnLevelCleared(), consumed by BuffSelectionPanel.
-    /// Null or empty means no pending choice.
-    /// </summary>
     public List<BuffReward> PendingBuffChoices { get; private set; } = new();
 
     private readonly List<RunLevelState> _runLevels = new();
 
-    // ── Events ────────────────────────────────────────────────────────────────
     public event Action                OnRunStateChanged;
     public event Action<RunLevelState> OnLevelReCorrupted;
     public event Action                OnBossUnlocked;
     public event Action                OnRunComplete;
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Lifecycle
-    // ═════════════════════════════════════════════════════════════════════════
 
     void Awake()
     {
@@ -81,9 +53,6 @@ public class RunManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Run Generation
-    // ═════════════════════════════════════════════════════════════════════════
 
     public void GenerateRun()
     {
@@ -119,9 +88,6 @@ public class RunManager : MonoBehaviour
         OnRunStateChanged?.Invoke();
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Save System Integration
-    // ═════════════════════════════════════════════════════════════════════════
 
     public void LoadFromSave(
         List<RunLevelState> levels,
@@ -144,9 +110,6 @@ public class RunManager : MonoBehaviour
         OnRunStateChanged?.Invoke();
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Level Select Interaction
-    // ═════════════════════════════════════════════════════════════════════════
 
     public LevelPreview PreviewLevel(RunLevelState level)
     {
@@ -192,9 +155,6 @@ public class RunManager : MonoBehaviour
         SceneManager.LoadScene(BossLevel.Data.sceneName);
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // In-Level Callbacks
-    // ═════════════════════════════════════════════════════════════════════════
 
     public void OnLevelCleared()
     {
@@ -203,9 +163,6 @@ public class RunManager : MonoBehaviour
         var cleared = ActiveLevel;
         cleared.ClearState = LevelClearState.Cleared;
 
-        // ── Store buffs as pending choices instead of auto-applying ──────────
-        // BuffSelectionPanel on the LevelSelect screen will read these,
-        // show the cards, and call PlayerBuffManager.AddBuff on the chosen one.
         PendingBuffChoices = new List<BuffReward>(cleared.AssignedBuffs);
 
         bool wasComplete = BossUnlocked;
@@ -246,18 +203,11 @@ public class RunManager : MonoBehaviour
         OnRunComplete?.Invoke();
     }
 
-    /// <summary>
-    /// Called by BuffSelectionPanel (via LevelSelectManager) once the player
-    /// has picked their buff and it has been applied. Clears the pending list.
-    /// </summary>
     public void ClearPendingBuffs()
     {
         PendingBuffChoices.Clear();
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Helpers — Distance & Turns
-    // ═════════════════════════════════════════════════════════════════════════
 
     public int GetTurnDistance(RunLevelState from, RunLevelState to)
     {
@@ -272,9 +222,6 @@ public class RunManager : MonoBehaviour
         return 3;
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Helpers — Corruption
-    // ═════════════════════════════════════════════════════════════════════════
 
     private void UpdateCorruptions(RunLevelState clearedLevel)
     {
@@ -296,9 +243,6 @@ public class RunManager : MonoBehaviour
         }
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Helpers — Re-Corruption
-    // ═════════════════════════════════════════════════════════════════════════
 
     private void CheckReCorruption(RunLevelState clearedLevel, int turnsTaken)
     {
@@ -346,9 +290,6 @@ public class RunManager : MonoBehaviour
         return false;
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Helpers — Buff Assignment
-    // ═════════════════════════════════════════════════════════════════════════
 
     private void InitialAssignAllBuffs()
     {
@@ -378,10 +319,6 @@ public class RunManager : MonoBehaviour
             level.AssignedBuffs.Add(pool[i]);
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Utility
-    // ═════════════════════════════════════════════════════════════════════════
-
     private static void Shuffle<T>(List<T> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
@@ -392,7 +329,6 @@ public class RunManager : MonoBehaviour
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 public struct LevelPreview
 {
     public int  Turns;
