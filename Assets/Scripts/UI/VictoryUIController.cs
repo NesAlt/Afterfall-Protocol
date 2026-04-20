@@ -53,7 +53,6 @@ public class VictoryUIController : MonoBehaviour
 
         Time.timeScale = 0f;
 
-        // Auto-return if delay is set
         if (!isBossLevel && autoReturnDelay > 0f)
             StartCoroutine(AutoReturnRoutine());
     }
@@ -64,10 +63,6 @@ public class VictoryUIController : MonoBehaviour
         ReturnToLevelSelect();
     }
 
-    /// <summary>
-    /// Called by the Continue button on normal levels.
-    /// Returns to LevelSelect — RunManager state is preserved since it's DontDestroyOnLoad.
-    /// </summary>
     public void ReturnToLevelSelect()
     {
         Time.timeScale = 1f;

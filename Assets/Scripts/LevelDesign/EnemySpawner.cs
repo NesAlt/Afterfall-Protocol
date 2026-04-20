@@ -32,9 +32,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void StartSpawning(ArenaController arenaController)
     {
-        // Safety: if enemyPrefab isn't assigned this spawner can't function.
-        // This usually means you're on a Boss scene — check your Inspector and
-        // make sure editorFallbackLevelType on LevelManager is set to Boss.
+
         if (enemyPrefab == null)
         {
             Debug.LogError("[EnemySpawner] enemyPrefab is not assigned. " +

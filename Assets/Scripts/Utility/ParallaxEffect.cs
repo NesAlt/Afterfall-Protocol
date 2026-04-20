@@ -35,16 +35,14 @@ public class ParallaxEffect : MonoBehaviour
         float spriteHeight = sr.sprite.bounds.size.y * transform.localScale.y;
         float spriteWidth  = sr.sprite.bounds.size.x * transform.localScale.x;
 
-        // Scale so it's always taller than the camera
         if (spriteHeight < camHeight)
         {
             float scaleY = camHeight / sr.sprite.bounds.size.y;
             transform.localScale = new Vector3(scaleY, scaleY, 1f); // uniform scale
         }
 
-        // Ensure it's wide enough — at minimum 3x camera width to survive parallax shift
         float requiredWidth = camWidth * 3f;
-        length = sr.bounds.size.x; // recalculate after scale
+        length = sr.bounds.size.x;
         if (length < requiredWidth)
         {
             float scaleX = requiredWidth / sr.sprite.bounds.size.x;
@@ -57,7 +55,7 @@ public class ParallaxEffect : MonoBehaviour
         }
     }
 
-    void LateUpdate()   // LateUpdate avoids jitter vs FixedUpdate
+    void LateUpdate()
     {
         float camX = cam.transform.position.x;
 

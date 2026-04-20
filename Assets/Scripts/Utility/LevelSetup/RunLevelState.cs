@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 public enum LevelClearState
 {
-    Uncleared,    // Not yet attempted this run
-    Cleared,      // Successfully completed
-    ReCorrupted   // Was cleared but the re-corruption mechanic reset it
+    Uncleared,
+    Cleared,
+    ReCorrupted
 }
 
 public class RunLevelState

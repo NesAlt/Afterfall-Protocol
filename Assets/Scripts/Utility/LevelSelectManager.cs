@@ -28,31 +28,23 @@ public class LevelSelectManager : MonoBehaviour
     public Button     btnEnterLevel;
     public Button     btnClose;
 
-    // ── HUD ───────────────────────────────────────────────────────────────────
     [Header("HUD")]
     public TMP_Text hudTurnsText;
     public TMP_Text hudProgressText;
 
-    // ── Buff Selection ────────────────────────────────────────────────────────
     [Header("Buff Selection")]
     public BuffSelectionPanel buffSelectionPanel;
 
-    // ── Re-Corruption Overlay ─────────────────────────────────────────────────
     [Header("Re-Corruption Overlay")]
     public GameObject reCorruptOverlay;
     public TMP_Text   reCorruptOverlayText;
     public float      reCorruptOverlayDuration = 4f;
 
-    // ── Boss Unlock ───────────────────────────────────────────────────────────
     [Header("Boss Unlock")]
     public GameObject bossUnlockBanner;
 
-    // ─────────────────────────────────────────────────────────────────────────
     private RunLevelState _selectedLevel;
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Lifecycle
-    // ═════════════════════════════════════════════════════════════════════════
 
     void Awake() => instance = this;
 
@@ -86,7 +78,6 @@ public class LevelSelectManager : MonoBehaviour
 
         RefreshAllNodes();
 
-        // 🔴 THIS is the important fix
         yield return null; // wait 1 frame
 
         Debug.Log($"[LevelSelect] PendingBuffChoices count: {RunManager.Instance?.PendingBuffChoices?.Count}");
@@ -119,9 +110,6 @@ public class LevelSelectManager : MonoBehaviour
             ClosePanel();
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Node Binding
-    // ═════════════════════════════════════════════════════════════════════════
 
     private void BindNodesToRun()
     {
@@ -146,13 +134,9 @@ public class LevelSelectManager : MonoBehaviour
                 node.LockNode();
         }
 
-        // Boss nodes stay hidden until HandleBossUnlocked is called
         foreach (var node in bossNodes) node.gameObject.SetActive(false);
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Node Refresh
-    // ═════════════════════════════════════════════════════════════════════════
 
     private void RefreshAllNodes()
     {
@@ -178,9 +162,6 @@ public class LevelSelectManager : MonoBehaviour
         }
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Info Panel
-    // ═════════════════════════════════════════════════════════════════════════
 
     public void SelectLevel(RunLevelState level)
     {
@@ -236,9 +217,6 @@ public class LevelSelectManager : MonoBehaviour
             btnEnterLevel.interactable = level.NeedsClearing;
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Button Handlers
-    // ═════════════════════════════════════════════════════════════════════════
 
     public void EnterSelectedLevel()
     {
@@ -258,9 +236,6 @@ public class LevelSelectManager : MonoBehaviour
         _selectedLevel = null;
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Buff Selection
-    // ═════════════════════════════════════════════════════════════════════════
 
     private void OnBuffChosen()
     {
@@ -275,9 +250,6 @@ public class LevelSelectManager : MonoBehaviour
         RefreshAllNodes();
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // Re-Corruption Overlay
-    // ═════════════════════════════════════════════════════════════════════════
 
     private void HandleReCorruption(RunLevelState level)
     {
@@ -297,10 +269,6 @@ public class LevelSelectManager : MonoBehaviour
     {
         if (reCorruptOverlay) reCorruptOverlay.SetActive(false);
     }
-
-    // ═════════════════════════════════════════════════════════════════════════
-    // Boss Unlock
-    // ═════════════════════════════════════════════════════════════════════════
 
     private void HandleBossUnlocked()
     {

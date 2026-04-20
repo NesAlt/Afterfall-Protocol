@@ -34,14 +34,11 @@ public class SampleManager : MonoBehaviour
 
         Debug.Log("[SampleManager] Sample quota reached — level complete.");
 
-        // 1. Notify run system — saves state, updates corruption, re-corruption rolls
         LevelManager.Instance?.NotifyLevelCleared();
 
-        // 2. Stop spawning / open doors
         ArenaController arena = FindObjectOfType<ArenaController>();
         if (arena != null) arena.ForceEndArena();
 
-        // 3. Show victory panel — VictoryUIController handles timeScale and navigation
         if (VictoryUIController.Instance != null)
             VictoryUIController.Instance.ShowVictory();
     }
