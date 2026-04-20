@@ -53,6 +53,11 @@ public class PlayerController : MonoBehaviour
     [Header("Projectile")]
     [SerializeField] private GameObject projectilePrefab;
 
+    [Tooltip("Bullet Damage.")]
+    [SerializeField] private int baseDamage = 1;
+
+    private float _effectiveDamage;
+
     [Tooltip("Base seconds between shots — reduced by FireRate buff.")]
     [SerializeField] private float baseFireCooldown = 0.5f;
     private float _fireCooldown;        // baseFireCooldown / (1 + FireRateBonus)
@@ -117,6 +122,10 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerBuffManager.Instance != null)
         {
+            //Bullet Damage
+            _effectiveDamage = baseDamage * (1f + PlayerBuffManager.Instance.DamageBonus);
+            Debug.Log($"[Player] Damage Bonus: {PlayerBuffManager.Instance.DamageBonus}");
+            Debug.Log($"[Player] Final Damage: {_effectiveDamage}");
             // Movement speed
             _effectiveSpeed = movementSpeed * (1f + PlayerBuffManager.Instance.MoveSpeedBonus);
 
@@ -197,6 +206,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator BurstFireRoutine()
     {
+        Debug.Log($"[Fire] Sending damage: {_effectiveDamage}");
         float xDir  = Mathf.Sign(firePoint.localPosition.x);
         Vector2 dir = new Vector2(xDir, 0f);
         int count   = Mathf.Max(1, _effectiveBulletCount);
@@ -205,7 +215,7 @@ public class PlayerController : MonoBehaviour
         {
             GameObject proj   = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
             Projectile bullet = proj.GetComponent<Projectile>();
-            if (bullet != null) bullet.Init(dir);
+            if (bullet != null) bullet.Init(dir,_effectiveDamage);
 
             if (i < count - 1)
                 yield return new WaitForSeconds(burstDelay);

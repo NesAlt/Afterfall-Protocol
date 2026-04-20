@@ -4,6 +4,6 @@ public class ProjectileTest : MonoBehaviour
 {
     void Start()
     {
-        GetComponent<Projectile>().Init(Vector2.right);
+        GetComponent<Projectile>().Init(Vector2.right,5);
     }
 }

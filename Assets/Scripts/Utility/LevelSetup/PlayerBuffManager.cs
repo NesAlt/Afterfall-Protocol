@@ -46,8 +46,19 @@ public class PlayerBuffManager : MonoBehaviour
     {
         _collected.Add(buff);
         Debug.Log($"[Buff] Gained: {buff.GetDescription()}");
-    }
 
+        // Apply instantly if it's health
+        if (buff.buffType == BuffType.MaxHealth)
+        {
+            var player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                Health health = player.GetComponent<Health>();
+                if (health != null)
+                    health.ApplyHealthBuff((int)buff.value);
+            }
+        }
+    }
     public void AddBuffs(IEnumerable<BuffReward> buffs)
     {
         foreach (var b in buffs) AddBuff(b);

@@ -11,7 +11,7 @@ public class Damage : MonoBehaviour
 
     [Header("Damage Settings")]
     [Tooltip("How much damage to deal")]
-    public int damageAmount = 1;
+    public float damageAmount = 1;
     [Tooltip("Prefab to spawn after doing damage")]
     public GameObject hitEffect = null;
     [Tooltip("Whether or not to destroy the attached game object after dealing damage")]
@@ -29,13 +29,6 @@ public class Damage : MonoBehaviour
         if (teamId == 1 && LevelManager.Instance != null)
         {
             float mult  = LevelManager.Instance.GetEnemyDamageMultiplier();
-            damageAmount = Mathf.RoundToInt(damageAmount * mult);
-        }
-
-        // Player bullets scale up with damage buffs earned this run
-        if (teamId == 0 && PlayerBuffManager.Instance != null)
-        {
-            float mult   = 1f + PlayerBuffManager.Instance.DamageBonus;
             damageAmount = Mathf.RoundToInt(damageAmount * mult);
         }
     }
@@ -63,7 +56,7 @@ public class Damage : MonoBehaviour
         Health collidedHealth = collisionGameObject.GetComponent<Health>();
         if (collidedHealth != null && collidedHealth.teamId != this.teamId)
         {
-            collidedHealth.TakeDamage(damageAmount);
+            collidedHealth.TakeDamage(Mathf.RoundToInt(damageAmount));
             if (hitEffect != null)
                 Instantiate(hitEffect, transform.position, transform.rotation, null);
             if (destroyAfterDamage)

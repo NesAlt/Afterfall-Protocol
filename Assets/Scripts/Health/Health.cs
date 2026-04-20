@@ -61,7 +61,7 @@ public class Health : MonoBehaviour
             isInIFrames = false;
     }
 
-    public void TakeDamage(int damageAmount)
+    public void TakeDamage(float damageAmount)
     {
         if (isInvincible) return;
         if (isInIFrames || currentHealth <= 0) return;
@@ -72,7 +72,7 @@ public class Health : MonoBehaviour
         isInIFrames = true;
         timeToBecomeDamagableAgain = Time.time + invincibilityTime;
 
-        currentHealth = Mathf.Max(currentHealth - damageAmount, 0);
+        currentHealth = Mathf.Max(currentHealth - Mathf.RoundToInt(damageAmount), 0);
 
         OnHealthChanged?.Invoke();
         CheckDeath();
@@ -86,6 +86,21 @@ public class Health : MonoBehaviour
 
         OnHealthChanged?.Invoke();
         CheckDeath();
+    }
+    public void ApplyHealthBuff(int bonus)
+    {
+        int oldMax = maximumHealth;
+
+        maximumHealth += bonus;
+        defaultHealth += bonus;
+
+        currentHealth += bonus;
+
+        currentHealth = Mathf.Min(currentHealth, maximumHealth);
+
+        OnHealthChanged?.Invoke();
+
+        Debug.Log($"[Health] Buff applied. Max: {maximumHealth}, Current: {currentHealth}");
     }
 
     [Header("Effects & Polish")]

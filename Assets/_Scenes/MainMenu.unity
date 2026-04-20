@@ -1929,8 +1929,8 @@ MonoBehaviour:
   baseCorruption: 10
   defaultCorruptionIncrease: 10
   furthestCorruptionIncrease: 20
-  baseReCorruptionChance: 0.12
-  turnsReCorruptionMultiplier: 0.06
+  baseReCorruptionChance: 0.5
+  turnsReCorruptionMultiplier: 0.2
   reCorruptionCorruptionPenalty: 30
 --- !u!4 &1303911732
 Transform:

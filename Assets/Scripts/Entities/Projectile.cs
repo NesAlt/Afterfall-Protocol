@@ -8,9 +8,19 @@ public class Projectile : MonoBehaviour
 
     private Vector2 direction;
 
-    public void Init(Vector2 dir)
+    public void Init(Vector2 dir, float damage)
     {
         direction = dir.normalized;
+
+        Debug.Log($"[Projectile] Received damage: {damage}");
+
+        Damage dmg = GetComponent<Damage>();
+        if (dmg != null)
+        {
+            dmg.damageAmount = damage;
+            Debug.Log($"[Projectile] Applied damage: {dmg.damageAmount}");
+        }
+
         Destroy(gameObject, lifetime);
     }
 
