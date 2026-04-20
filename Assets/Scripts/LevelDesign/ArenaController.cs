@@ -42,11 +42,11 @@ public class ArenaController : MonoBehaviour
     {
         if (arenaCleared) return;
 
-        // KillAndCollect levels track completion via SampleManager
+        // KillAndCollect — SampleManager handles completion
         if (LevelManager.Instance != null && LevelManager.Instance.IsKillAndCollectLevel())
             return;
 
-        // Boss level — boss death comes through here as a final enemy
+        // Boss level — boss death calls RegisterKill(true)
         if (LevelManager.Instance != null && LevelManager.Instance.IsBossLevel())
         {
             arenaCleared = true;
@@ -76,23 +76,23 @@ public class ArenaController : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Called when the final enemy in an AreaClear level dies
+    // AreaClear — called when final enemy dies
     void EndArena()
     {
         OpenDoors();
         spawner.StopSpawning();
-        // LevelEndPickup handles NotifyLevelCleared + ShowVictory for AreaClear
+        // LevelEndPickup handles NotifyLevelCleared + ShowVictory
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Called by SampleManager when sample quota is reached (KillAndCollect)
+    // KillAndCollect — called by SampleManager when quota is reached
     public void ForceEndArena()
     {
         if (arenaCleared) return;
         arenaCleared = true;
         OpenDoors();
         spawner.StopSpawning();
-        // SampleManager already called NotifyLevelCleared + ShowVictory before this
+        // SampleManager already called NotifyLevelCleared + ShowVictory
     }
 
     // ─────────────────────────────────────────────────────────────────────────

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -8,10 +9,12 @@ public class LevelSelectManager : MonoBehaviour
 {
     public static LevelSelectManager instance;
 
+    // ── Node References ───────────────────────────────────────────────────────
     [Header("Map Nodes")]
     public List<LevelNode> allLevelNodes = new();
     public List<LevelNode> bossNodes     = new();
 
+    // ── Info Panel ────────────────────────────────────────────────────────────
     [Header("Info Panel")]
     public GameObject panelRoot;
     public TMP_Text   panelLevelName;
@@ -25,35 +28,41 @@ public class LevelSelectManager : MonoBehaviour
     public Button     btnEnterLevel;
     public Button     btnClose;
 
+    // ── HUD ───────────────────────────────────────────────────────────────────
     [Header("HUD")]
     public TMP_Text hudTurnsText;
     public TMP_Text hudProgressText;
 
+    // ── Buff Selection ────────────────────────────────────────────────────────
     [Header("Buff Selection")]
-    [Tooltip("The BuffSelectionPanel GameObject — hidden by default.")]
     public BuffSelectionPanel buffSelectionPanel;
 
+    // ── Re-Corruption Overlay ─────────────────────────────────────────────────
     [Header("Re-Corruption Overlay")]
-    [Tooltip("Full-width panel anchored to top-center. Hidden by default.")]
     public GameObject reCorruptOverlay;
-    [Tooltip("Text inside the overlay — shows which level was re-corrupted.")]
     public TMP_Text   reCorruptOverlayText;
-    [Tooltip("How long the overlay stays visible before auto-hiding.")]
     public float      reCorruptOverlayDuration = 4f;
 
+    // ── Boss Unlock ───────────────────────────────────────────────────────────
     [Header("Boss Unlock")]
     public GameObject bossUnlockBanner;
+
+    // ─────────────────────────────────────────────────────────────────────────
     private RunLevelState _selectedLevel;
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // Lifecycle
+    // ═════════════════════════════════════════════════════════════════════════
 
     void Awake() => instance = this;
 
-    void Start()
+    IEnumerator Start()
     {
         panelRoot.SetActive(false);
-        if (reCorruptOverlay)  reCorruptOverlay.SetActive(false);
-        if (bossUnlockBanner)  bossUnlockBanner.SetActive(false);
+        if (reCorruptOverlay) reCorruptOverlay.SetActive(false);
+        if (bossUnlockBanner) bossUnlockBanner.SetActive(false);
 
-        foreach (var node in bossNodes) node.LockNode();
+        foreach (var node in bossNodes) node.gameObject.SetActive(false);
 
         btnEnterLevel?.onClick.AddListener(EnterSelectedLevel);
         btnClose?.onClick.AddListener(ClosePanel);
@@ -67,15 +76,30 @@ public class LevelSelectManager : MonoBehaviour
 
         if (buffSelectionPanel != null)
             buffSelectionPanel.OnBuffChosen += OnBuffChosen;
+        else
+            Debug.LogWarning("[LevelSelectManager] buffSelectionPanel is not assigned.");
 
         BindNodesToRun();
+
+        if (RunManager.Instance != null && RunManager.Instance.BossUnlocked)
+            HandleBossUnlocked();
+
         RefreshAllNodes();
 
-        // ── Show buff selection if the player just cleared a level ────────────
-        // PendingBuffChoices is populated in RunManager.OnLevelCleared() and
-        // persists across the scene load until the player makes their choice.
+        // 🔴 THIS is the important fix
+        yield return null; // wait 1 frame
+
+        Debug.Log($"[LevelSelect] PendingBuffChoices count: {RunManager.Instance?.PendingBuffChoices?.Count}");
+
         if (RunManager.Instance?.PendingBuffChoices?.Count > 0)
-            buffSelectionPanel?.Show(RunManager.Instance.PendingBuffChoices);
+        {
+            Debug.Log("[LevelSelect] Showing buff panel (delayed)");
+
+            if (buffSelectionPanel != null)
+                buffSelectionPanel.Show(RunManager.Instance.PendingBuffChoices);
+            else
+                Debug.LogWarning("[LevelSelectManager] buffSelectionPanel not assigned.");
+        }
     }
 
     void OnDestroy()
@@ -94,6 +118,10 @@ public class LevelSelectManager : MonoBehaviour
         if (panelRoot.activeSelf && Input.GetKeyDown(KeyCode.Escape))
             ClosePanel();
     }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // Node Binding
+    // ═════════════════════════════════════════════════════════════════════════
 
     private void BindNodesToRun()
     {
@@ -118,9 +146,13 @@ public class LevelSelectManager : MonoBehaviour
                 node.LockNode();
         }
 
-        foreach (var node in bossNodes) node.LockNode();
+        // Boss nodes stay hidden until HandleBossUnlocked is called
+        foreach (var node in bossNodes) node.gameObject.SetActive(false);
     }
 
+    // ═════════════════════════════════════════════════════════════════════════
+    // Node Refresh
+    // ═════════════════════════════════════════════════════════════════════════
 
     private void RefreshAllNodes()
     {
@@ -145,6 +177,10 @@ public class LevelSelectManager : MonoBehaviour
             hudProgressText.text = $"Cleared: {cleared} / {RunManager.Instance.RunLevels.Count}";
         }
     }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // Info Panel
+    // ═════════════════════════════════════════════════════════════════════════
 
     public void SelectLevel(RunLevelState level)
     {
@@ -172,7 +208,6 @@ public class LevelSelectManager : MonoBehaviour
             panelTurns.text = t == 1 ? "1 Turn  (Close)" : $"{t} Turns  (Further — better rewards)";
         }
 
-        // Show preview of possible buffs — player sees these before entering
         if (panelBuffList)
         {
             if (level.AssignedBuffs.Count > 0)
@@ -201,6 +236,10 @@ public class LevelSelectManager : MonoBehaviour
             btnEnterLevel.interactable = level.NeedsClearing;
     }
 
+    // ═════════════════════════════════════════════════════════════════════════
+    // Button Handlers
+    // ═════════════════════════════════════════════════════════════════════════
+
     public void EnterSelectedLevel()
     {
         if (_selectedLevel == null)
@@ -208,8 +247,6 @@ public class LevelSelectManager : MonoBehaviour
             Debug.LogWarning("[LevelSelectManager] EnterSelectedLevel called with no level selected.");
             return;
         }
-
-        // Capture before ClosePanel() nulls _selectedLevel
         RunLevelState levelToLoad = _selectedLevel;
         ClosePanel();
         RunManager.Instance?.LoadLevel(levelToLoad);
@@ -221,14 +258,16 @@ public class LevelSelectManager : MonoBehaviour
         _selectedLevel = null;
     }
 
+    // ═════════════════════════════════════════════════════════════════════════
+    // Buff Selection
+    // ═════════════════════════════════════════════════════════════════════════
+
     private void OnBuffChosen()
     {
         RunManager.Instance?.ClearPendingBuffs();
 
-        // If boss was just cleared, go to run-complete flow instead of refreshing map
         if (RunManager.Instance?.BossLevel?.IsCleared == true)
         {
-            // TODO: load credits / run summary scene here
             Debug.Log("[LevelSelectManager] Run complete — handle end screen here.");
             return;
         }
@@ -236,16 +275,19 @@ public class LevelSelectManager : MonoBehaviour
         RefreshAllNodes();
     }
 
+    // ═════════════════════════════════════════════════════════════════════════
+    // Re-Corruption Overlay
+    // ═════════════════════════════════════════════════════════════════════════
 
     private void HandleReCorruption(RunLevelState level)
     {
+        Debug.Log($"[LevelSelect] HandleReCorruption fired for: {level.Data.levelName}");
+        Debug.Log($"[LevelSelect] reCorruptOverlay assigned: {reCorruptOverlay != null}");
+
         RefreshAllNodes();
-
         if (reCorruptOverlay == null) return;
-
         if (reCorruptOverlayText)
             reCorruptOverlayText.text = $"⚠  {level.Data.levelName} has been re-corrupted!";
-
         reCorruptOverlay.SetActive(true);
         CancelInvoke(nameof(HideReCorruptOverlay));
         Invoke(nameof(HideReCorruptOverlay), reCorruptOverlayDuration);
@@ -256,6 +298,9 @@ public class LevelSelectManager : MonoBehaviour
         if (reCorruptOverlay) reCorruptOverlay.SetActive(false);
     }
 
+    // ═════════════════════════════════════════════════════════════════════════
+    // Boss Unlock
+    // ═════════════════════════════════════════════════════════════════════════
 
     private void HandleBossUnlocked()
     {
@@ -267,6 +312,7 @@ public class LevelSelectManager : MonoBehaviour
         {
             if (node.assignedLevelData == bossData)
             {
+                node.gameObject.SetActive(true);
                 node.SetBossVisible(RunManager.Instance.BossLevel);
                 Debug.Log($"[LevelSelectManager] Boss node revealed: {bossData.levelName}");
                 break;

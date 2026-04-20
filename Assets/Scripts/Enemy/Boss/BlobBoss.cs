@@ -9,53 +9,41 @@ public class BlobBoss : Boss
 
     //  Child references — assign in Inspector
     [Header("Child References")]
-    [Tooltip("Child with SpriteRenderer and Animator.")]
     [SerializeField] private GameObject bossSprite;
-
-    [Tooltip("Child with GroundCheck component.")]
     [SerializeField] private GameObject groundCheckObject;
-
-    [Tooltip("Child with Damage component — enabled only during attacks.")]
     [SerializeField] private GameObject attackHitbox;
-
-    [Tooltip("Child with Health component — always active.")]
     [SerializeField] private GameObject bodyHitbox;
 
     //  Movement
     [Header("Movement")]
-    [SerializeField] private float moveSpeed = 1.8f;
+    [SerializeField] private float moveSpeed        = 1.8f;
     [SerializeField] private float slitherAmplitude = 0.06f;
     [SerializeField] private float slitherFrequency = 3f;
-    [SerializeField] private float moveDuration = 2.5f;
+    [SerializeField] private float moveDuration     = 2.5f;
 
     //  Directional Attack
     [Header("Directional Attack")]
     [SerializeField] private GameObject tentaclePrefab;
-    [SerializeField] private int directionalTentacleCount = 3;
-    [SerializeField] private float directionalSpread = 18f;
+    [SerializeField] private int   directionalTentacleCount = 3;
+    [SerializeField] private float directionalSpread        = 18f;
     [SerializeField] private float directionalAttackCooldown = 3.5f;
 
     //  Burst Attack
     [Header("Burst Attack")]
-    [SerializeField] private int burstTentacleCount = 8;
+    [SerializeField] private int   burstTentacleCount  = 8;
     [SerializeField] private float burstAttackCooldown = 8f;
-    [SerializeField] private float burstWindupTime = 1.5f;
+    [SerializeField] private float burstWindupTime     = 1.5f;
 
     //  Attack Range
     [Header("Attack Range")]
-    [Tooltip("Player must be within this distance for a directional attack to trigger.")]
     [SerializeField] private float directionalAttackRange = 6f;
-
-    [Tooltip("Player must be within this distance for a burst attack to trigger.")]
-    [SerializeField] private float burstAttackRange = 4f;
-
-    [Tooltip("Tentacles spawn offset from boss centre — roughly half the boss sprite width in Unity units.")]
-    [SerializeField] private float tentacleSpawnRadius = 1.8f;
+    [SerializeField] private float burstAttackRange       = 4f;
+    [SerializeField] private float tentacleSpawnRadius    = 1.8f;
 
     //  Phase 2
     [Header("Phase 2")]
-    [SerializeField] private float phase2Threshold = 0.5f;
-    [SerializeField] private float phase2SpeedMultiplier = 1.6f;
+    [SerializeField] private float phase2Threshold          = 0.5f;
+    [SerializeField] private float phase2SpeedMultiplier    = 1.6f;
     [SerializeField] private float phase2CooldownMultiplier = 0.65f;
 
     //  Effects
@@ -69,8 +57,7 @@ public class BlobBoss : Boss
     private static readonly int AnimAttackBurst = Animator.StringToHash("AttackBurst");
     private static readonly int AnimDeath       = Animator.StringToHash("Death");
 
-    //  Cached component references
-    //  Note: playerTransform is inherited from Boss base class
+    //  Cached components
     private Rigidbody2D    rb;
     private Health         health;
     private SpriteRenderer spriteRenderer;
@@ -86,40 +73,35 @@ public class BlobBoss : Boss
     private bool  isPhase2      = false;
     private float slitherTime   = 0f;
 
-    //  Initialisation
+    // ─────────────────────────────────────────────────────────────────────────
     public override void Initialize(ArenaController arenaController, Transform player)
     {
         base.Initialize(arenaController, player);
 
-        // Root
         rb = GetComponent<Rigidbody2D>();
 
-        // BossSprite child
         if (bossSprite != null)
         {
             spriteRenderer = bossSprite.GetComponent<SpriteRenderer>();
             animator       = bossSprite.GetComponent<Animator>();
         }
-        else Debug.LogWarning("InfectionBlobBoss: bossSprite not assigned.", this);
+        else Debug.LogWarning("BlobBoss: bossSprite not assigned.", this);
 
-        // GroundCheck child
         if (groundCheckObject != null)
             groundCheck = groundCheckObject.GetComponent<GroundCheck>();
-        else Debug.LogWarning("InfectionBlobBoss: groundCheckObject not assigned.", this);
+        else Debug.LogWarning("BlobBoss: groundCheckObject not assigned.", this);
 
-        // AttackHitbox child — disabled until attack fires
         if (attackHitbox != null)
         {
             attackHitboxCollider = attackHitbox.GetComponent<Collider2D>();
             attackHitboxDamage   = attackHitbox.GetComponent<Damage>();
             SetAttackHitbox(false);
         }
-        else Debug.LogWarning("InfectionBlobBoss: attackHitbox not assigned.", this);
+        else Debug.LogWarning("BlobBoss: attackHitbox not assigned.", this);
 
-        // BodyHitbox child
         if (bodyHitbox != null)
             health = bodyHitbox.GetComponent<Health>();
-        else Debug.LogWarning("InfectionBlobBoss: bodyHitbox not assigned.", this);
+        else Debug.LogWarning("BlobBoss: bodyHitbox not assigned.", this);
 
         nextDirectionalAttackTime = Time.time + 2f;
         nextBurstAttackTime       = Time.time + burstAttackCooldown;
@@ -128,7 +110,9 @@ public class BlobBoss : Boss
         StartCoroutine(BossLoop());
     }
 
-    //  Boss death — called by BossHealthBridge
+    // ─────────────────────────────────────────────────────────────────────────
+    // Boss death — called by BossHealthBridge
+    // ─────────────────────────────────────────────────────────────────────────
     public override void OnBossDeath()
     {
         if (currentState == BossState.Dead) return;
@@ -141,11 +125,17 @@ public class BlobBoss : Boss
         if (deathExplosionEffect != null)
             Instantiate(deathExplosionEffect, transform.position, Quaternion.identity);
 
-        arena.ForceEndArena();
+        // RegisterKill(true) routes through ArenaController's boss path:
+        // → NotifyLevelCleared() → RunManager.OnBossCleared()
+        // → VictoryUIController.ShowVictory()
+        arena.RegisterKill(true);
+
         Destroy(gameObject, 1.5f);
     }
 
-    //  Main loop
+    // ─────────────────────────────────────────────────────────────────────────
+    // Main loop
+    // ─────────────────────────────────────────────────────────────────────────
     private IEnumerator BossLoop()
     {
         while (currentState != BossState.Dead)
@@ -178,7 +168,9 @@ public class BlobBoss : Boss
         }
     }
 
-    //  Physics
+    // ─────────────────────────────────────────────────────────────────────────
+    // Physics
+    // ─────────────────────────────────────────────────────────────────────────
     private void FixedUpdate()
     {
         if (currentState != BossState.Moving) return;
@@ -187,31 +179,24 @@ public class BlobBoss : Boss
 
     private void SlitherAlongGround()
     {
-        float speed = moveSpeed * (isPhase2 ? phase2SpeedMultiplier : 1f);
-
+        float speed    = moveSpeed * (isPhase2 ? phase2SpeedMultiplier : 1f);
         Vector2 velocity = rb.velocity;
         velocity.x = moveDirection * speed;
 
-        // Slow horizontal movement while airborne so the boss doesn't slide off edges
         bool grounded = groundCheck != null && groundCheck.CheckGrounded();
-        if (!grounded)
-            velocity.x *= 0.4f;
-
+        if (!grounded) velocity.x *= 0.4f;
         rb.velocity = velocity;
 
-        // Sinusoidal body bob
         slitherTime += Time.fixedDeltaTime * slitherFrequency;
         Vector3 pos = transform.position;
         pos.y += Mathf.Sin(slitherTime) * slitherAmplitude;
         transform.position = pos;
 
-        // Flip sprite to face movement direction
         if (spriteRenderer != null)
             spriteRenderer.flipX = moveDirection < 0;
 
         moveTimer -= Time.fixedDeltaTime;
-        if (moveTimer <= 0f)
-            PickNewMoveDirection();
+        if (moveTimer <= 0f) PickNewMoveDirection();
     }
 
     private void PickNewMoveDirection()
@@ -219,44 +204,36 @@ public class BlobBoss : Boss
         moveDirection = (playerTransform != null)
             ? (playerTransform.position.x >= transform.position.x ? 1 : -1)
             : (Random.value > 0.5f ? 1 : -1);
-
         moveTimer = moveDuration;
     }
 
-    //  Directional Attack
+    // ─────────────────────────────────────────────────────────────────────────
+    // Attacks
+    // ─────────────────────────────────────────────────────────────────────────
     private IEnumerator DoDirectionalAttack()
     {
         currentState = BossState.DirectionalAttack;
         SetAnimTrigger(AnimAttackDir);
-
-        // Wait for the animation windup frames before releasing
-        // At 8fps: 6 windup frames = 0.75s. Tune to match your animation.
         yield return new WaitForSeconds(0.75f);
-
         SetAttackHitbox(true);
 
         if (playerTransform != null && tentaclePrefab != null)
         {
-            Vector2 toPlayer  = (playerTransform.position - transform.position).normalized;
-            float   baseAngle = Mathf.Atan2(toPlayer.y, toPlayer.x) * Mathf.Rad2Deg;
+            Vector2 toPlayer   = (playerTransform.position - transform.position).normalized;
+            float   baseAngle  = Mathf.Atan2(toPlayer.y, toPlayer.x) * Mathf.Rad2Deg;
             float   startOffset = -(directionalTentacleCount - 1) * 0.5f * directionalSpread;
-
             for (int i = 0; i < directionalTentacleCount; i++)
                 SpawnTentacle(AngleToDir(baseAngle + startOffset + i * directionalSpread));
         }
 
-        // Brief window where the body hitbox is also dangerous to touch
         yield return new WaitForSeconds(0.125f);
         SetAttackHitbox(false);
 
         float cooldown = directionalAttackCooldown * (isPhase2 ? phase2CooldownMultiplier : 1f);
         nextDirectionalAttackTime = Time.time + cooldown;
-
-        // Wait for recovery frames before returning to move state
         yield return new WaitForSeconds(0.5f);
     }
 
-    //  Burst Attack
     private IEnumerator DoBurstAttack()
     {
         currentState = BossState.BurstAttack;
@@ -270,7 +247,6 @@ public class BlobBoss : Boss
         }
 
         yield return new WaitForSeconds(burstWindupTime);
-
         SetAttackHitbox(true);
 
         if (tentaclePrefab != null)
@@ -285,11 +261,12 @@ public class BlobBoss : Boss
 
         float cooldown = burstAttackCooldown * (isPhase2 ? phase2CooldownMultiplier : 1f);
         nextBurstAttackTime = Time.time + cooldown;
-
         yield return new WaitForSeconds(0.625f);
     }
 
-    //  Phase 2
+    // ─────────────────────────────────────────────────────────────────────────
+    // Phase 2
+    // ─────────────────────────────────────────────────────────────────────────
     private void CheckPhaseTransition()
     {
         if (isPhase2 || health == null) return;
@@ -303,31 +280,26 @@ public class BlobBoss : Boss
     private void OnEnterPhase2()
     {
         nextBurstAttackTime       = Time.time + 1f;
-        // Auto-find the player
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-            playerTransform = playerObj.transform;
-        else
-            Debug.LogWarning("InfectionBlobBoss: No GameObject tagged Player found.", this);
-
         nextDirectionalAttackTime = Time.time + 2f;
+
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null) playerTransform = playerObj.transform;
 
         if (spriteRenderer != null)
             spriteRenderer.color = new Color(0.9f, 0.4f, 1f);
     }
 
-    //  Helpers
+    // ─────────────────────────────────────────────────────────────────────────
+    // Helpers
+    // ─────────────────────────────────────────────────────────────────────────
     private void SpawnTentacle(Vector2 direction)
     {
         Vector3 spawnPos = transform.position + (Vector3)(direction.normalized * tentacleSpawnRadius);
-        GameObject obj = Instantiate(tentaclePrefab, spawnPos, Quaternion.identity);
-        BossTentacle t = obj.GetComponent<BossTentacle>();
-
+        GameObject obj   = Instantiate(tentaclePrefab, spawnPos, Quaternion.identity);
+        BossTentacle t   = obj.GetComponent<BossTentacle>();
         if (t != null)
         {
-            if (spriteRenderer != null)
-                t.SetColor(spriteRenderer.color);   // 👈 ADD THIS
-
+            if (spriteRenderer != null) t.SetColor(spriteRenderer.color);
             t.Launch(direction);
         }
     }

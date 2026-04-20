@@ -18,25 +18,48 @@ public class BuffSelectionPanel : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log($"[BuffSelectionPanel] Awake ID: {GetInstanceID()}");
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning("Duplicate BuffSelectionPanel destroyed.");
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
         gameObject.SetActive(false);
     }
 
+    void Update()
+    {
+        if (!gameObject.activeSelf)
+            Debug.Log("Panel got disabled externally!");
+    }
+
     public void Show(List<BuffReward> options)
     {
+        // Debug.Log($"[BuffSelectionPanel] Show called on ID: {GetInstanceID()}");
+        // Debug.Log("[BuffSelectionPanel] SHOW CALLED");
+        gameObject.SetActive(true);
+        Debug.Log($"[BuffSelectionPanel] Active after SetActive: {gameObject.activeSelf}");
+
+        Debug.Log("Panel activated");
+        Debug.Log($"[BuffSelectionPanel] Instance ID: {GetInstanceID()}");
         if (options == null || options.Count == 0)
         {
-            // No buffs to award — skip the panel entirely
+
             OnBuffChosen?.Invoke();
             return;
         }
 
+        Debug.Log($"[BuffSelectionPanel] Show called with {options?.Count} options");
         gameObject.SetActive(true);
 
         for (int i = 0; i < buffCards.Count; i++)
         {
             if (i < options.Count)
             {
+                Debug.Log($"Setting card {i} with {options[i].buffType}");
                 buffCards[i].gameObject.SetActive(true);
                 buffCards[i].Setup(options[i], OnCardClicked);
             }
@@ -48,6 +71,10 @@ public class BuffSelectionPanel : MonoBehaviour
                     buffCards[i].SetEmpty();
             }
         }
+    }
+    void OnDisable()
+    {
+        Debug.Log("[BuffSelectionPanel] DISABLED");
     }
 
     private void OnCardClicked(BuffReward chosen)

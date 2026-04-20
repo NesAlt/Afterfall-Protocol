@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class RunManager : MonoBehaviour
 {
     public static RunManager Instance { get; private set; }
@@ -115,7 +116,7 @@ public class RunManager : MonoBehaviour
     {
         int turns     = GetTurnDistance(LastClearedLevel, level);
         int buffCount = TurnsToBuffCount(turns);
-        AssignBuffsToLevel(level, buffCount);
+        // AssignBuffsToLevel(level, buffCount);
 
         return new LevelPreview
         {
@@ -186,6 +187,29 @@ public class RunManager : MonoBehaviour
         }
 
         OnRunStateChanged?.Invoke();
+        SceneManager.sceneLoaded += OnLevelSelectSceneLoaded;
+    }
+    private void OnLevelSelectSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnLevelSelectSceneLoaded;
+
+        if (scene.name != "LevelSelect") return;
+
+        Debug.Log("[RunManager] Scene loaded, checking buff panel...");
+
+        if (PendingBuffChoices != null && PendingBuffChoices.Count > 0)
+        {
+            Debug.Log("[RunManager] Showing buff panel AFTER scene load");
+
+            if (BuffSelectionPanel.Instance != null)
+            {
+                BuffSelectionPanel.Instance.Show(PendingBuffChoices);
+            }
+            else
+            {
+                Debug.LogWarning("[RunManager] BuffSelectionPanel.Instance is NULL");
+            }
+        }
     }
 
     public void OnBossCleared()
@@ -217,8 +241,6 @@ public class RunManager : MonoBehaviour
 
     private int TurnsToBuffCount(int turns)
     {
-        if (turns <= 1) return 1;
-        if (turns <= 2) return 2;
         return 3;
     }
 

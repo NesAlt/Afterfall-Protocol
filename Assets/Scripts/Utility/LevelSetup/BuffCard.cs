@@ -27,7 +27,8 @@ public class BuffCard : MonoBehaviour,
 
     void Awake()
     {
-        _baseScale = transform.localScale;
+        _baseScale = Vector3.one;
+        transform.localScale = _baseScale;
     }
 
     void Update()
@@ -35,14 +36,25 @@ public class BuffCard : MonoBehaviour,
         if (!_interactable) return;
 
         // Smoothly lerp toward hover or rest scale
-        Vector3 targetScale = _hovering ? _baseScale * hoverScale : _baseScale;
+        Debug.Log($"[BuffCard LIVE] Name: {buffNameText.text}");
+
+        Vector3 targetScale = _hovering ? Vector3.one * hoverScale : Vector3.one;
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.unscaledDeltaTime * scaleSpeed);
     }
 
     public void Setup(BuffReward buff, Action<BuffReward> onSelected)
     {
-        _buff         = buff;
-        _onSelected   = onSelected;
+        transform.localScale = Vector3.one;
+        buffNameText.text = "VISIBLE TEST";
+        buffNameText.color = Color.red;
+        buffNameText.fontSize = 40;
+        Debug.Log($"[BuffCard] Instance ID: {GetInstanceID()}");
+        Debug.Log($"[BuffCard AFTER SET] Name: {buffNameText.text}");
+        Debug.Log($"[BuffCard] Setup called — Type: {buff.buffType}, Value: {buff.value}");
+        Debug.Log($"[BuffCard] buffNameText null: {buffNameText == null}, buffDescText null: {buffDescriptionText == null}");
+        
+        _buff       = buff;
+        _onSelected = onSelected;
         _interactable = true;
         _hovering     = false;
         transform.localScale = _baseScale;
