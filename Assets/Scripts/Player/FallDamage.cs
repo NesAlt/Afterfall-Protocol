@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class FallDamage : MonoBehaviour
 {
     [Header("References")]
@@ -26,8 +25,8 @@ public class FallDamage : MonoBehaviour
     //  Internal state
     private Rigidbody2D rb;
 
-    private bool  isFalling         = false;   // true once vy < 0 while airborne
-    private float fallStartY        = 0f;      // Y recorded when downward movement began
+    private bool  isFalling         = false;
+    private float fallStartY        = 0f;
     private bool  wasGrounded       = true;
     private float wallJumpImmunityTimer = 0f;
 
@@ -65,21 +64,17 @@ public class FallDamage : MonoBehaviour
 
         if (!isFalling && vy < -0.1f)
         {
-            // Player has started moving downward — begin measuring from here
             isFalling  = true;
             fallStartY = transform.position.y;
         }
         else if (isFalling && vy >= 0f)
         {
-            // Velocity went back upward mid-air (e.g. double jump off apex)
-            // Reset so we measure from the new peak instead
             isFalling = false;
         }
     }
 
     private void OnLanded()
     {
-        // Ignore if still within wall jump immunity window
         if (wallJumpImmunityTimer > 0f) return;
 
         float fallDistance = fallStartY - transform.position.y;
@@ -101,8 +96,6 @@ public class FallDamage : MonoBehaviour
     public void NotifyWallJump()
     {
         wallJumpImmunityTimer = wallJumpImmunityDuration;
-        // Reset fall tracking — the wall jump launches upward,
-        // so any previous fall measurement is no longer valid
         isFalling = false;
     }
 }
