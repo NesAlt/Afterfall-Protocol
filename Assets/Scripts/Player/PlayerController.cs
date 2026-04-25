@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
     private int  timesJumped = 0;
     private bool jumping     = false;
 
-    public enum PlayerState { Idle, Walk, Jump, Fall, Dead }
+    public enum PlayerState { Idle, Walk, Jump, Fall, Dead, WallJump, WallSlide }
     public PlayerState state = PlayerState.Idle;
 
 
@@ -277,6 +277,7 @@ public class PlayerController : MonoBehaviour
     {
         float direction = isTouchingWallLeft ? 1f : -1f;
         wallJumpLockCounter = wallJumpLockTime;
+        state = PlayerState.WallJump;   
         GetComponent<FallDamage>().NotifyWallJump();
         playerRigidbody.velocity = Vector2.zero;
         playerRigidbody.AddForce(new Vector2(direction * wallJumpDirection.x, wallJumpDirection.y) * wallJumpForce, ForceMode2D.Impulse);
@@ -331,6 +332,10 @@ public class PlayerController : MonoBehaviour
         {
             state = playerRigidbody.velocity.magnitude > 0 ? PlayerState.Walk : PlayerState.Idle;
             if (!jumping) timesJumped = 0;
+        }
+        else if ((isTouchingWallLeft || isTouchingWallRight) && playerRigidbody.velocity.y <= 0)
+        {
+            state = PlayerState.WallSlide;
         }
         else
         {

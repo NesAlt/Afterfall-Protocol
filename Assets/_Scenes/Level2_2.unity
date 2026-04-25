@@ -18876,7 +18876,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2128483162}
-  - component: {fileID: 2128483163}
   m_Layer: 0
   m_Name: Fog
   m_TagString: Untagged
@@ -18901,22 +18900,6 @@ Transform:
   - {fileID: 762739028}
   m_Father: {fileID: 2008919146}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2128483163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2128483161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0df99be5e8783784e9faddd76bae4a95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 0}
-  parallaxEffect: 0.5
-  infiniteHorizontal: 1
-  stretchToFillCamera: 1
 --- !u!1 &2146977265
 GameObject:
   m_ObjectHideFlags: 0

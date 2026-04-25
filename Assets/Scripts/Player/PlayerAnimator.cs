@@ -20,56 +20,17 @@ public class PlayerAnimator : MonoBehaviour
         ReadPlayerStateAndAnimate();
     }
 
-    void ReadPlayerStateAndAnimate()
+   void ReadPlayerStateAndAnimate()
     {
-        if (animator == null)
-        {
-            return;
-        }
-        if (playerController.state == PlayerController.PlayerState.Idle)
-        {
-            animator.SetBool("isIdle", true);
-        }
-        else
-        {
-            animator.SetBool("isIdle", false);
-        }
+        if (animator == null) return;
 
-        if (playerController.state == PlayerController.PlayerState.Jump)
-        {
-            animator.SetBool("isJumping", true);
-        }
-        else
-        {
-            animator.SetBool("isJumping", false);
-        }
-
-        if (playerController.state == PlayerController.PlayerState.Fall)
-        {
-            animator.SetBool("isFalling", true);
-        }
-        else
-        {
-            animator.SetBool("isFalling", false);
-        }
-
-        if (playerController.state == PlayerController.PlayerState.Walk)
-        {
-            animator.SetBool("isRunning", true);
-        }
-        else
-        {
-            animator.SetBool("isRunning", false);
-        }
-
-        if (playerController.state == PlayerController.PlayerState.Dead)
-        {
-            animator.SetBool("isDead", true);
-        }
-        else
-        {
-            animator.SetBool("isDead", false);
-        }
+        animator.SetBool("isIdle",        playerController.state == PlayerController.PlayerState.Idle);
+        animator.SetBool("isJumping",     playerController.state == PlayerController.PlayerState.Jump);
+        animator.SetBool("isFalling",     playerController.state == PlayerController.PlayerState.Fall);
+        animator.SetBool("isRunning",     playerController.state == PlayerController.PlayerState.Walk);
+        animator.SetBool("isWallSliding", playerController.state == PlayerController.PlayerState.WallSlide);
+        animator.SetBool("isWallJumping", playerController.state == PlayerController.PlayerState.WallJump);
+        animator.SetBool("isDead",        playerController.state == PlayerController.PlayerState.Dead);
     }
     public void OnAttackStart()
     {
